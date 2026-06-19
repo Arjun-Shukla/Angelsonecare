@@ -4,6 +4,7 @@ import {
   HeartIcon, CheckCircleIcon, ArrowLeftIcon, ArrowRightIcon,
   MapPinIcon, CurrencyRupeeIcon, ExclamationCircleIcon,
 } from '../../components/common/icons.jsx';
+import EmailSentToast from '../../components/common/EmailSentToast.jsx';
 
 // ── Static data ────────────────────────────────────────────────────────────────
 const SERVICES = [
@@ -680,8 +681,9 @@ export default function BookService() {
   const [step,      setStep]      = useState(1);
   const [booking,   setBooking]   = useState(INITIAL);
   const [errors,    setErrors]    = useState({});
-  const [confirmed, setConfirmed] = useState(false);
-  const [saved,     setSaved]     = useState(false);
+  const [confirmed,      setConfirmed]      = useState(false);
+  const [saved,          setSaved]          = useState(false);
+  const [showEmailToast, setShowEmailToast] = useState(false);
   const [bookingId]               = useState(() => 'AO' + Math.floor(100000 + Math.random() * 900000));
 
   const TOTAL = STEP_LABELS.length;
@@ -737,6 +739,7 @@ export default function BookService() {
 
   const handleConfirm = () => {
     setConfirmed(true);
+    setShowEmailToast(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -744,6 +747,11 @@ export default function BookService() {
   if (confirmed) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex flex-col items-center justify-center px-4 py-16">
+        <EmailSentToast
+          show={showEmailToast}
+          message="Booking confirmation sent!"
+          detail="Check your email for booking details and updates."
+        />
         <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 sm:p-12 max-w-lg w-full text-center">
           <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-6">
             <CheckCircleIcon className="w-10 h-10 text-green-500" />

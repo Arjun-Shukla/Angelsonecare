@@ -4,10 +4,12 @@ import app from './app.js';
 import { env } from './config/env.js';
 import { connectDB } from './config/db.js';
 import { initSocket } from './sockets/index.js';
+import { verifyMailer } from './config/mailer.js';
 import { logger } from './utils/logger.js';
 
 const start = async () => {
   await connectDB();
+  await verifyMailer();
 
   const httpServer = http.createServer(app);
   initSocket(httpServer);

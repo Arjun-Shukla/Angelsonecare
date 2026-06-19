@@ -1,14 +1,31 @@
-/**
- * Passport Google OAuth 2.0 strategy configuration.
- *
- * Purpose: Configure the Google OAuth strategy used by the auth routes.
- * On successful Google login, find-or-create the User and pass it through to
- * the auth controller which issues JWTs.
- *
- * TODO (implementation):
- *  - new GoogleStrategy({ clientID, clientSecret, callbackURL }, verify)
- *  - verify(): upsert User by googleId/email, default role = CLIENT
- *  - No sessions (stateless JWT) — session: false on the route
- */
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { env } from './env.js';
+import { findOrCreateGoogleUser } from '../services/auth.service.js';
+import { logger } from '../utils/logger.js';
 
-export const configurePassport = (passport) => {};
+export const configurePassport = (passport) => {
+  if (!env.google.clientId || !env.google.clientSecret) {
+    logger.warn('[passport] GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET not set — Google OAuth disabled');
+    return;
+  }
+
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: env.google.clientId,
+        clientSecret: env.google.clientSecret,
+        callbackURL: env.google.callbackUrl,
+      },
+      async (_accessToken, _refreshToken, profile, done) => {
+        try {
+          const user = await findOrCreateGoogleUser(profile);
+          done(null, user);
+        } catch (err) {
+          done(err, null);
+        }
+      }
+    )
+  );
+
+  logger.info('[passport] Google OAuth strategy registered');
+};

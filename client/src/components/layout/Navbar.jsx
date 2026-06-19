@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { HeartIcon, MenuIcon, XMarkIcon } from '../common/icons.jsx';
+import { useAuth } from '../../hooks/useAuth.js';
 
 const NAV_LINKS = [
   { label: 'Home',         href: '#home' },
@@ -12,9 +13,16 @@ const NAV_LINKS = [
   { label: 'Contact',      href: '#contact' },
 ];
 
+const DASHBOARD_PATH = {
+  CLIENT: '/app',
+  LEADER: '/leader',
+  ADMIN:  '/admin',
+};
+
 export default function Navbar() {
-  const [scrolled, setScrolled]   = useState(false);
-  const [menuOpen, setMenuOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -25,6 +33,10 @@ export default function Navbar() {
   const linkClass = scrolled
     ? 'text-slate-700 hover:text-blue-600'
     : 'text-white/90 hover:text-white';
+
+  const dashboardPath = user ? (DASHBOARD_PATH[user.role] ?? '/app') : '/login';
+  const firstName     = user?.name?.split(' ')[0] ?? '';
+  const initial       = user?.name?.charAt(0).toUpperCase() ?? '';
 
   return (
     <nav
@@ -63,30 +75,63 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Desktop CTA */}
+        {/* Desktop CTA — changes based on auth state */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link
-            to="/login"
-            className={`text-sm font-semibold transition-colors ${linkClass}`}
-          >
-            Login
-          </Link>
-          <Link
-            to="/signup"
-            className={`text-sm font-semibold px-5 py-2.5 rounded-full border-2 transition-all ${
-              scrolled
-                ? 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
-                : 'border-white text-white hover:bg-white hover:text-blue-700'
-            }`}
-          >
-            Sign Up
-          </Link>
-          <Link
-            to="/book"
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
-          >
-            Book Now
-          </Link>
+          {user ? (
+            <>
+              {/* Logged-in: avatar + first name → goes to their dashboard */}
+              <Link
+                to={dashboardPath}
+                className={`flex items-center gap-2 text-sm font-semibold transition-colors ${linkClass}`}
+              >
+                <span className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  {initial}
+                </span>
+                {firstName}
+              </Link>
+              <Link
+                to={dashboardPath}
+                className={`text-sm font-semibold px-5 py-2.5 rounded-full border-2 transition-all ${
+                  scrolled
+                    ? 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                    : 'border-white text-white hover:bg-white hover:text-blue-700'
+                }`}
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/book"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
+              >
+                Book Now
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className={`text-sm font-semibold transition-colors ${linkClass}`}
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className={`text-sm font-semibold px-5 py-2.5 rounded-full border-2 transition-all ${
+                  scrolled
+                    ? 'border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white'
+                    : 'border-white text-white hover:bg-white hover:text-blue-700'
+                }`}
+              >
+                Sign Up
+              </Link>
+              <Link
+                to="/book"
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
+              >
+                Book Now
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile hamburger */}
@@ -123,27 +168,58 @@ export default function Navbar() {
             ))}
           </div>
           <div className="flex flex-col gap-2 p-4 border-t border-slate-100">
-            <Link
-              to="/login"
-              onClick={() => setMenuOpen(false)}
-              className="text-slate-700 font-semibold py-2.5 text-center text-sm rounded-full hover:bg-slate-100 transition-colors"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              onClick={() => setMenuOpen(false)}
-              className="border-2 border-blue-600 text-blue-600 font-semibold py-2.5 rounded-full text-center text-sm hover:bg-blue-50 transition-colors"
-            >
-              Sign Up
-            </Link>
-            <Link
-              to="/book"
-              onClick={() => setMenuOpen(false)}
-              className="bg-blue-600 text-white font-semibold py-2.5 rounded-full text-center text-sm hover:bg-blue-700 transition-colors"
-            >
-              Book Now
-            </Link>
+            {user ? (
+              <>
+                {/* Logged-in mobile: user name + dashboard + book */}
+                <div className="flex items-center gap-3 px-2 py-1">
+                  <span className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+                    {initial}
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{user.name}</p>
+                    <p className="text-xs text-slate-400">{user.role}</p>
+                  </div>
+                </div>
+                <Link
+                  to={dashboardPath}
+                  onClick={() => setMenuOpen(false)}
+                  className="border-2 border-blue-600 text-blue-600 font-semibold py-2.5 rounded-full text-center text-sm hover:bg-blue-50 transition-colors"
+                >
+                  Go to Dashboard
+                </Link>
+                <Link
+                  to="/book"
+                  onClick={() => setMenuOpen(false)}
+                  className="bg-blue-600 text-white font-semibold py-2.5 rounded-full text-center text-sm hover:bg-blue-700 transition-colors"
+                >
+                  Book Now
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-slate-700 font-semibold py-2.5 text-center text-sm rounded-full hover:bg-slate-100 transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  onClick={() => setMenuOpen(false)}
+                  className="border-2 border-blue-600 text-blue-600 font-semibold py-2.5 rounded-full text-center text-sm hover:bg-blue-50 transition-colors"
+                >
+                  Sign Up
+                </Link>
+                <Link
+                  to="/book"
+                  onClick={() => setMenuOpen(false)}
+                  className="bg-blue-600 text-white font-semibold py-2.5 rounded-full text-center text-sm hover:bg-blue-700 transition-colors"
+                >
+                  Book Now
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MOCK_TICKETS, MOCK_BOOKINGS } from '../../data/mockClient.js';
 import { ChevronDownIcon, ChevronUpIcon, TagIcon, CheckCircleIcon } from '../../components/common/icons.jsx';
+import EmailSentToast from '../../components/common/EmailSentToast.jsx';
 
 const TICKET_STATUS_STYLES = {
   OPEN: 'bg-amber-100 text-amber-700',
@@ -116,9 +117,10 @@ function TicketCard({ ticket }) {
 }
 
 function NewTicketForm() {
-  const [form, setForm] = useState({ bookingId: '', category: '', subject: '', description: '' });
-  const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(null);
+  const [form,           setForm]           = useState({ bookingId: '', category: '', subject: '', description: '' });
+  const [errors,         setErrors]         = useState({});
+  const [success,        setSuccess]        = useState(null);
+  const [showEmailToast, setShowEmailToast] = useState(false);
 
   function validate() {
     const e = {};
@@ -135,6 +137,7 @@ function NewTicketForm() {
     if (Object.keys(e).length > 0) { setErrors(e); return; }
     const ticketId = `TKT-${String(Math.floor(Math.random() * 900) + 100)}`;
     setSuccess(ticketId);
+    setShowEmailToast(true);
     setForm({ bookingId: '', category: '', subject: '', description: '' });
     setErrors({});
   }
@@ -142,13 +145,18 @@ function NewTicketForm() {
   if (success) {
     return (
       <div className="bg-white rounded-2xl border border-green-200 p-8 text-center shadow-sm">
+        <EmailSentToast
+          show={showEmailToast}
+          message="Ticket notification sent!"
+          detail="Our support team has been notified via email."
+        />
         <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircleIcon className="w-7 h-7 text-green-600" />
         </div>
         <h3 className="text-lg font-bold text-slate-800 mb-1">Ticket Raised!</h3>
         <p className="text-slate-500 text-sm mb-4">Your support ticket <span className="font-semibold text-slate-700">{success}</span> has been submitted successfully. Our team will respond within 24 hours.</p>
         <button
-          onClick={() => setSuccess(null)}
+          onClick={() => { setSuccess(null); setShowEmailToast(false); }}
           className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors"
         >
           Raise Another Ticket

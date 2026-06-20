@@ -1,13 +1,26 @@
-/**
- * Ticket API calls (maps to /api/tickets).
- *   createTicket, listTickets, getTicket, addMessage, updateStatus
- * TODO (implementation): wire to api (axios).
- */
+import api from './axios.js';
 
-// import api from './axios.js';
+export const createTicket = async (payload) => {
+  const { data } = await api.post('/tickets', payload);
+  return data;
+};
 
-export const createTicket = async (payload) => {};
-export const listTickets = async (params) => {};
-export const getTicket = async (id) => {};
-export const addMessage = async (id, text) => {};
-export const updateStatus = async (id, status) => {};
+export const listTickets = async () => {
+  const { data } = await api.get('/tickets');
+  return data;
+};
+
+export const getTicket = async (id) => {
+  const { data } = await api.get(`/tickets/${id}`);
+  return data;
+};
+
+export const addMessage = async (id, text) => {
+  const { data } = await api.post(`/tickets/${id}/messages`, { text });
+  return data;
+};
+
+export const updateStatus = async (id, status) => {
+  const { data } = await api.patch(`/tickets/${id}/status`, { status });
+  return data;
+};

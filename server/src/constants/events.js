@@ -9,12 +9,15 @@ export const SOCKET_EVENTS = {
   BOOKING_STATUS_UPDATED: 'booking:status_updated',
 
   // Tickets
-  TICKET_CREATED: 'ticket:created',
-  TICKET_MESSAGE: 'ticket:message',
+  TICKET_CREATED:        'ticket:created',
+  TICKET_MESSAGE:        'ticket:message',
   TICKET_STATUS_UPDATED: 'ticket:status_updated',
+  TICKET_SOLVED:         'ticket:solved',
+  TICKET_UNSOLVED:       'ticket:unsolved',
 
   // Reviews
-  REVIEW_NEW: 'review:new',
+  REVIEW_NEW:     'review:new',
+  REVIEW_UPDATED: 'review:updated',
 
   // Admin dashboard
   DASHBOARD_UPDATE: 'dashboard:update',

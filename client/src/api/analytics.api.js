@@ -1,11 +1,16 @@
-/**
- * Analytics API calls (maps to /api/analytics, admin).
- *   getDashboard, getBookingTrends, getRevenue
- * TODO (implementation): wire to api (axios).
- */
+import api from './axios.js';
 
-// import api from './axios.js';
+export const getDashboard = async () => {
+  const { data } = await api.get('/analytics/dashboard');
+  return data;
+};
 
-export const getDashboard = async () => {};
-export const getBookingTrends = async (range) => {};
-export const getRevenue = async (range) => {};
+export const getBookingTrends = async (months = 6) => {
+  const { data } = await api.get('/analytics/bookings', { params: { months } });
+  return data;
+};
+
+export const getRevenue = async (months = 6) => {
+  const { data } = await api.get('/analytics/revenue', { params: { months } });
+  return data;
+};

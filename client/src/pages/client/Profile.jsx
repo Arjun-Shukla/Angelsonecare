@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth.js';
+import { updateMe } from '../../api/auth.api.js';
 import { CheckCircleIcon, PencilSquareIcon } from '../../components/common/icons.jsx';
 
 function TabButton({ active, onClick, children }) {
@@ -61,26 +62,54 @@ function PasswordInput({ label, value, onChange, placeholder }) {
   );
 }
 
-function PersonalInfoTab({ user }) {
+function PersonalInfoTab({ user, onUserUpdate }) {
+  const formatDob = (dob) => {
+    if (!dob) return '';
+    return new Date(dob).toISOString().split('T')[0];
+  };
+
   const [form, setForm] = useState({
-    name: user?.name ?? '',
-    email: user?.email ?? '',
-    phone: user?.phone ?? '',
-    dob: '',
-    line1: user?.address?.line1 ?? '',
-    area: user?.address?.area ?? '',
-    city: user?.address?.city ?? '',
-    state: user?.address?.state ?? '',
+    name:    user?.name ?? '',
+    email:   user?.email ?? '',
+    phone:   user?.phone ?? '',
+    dob:     formatDob(user?.dob),
+    line1:   user?.address?.line1 ?? '',
+    area:    user?.address?.area ?? '',
+    city:    user?.address?.city ?? '',
+    state:   user?.address?.state ?? '',
     pincode: user?.address?.pincode ?? '',
   });
-  const [saved, setSaved] = useState(false);
+  const [saved,  setSaved]  = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error,  setError]  = useState('');
 
   const initial = form.name ? form.name.charAt(0).toUpperCase() : 'U';
 
-  function handleSave(e) {
+  async function handleSave(e) {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+    setSaving(true);
+    setError('');
+    try {
+      const res = await updateMe({
+        name:  form.name.trim(),
+        phone: form.phone.trim(),
+        dob:   form.dob || null,
+        address: {
+          line1:   form.line1.trim(),
+          area:    form.area.trim(),
+          city:    form.city.trim(),
+          state:   form.state.trim(),
+          pincode: form.pincode.trim(),
+        },
+      });
+      if (onUserUpdate) onUserUpdate(res.data?.user);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to save changes. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   function field(key) {
@@ -159,9 +188,16 @@ function PersonalInfoTab({ user }) {
         </div>
       </div>
 
+      {error && (
+        <p className="text-xs text-rose-500 bg-rose-50 border border-rose-200 px-3 py-2 rounded-lg">{error}</p>
+      )}
       <div className="flex items-center gap-4">
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
-          Save Changes
+        <button
+          type="submit"
+          disabled={saving}
+          className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
+        >
+          {saving ? 'Saving…' : 'Save Changes'}
         </button>
         {saved && (
           <span className="flex items-center gap-1.5 text-green-600 text-sm font-medium">
@@ -263,7 +299,7 @@ function NotificationsTab() {
 }
 
 export default function Profile() {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState('personal');
 
   return (
@@ -279,7 +315,7 @@ export default function Profile() {
         <TabButton active={activeTab === 'notifications'} onClick={() => setActiveTab('notifications')}>Notifications</TabButton>
       </div>
 
-      {activeTab === 'personal' && <PersonalInfoTab user={user} />}
+      {activeTab === 'personal' && <PersonalInfoTab user={user} onUserUpdate={setUser} />}
       {activeTab === 'security' && <SecurityTab />}
       {activeTab === 'notifications' && <NotificationsTab />}
     </div>

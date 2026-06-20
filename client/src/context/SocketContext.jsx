@@ -1,12 +1,44 @@
-import { createContext, useRef } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { AuthContext } from './AuthContext.jsx';
+import { connectSocket, disconnectSocket, getSocket } from '../socket/socket.js';
 
 export const SocketContext = createContext(null);
 
+export const useSocket = () => useContext(SocketContext);
+
 export const SocketProvider = ({ children }) => {
-  // socket will be connected once AuthContext provides a token (see auth implementation)
-  const socketRef = useRef(null);
+  const { user, accessToken } = useContext(AuthContext);
+  const [socket, setSocket] = useState(null);
+  const connectedRef = useRef(false);
 
-  const value = { socket: socketRef.current };
+  useEffect(() => {
+    if (user && accessToken) {
+      if (!connectedRef.current) {
+        const s = connectSocket(accessToken);
+        s.connect();
+        connectedRef.current = true;
+        setSocket(s);
+      }
+    } else {
+      if (connectedRef.current) {
+        disconnectSocket();
+        connectedRef.current = false;
+        setSocket(null);
+      }
+    }
+  }, [user, accessToken]);
 
-  return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
+  // If user logs in again with a different token, reconnect with the new token
+  useEffect(() => {
+    const existing = getSocket();
+    if (existing && accessToken) {
+      existing.auth = { token: accessToken };
+    }
+  }, [accessToken]);
+
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };

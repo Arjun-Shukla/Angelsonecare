@@ -60,26 +60,34 @@ export default function AppRoutes() {
       <Route path="/oauth/callback"  element={<OAuthCallback />} />
       <Route path="/book"            element={<BookService />} />
 
-      {/* Leader Dashboard — public during dev; add ProtectedRoute + RoleRoute when auth is ready */}
-      <Route element={<LeaderLayout />}>
-        <Route path="/leader"              element={<LeaderDashboard />} />
-        <Route path="/leader/bookings"     element={<AssignedBookings />} />
-        <Route path="/leader/progress/:id" element={<UpdateProgress />} />
-        <Route path="/leader/verify/:id"   element={<VerifyOTP />} />
-        <Route path="/leader/tickets"      element={<LeaderTickets />} />
-        <Route path="/leader/clients/:id"  element={<ClientDetail />} />
-        <Route path="/leader/profile"      element={<LeaderProfile />} />
+      {/* Leader Dashboard */}
+      <Route element={<ProtectedRoute />}>
+        <Route element={<RoleRoute allow={[ROLES.LEADER, ROLES.ADMIN]} />}>
+          <Route element={<LeaderLayout />}>
+            <Route path="/leader"              element={<LeaderDashboard />} />
+            <Route path="/leader/bookings"     element={<AssignedBookings />} />
+            <Route path="/leader/progress/:id" element={<UpdateProgress />} />
+            <Route path="/leader/verify/:id"   element={<VerifyOTP />} />
+            <Route path="/leader/tickets"      element={<LeaderTickets />} />
+            <Route path="/leader/clients/:id"  element={<ClientDetail />} />
+            <Route path="/leader/profile"      element={<LeaderProfile />} />
+          </Route>
+        </Route>
       </Route>
 
-      {/* Admin Dashboard — public during dev; add ProtectedRoute + RoleRoute when auth is ready */}
-      <Route element={<AdminLayout />}>
-        <Route path="/admin"           element={<AdminDashboard />} />
-        <Route path="/admin/bookings"  element={<AdminBookings />} />
-        <Route path="/admin/leaders"   element={<Leaders />} />
-        <Route path="/admin/tickets"   element={<AdminTickets />} />
-        <Route path="/admin/reviews"   element={<AdminReviews />} />
-        <Route path="/admin/analytics" element={<Analytics />} />
-        <Route path="/admin/settings"  element={<AdminSettings />} />
+      {/* Admin Dashboard */}
+      <Route element={<ProtectedRoute />}>
+        <Route element={<RoleRoute allow={[ROLES.ADMIN]} />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin"           element={<AdminDashboard />} />
+            <Route path="/admin/bookings"  element={<AdminBookings />} />
+            <Route path="/admin/leaders"   element={<Leaders />} />
+            <Route path="/admin/tickets"   element={<AdminTickets />} />
+            <Route path="/admin/reviews"   element={<AdminReviews />} />
+            <Route path="/admin/analytics" element={<Analytics />} />
+            <Route path="/admin/settings"  element={<AdminSettings />} />
+          </Route>
+        </Route>
       </Route>
 
       {/* Client dashboard — requires auth + CLIENT role */}

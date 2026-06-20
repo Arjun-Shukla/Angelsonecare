@@ -1,61 +1,6 @@
+import { useState, useEffect, useRef } from 'react';
 import { StarIcon } from '../common/icons.jsx';
-
-const TESTIMONIALS = [
-  {
-    name:    'Priya Sharma',
-    role:    'Home Nursing Client',
-    city:    'Lucknow',
-    rating:  5,
-    text:    "After my mother's hip replacement surgery, Angels One arranged a home nurse within hours. The caregiver was incredibly professional and patient. My mother recovered faster than the doctors expected!",
-    initial: 'P',
-    color:   'bg-blue-500',
-  },
-  {
-    name:    'Rajesh Verma',
-    role:    'Elder Care Client',
-    city:    'Kanpur',
-    rating:  5,
-    text:    'Finding reliable elder care for my 78-year-old father felt impossible until I found Angels One. The assigned caregiver is like family now — punctual, caring, and highly skilled.',
-    initial: 'R',
-    color:   'bg-teal-500',
-  },
-  {
-    name:    'Anita Gupta',
-    role:    'Physiotherapy Client',
-    city:    'Lucknow',
-    rating:  5,
-    text:    'The physiotherapist came every morning for 3 weeks after my knee surgery. The OTP verification gave me confidence that service was properly logged. Highly recommended!',
-    initial: 'A',
-    color:   'bg-violet-500',
-  },
-  {
-    name:    'Suresh Patel',
-    role:    'Post-Surgery Client',
-    city:    'Varanasi',
-    rating:  5,
-    text:    'The real-time tracking feature is brilliant. I could see exactly when the nurse left, was en route, and arrived. Completely transparent and trustworthy service.',
-    initial: 'S',
-    color:   'bg-orange-500',
-  },
-  {
-    name:    'Meera Joshi',
-    role:    'Baby Care Client',
-    city:    'Lucknow',
-    rating:  5,
-    text:    'As a first-time mother, I was anxious. The baby care specialist from Angels One was a blessing — she guided me through everything and helped my baby settle into a healthy routine.',
-    initial: 'M',
-    color:   'bg-pink-500',
-  },
-  {
-    name:    'Deepak Mishra',
-    role:    'Elder Care Client',
-    city:    'Allahabad',
-    rating:  5,
-    text:    'Booking was effortless and the support team responded within minutes. The caregiver they sent for my parents is wonderful. The price is fair and there are no hidden charges at all.',
-    initial: 'D',
-    color:   'bg-green-500',
-  },
-];
+import { listReviews } from '../../api/review.api.js';
 
 function Stars({ count = 5 }) {
   return (
@@ -67,7 +12,41 @@ function Stars({ count = 5 }) {
   );
 }
 
+function initials(name = '') {
+  return name.split(' ').map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || '?';
+}
+
+const AVATAR_COLORS = [
+  'bg-blue-500', 'bg-teal-500', 'bg-violet-500',
+  'bg-orange-500', 'bg-pink-500', 'bg-green-500',
+  'bg-rose-500', 'bg-indigo-500',
+];
+
 export default function Testimonials() {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const timerRef = useRef(null);
+
+  function fetchReviews() {
+    listReviews()
+      .then(res => setReviews(res.data?.reviews ?? []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => {
+    fetchReviews();
+    // Refresh every 60 seconds so newly approved reviews appear without a page reload
+    timerRef.current = setInterval(fetchReviews, 60_000);
+    return () => clearInterval(timerRef.current);
+  }, []);
+
+  const avgRating = reviews.length
+    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+    : null;
+
+  const displayReviews = reviews.slice(0, 6);
+
   return (
     <section id="testimonials" className="section-padding bg-white">
       <div className="section-container">
@@ -87,52 +66,93 @@ export default function Testimonials() {
         </div>
 
         {/* Review grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TESTIMONIALS.map(({ name, role, city, rating, text, initial, color }) => (
-            <div
-              key={name}
-              className="bg-white border border-slate-100 rounded-2xl p-7 shadow-sm hover:shadow-md transition-all flex flex-col"
-            >
-              {/* Stars */}
-              <Stars count={rating} />
-
-              {/* Review text */}
-              <p className="text-slate-600 text-sm leading-relaxed mt-4 flex-1">
-                "{text}"
-              </p>
-
-              {/* Reviewer */}
-              <div className="flex items-center gap-3 mt-6 pt-5 border-t border-slate-100">
-                <div className={`w-11 h-11 rounded-full ${color} flex items-center justify-center shrink-0`}>
-                  <span className="text-white font-bold text-base">{initial}</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900 text-sm">{name}</p>
-                  <p className="text-xs text-slate-500">{role} · {city}</p>
+        {loading ? (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="bg-white border border-slate-100 rounded-2xl p-7 shadow-sm animate-pulse">
+                <div className="h-4 bg-slate-100 rounded w-24 mb-4" />
+                <div className="h-3 bg-slate-100 rounded w-full mb-2" />
+                <div className="h-3 bg-slate-100 rounded w-4/5 mb-2" />
+                <div className="h-3 bg-slate-100 rounded w-3/5" />
+                <div className="flex items-center gap-3 mt-8 pt-5 border-t border-slate-100">
+                  <div className="w-11 h-11 rounded-full bg-slate-100" />
+                  <div className="space-y-1.5">
+                    <div className="h-3 bg-slate-100 rounded w-24" />
+                    <div className="h-2.5 bg-slate-100 rounded w-20" />
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+        ) : displayReviews.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <StarIcon className="w-8 h-8 text-slate-300" filled={false} />
             </div>
-          ))}
-        </div>
+            <p className="text-slate-500 font-medium">No reviews yet</p>
+            <p className="text-slate-400 text-sm mt-1">Be the first to share your experience.</p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayReviews.map((review, idx) => {
+              const name    = review.client?.name || 'Client';
+              const service = review.booking?.service || 'Healthcare Service';
+              const color   = AVATAR_COLORS[idx % AVATAR_COLORS.length];
 
-        {/* Rating summary */}
-        <div className="mt-12 bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-100 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-center gap-8 text-center">
-          <div>
-            <p className="text-6xl font-extrabold text-blue-700">4.9</p>
-            <Stars count={5} />
-            <p className="text-sm text-slate-500 mt-1">Average rating</p>
+              return (
+                <div
+                  key={review._id}
+                  className="bg-white border border-slate-100 rounded-2xl p-7 shadow-sm hover:shadow-md transition-all flex flex-col"
+                >
+                  <Stars count={review.rating} />
+
+                  {review.title && (
+                    <p className="text-slate-800 font-semibold text-sm mt-3">{review.title}</p>
+                  )}
+
+                  <p className="text-slate-600 text-sm leading-relaxed mt-3 flex-1">
+                    "{review.comment}"
+                  </p>
+
+                  <div className="flex items-center gap-3 mt-6 pt-5 border-t border-slate-100">
+                    <div className={`w-11 h-11 rounded-full ${color} flex items-center justify-center shrink-0`}>
+                      <span className="text-white font-bold text-base">{initials(name)}</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold text-slate-900 text-sm">{name}</p>
+                      <p className="text-xs text-slate-500">{service}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-          <div className="hidden sm:block w-px h-16 bg-blue-200" />
-          <div>
-            <p className="text-4xl font-extrabold text-slate-800">2,000+</p>
-            <p className="text-slate-500 mt-1">Verified reviews</p>
+        )}
+
+        {/* Rating summary — only shown when real data is available */}
+        {!loading && reviews.length > 0 && (
+          <div className="mt-12 bg-gradient-to-r from-blue-50 to-teal-50 border border-blue-100 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-center gap-8 text-center">
+            <div>
+              <p className="text-6xl font-extrabold text-blue-700">{avgRating}</p>
+              <Stars count={Math.round(parseFloat(avgRating))} />
+              <p className="text-sm text-slate-500 mt-1">Average rating</p>
+            </div>
+            <div className="hidden sm:block w-px h-16 bg-blue-200" />
+            <div>
+              <p className="text-4xl font-extrabold text-slate-800">{reviews.length}+</p>
+              <p className="text-slate-500 mt-1">Verified reviews</p>
+            </div>
+            <div className="hidden sm:block w-px h-16 bg-blue-200" />
+            <div>
+              <p className="text-4xl font-extrabold text-slate-800">
+                {reviews.length > 0
+                  ? `${Math.round((reviews.filter(r => r.rating >= 4).length / reviews.length) * 100)}%`
+                  : '—'}
+              </p>
+              <p className="text-slate-500 mt-1">Would recommend us</p>
+            </div>
           </div>
-          <div className="hidden sm:block w-px h-16 bg-blue-200" />
-          <div>
-            <p className="text-4xl font-extrabold text-slate-800">99%</p>
-            <p className="text-slate-500 mt-1">Would recommend us</p>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );

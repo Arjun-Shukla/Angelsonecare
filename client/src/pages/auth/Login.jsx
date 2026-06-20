@@ -7,23 +7,11 @@ import GoogleAuthButton from '../../components/common/GoogleAuthButton.jsx';
 import { useForm }      from '../../hooks/useForm.js';
 import { useAuth }      from '../../hooks/useAuth.js';
 
-const DEMO_ACCOUNTS = [
-  {
-    email: 'arjunshukla489@gmail.com', password: 'Client@123',
-    user: { _id: 'mock-001', name: 'Arjun Shukla', email: 'arjunshukla489@gmail.com', phone: '9876543210', role: 'CLIENT', avatar: null },
-    redirect: '/app',
-  },
-  {
-    email: 'priya.desai@angelsone.com', password: 'Leader@123',
-    user: { _id: 'leader-001', name: 'Priya Desai', email: 'priya.desai@angelsone.com', phone: '+91 98765 12345', role: 'LEADER', avatar: null },
-    redirect: '/leader',
-  },
-  {
-    email: 'admin@angelsone.com', password: 'Admin@123',
-    user: { _id: 'admin-001', name: 'Rajesh Angels', email: 'admin@angelsone.com', phone: '+91 98100 00001', role: 'ADMIN', avatar: null },
-    redirect: '/admin',
-  },
-];
+const ROLE_REDIRECT = {
+  CLIENT: '/app',
+  LEADER: '/leader',
+  ADMIN:  '/admin',
+};
 
 const validators = {
   email:    (v) => !v?.trim()                             ? 'Email address is required'
@@ -53,26 +41,23 @@ export default function Login() {
   );
   const [loading,   setLoading]   = useState(false);
   const [authError, setAuthError] = useState('');
-  const { setUser } = useAuth();
-  const navigate    = useNavigate();
+  const { login } = useAuth();
+  const navigate  = useNavigate();
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setAuthError('');
     if (!validate()) return;
+
     setLoading(true);
-    setTimeout(() => {
-      const match = DEMO_ACCOUNTS.find(
-        (a) => a.email === values.email.trim() && a.password === values.password
-      );
-      if (match) {
-        setUser(match.user);
-        navigate(match.redirect);
-      } else {
-        setLoading(false);
-        setAuthError('Invalid email or password. Please check your credentials and try again.');
-      }
-    }, 1000);
+    try {
+      const user = await login(values.email.trim(), values.password);
+      navigate(ROLE_REDIRECT[user.role] ?? '/app');
+    } catch (err) {
+      setAuthError(err.response?.data?.message || 'Invalid email or password. Please check your credentials and try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,20 +65,18 @@ export default function Login() {
       heading="Welcome back"
       subheading="Sign in to your Angels One account"
     >
-      {/* Demo credential hint */}
       <div className="mb-5 rounded-xl bg-blue-50 border border-blue-200 p-4">
-        <p className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wide">Demo Accounts</p>
+        <p className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wide">Test Accounts</p>
         <div className="space-y-1.5 text-xs text-slate-600 font-mono">
-          <p><span className="text-slate-400">Client  →</span> arjunshukla489@gmail.com / <strong>Client@123</strong></p>
-          <p><span className="text-slate-400">Leader  →</span> priya.desai@angelsone.com / <strong>Leader@123</strong></p>
-          <p><span className="text-slate-400">Admin   →</span> admin@angelsone.com / <strong>Admin@123</strong></p>
+          <p><span className="text-slate-400">Client →</span> testclient@angelsone.dev / <strong>Test@1234</strong></p>
+          <p><span className="text-slate-400">Leader →</span> testleader@angelsone.dev / <strong>Test@1234</strong></p>
+          <p><span className="text-slate-400">Admin  →</span> testadmin@angelsone.dev  / <strong>Test@1234</strong></p>
         </div>
       </div>
 
       <ErrorBanner message={authError} />
 
       <form onSubmit={onSubmit} noValidate className="space-y-5">
-
         <FormInput
           label="Email address"
           name="email"

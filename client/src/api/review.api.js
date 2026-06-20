@@ -1,13 +1,37 @@
-/**
- * Review API calls (maps to /api/reviews).
- *   listReviews (public), createReview, listMyReviews, approveReview, deleteReview
- * TODO (implementation): wire to api (axios).
- */
+import api from './axios.js';
 
-// import api from './axios.js';
+export const listReviews = async () => {
+  const { data } = await api.get('/reviews');
+  return data;
+};
 
-export const listReviews = async () => {};
-export const createReview = async (payload) => {};
-export const listMyReviews = async () => {};
-export const approveReview = async (id) => {};
-export const deleteReview = async (id) => {};
+export const createReview = async (payload) => {
+  const { data } = await api.post('/reviews', payload);
+  return data;
+};
+
+export const listMyReviews = async () => {
+  const { data } = await api.get('/reviews/me');
+  return data;
+};
+
+// Admin: all reviews regardless of approval status
+export const listAllReviews = async () => {
+  const { data } = await api.get('/reviews/admin/all');
+  return data;
+};
+
+export const approveReview = async (id) => {
+  const { data } = await api.patch(`/reviews/${id}/approve`);
+  return data;
+};
+
+export const toggleFeatured = async (id) => {
+  const { data } = await api.patch(`/reviews/${id}/featured`);
+  return data;
+};
+
+export const deleteReview = async (id) => {
+  const { data } = await api.delete(`/reviews/${id}`);
+  return data;
+};

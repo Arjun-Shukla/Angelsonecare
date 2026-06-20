@@ -1,21 +1,12 @@
 import { useState } from 'react';
-import { MOCK_LEADER } from '../../data/mockLeader.js';
-import { StarIcon, CheckIcon } from '../../components/common/icons.jsx';
+import { useAuth } from '../../hooks/useAuth.js';
+import { updateMe } from '../../api/auth.api.js';
+import { CheckIcon } from '../../components/common/icons.jsx';
 
 const ALL_SPECIALIZATIONS = [
-  'Elder Care',
-  'Home Nursing',
-  'Patient Caretaker',
-  'Physiotherapy',
-  'Post-Surgery Care',
-  'Medical Assistance',
+  'Elder Care', 'Home Nursing', 'Patient Caretaker',
+  'Physiotherapy', 'Post-Surgery Care', 'Medical Assistance',
 ];
-
-const initials = MOCK_LEADER.name
-  .split(' ')
-  .map(w => w[0])
-  .join('')
-  .toUpperCase();
 
 function TabButton({ label, active, onClick }) {
   return (
@@ -32,32 +23,45 @@ function TabButton({ label, active, onClick }) {
   );
 }
 
+function Toggle({ on, onToggle }) {
+  return (
+    <button
+      onClick={onToggle}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${on ? 'bg-teal-600' : 'bg-slate-200'}`}
+    >
+      <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
+    </button>
+  );
+}
+
 export default function LeaderProfile() {
+  const { user, setUser } = useAuth();
   const [activeTab, setActiveTab] = useState('info');
-  const [saved, setSaved] = useState(false);
-  const [availability, setAvailability] = useState(MOCK_LEADER.availability);
+  const [saving,    setSaving]    = useState(false);
+  const [saved,     setSaved]     = useState(false);
+  const [error,     setError]     = useState('');
+
+  const initials = (user?.name || 'L')
+    .split(' ')
+    .map(w => w[0])
+    .join('')
+    .toUpperCase();
 
   const [form, setForm] = useState({
-    name: MOCK_LEADER.name,
-    email: MOCK_LEADER.email,
-    phone: MOCK_LEADER.phone,
-    experience: MOCK_LEADER.experience,
-    location: MOCK_LEADER.location,
-    specializations: [...MOCK_LEADER.specializations],
-    bio: MOCK_LEADER.bio,
-  });
-
-  const [passwords, setPasswords] = useState({
-    current: '',
-    next: '',
-    confirm: '',
+    name:            user?.name            ?? '',
+    email:           user?.email           ?? '',
+    phone:           user?.phone           ?? '',
+    experience:      user?.experience      ?? '',
+    location:        user?.location        ?? '',
+    specializations: user?.specializations ?? [],
+    bio:             user?.bio             ?? '',
   });
 
   const [notifications, setNotifications] = useState({
-    newBooking: true,
-    ticketUpdate: true,
+    newBooking:      true,
+    ticketUpdate:    true,
     serviceReminder: true,
-    systemAlerts: false,
+    systemAlerts:    false,
   });
 
   function handleFormChange(key, value) {
@@ -76,45 +80,59 @@ export default function LeaderProfile() {
     });
   }
 
-  function handleSave(e) {
+  async function handleSave(e) {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
-  }
-
-  function handlePasswordUpdate(e) {
-    e.preventDefault();
-    setPasswords({ current: '', next: '', confirm: '' });
-  }
-
-  function toggleNotification(key) {
-    setNotifications(prev => ({ ...prev, [key]: !prev[key] }));
+    setSaving(true);
+    setError('');
+    try {
+      const res = await updateMe({
+        name:            form.name.trim(),
+        phone:           form.phone.trim(),
+        experience:      form.experience.trim(),
+        location:        form.location.trim(),
+        bio:             form.bio.trim(),
+        specializations: form.specializations,
+      });
+      const updatedUser = res.data?.user;
+      if (updatedUser) setUser(updatedUser);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to save changes. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
     <div className="animate-fade-in space-y-6">
+      {/* Header card */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
           <div className="w-24 h-24 rounded-full bg-teal-600 flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
             {initials}
           </div>
           <div className="text-center sm:text-left">
-            <h1 className="text-2xl font-bold text-slate-800">{form.name}</h1>
+            <h1 className="text-2xl font-bold text-slate-800">{user?.name || '—'}</h1>
             <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">
               <span className="px-2.5 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">LEADER</span>
-              <div className="flex items-center gap-1">
-                <StarIcon className="w-4 h-4 text-amber-400" />
-                <span className="text-sm font-semibold text-slate-700">{MOCK_LEADER.rating}</span>
-              </div>
-              <span className="text-sm text-slate-500">{MOCK_LEADER.totalCompleted} completed services</span>
+              {user?.location && (
+                <span className="text-sm text-slate-500">{user.location}</span>
+              )}
+              {user?.experience && (
+                <span className="text-sm text-slate-500">· {user.experience}</span>
+              )}
             </div>
+            {user?.email && (
+              <p className="text-sm text-slate-400 mt-1">{user.email}</p>
+            )}
           </div>
         </div>
       </div>
 
       <div className="flex gap-2 flex-wrap">
-        <TabButton label="Professional Info" active={activeTab === 'info'} onClick={() => setActiveTab('info')} />
-        <TabButton label="Settings" active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
+        <TabButton label="Professional Info" active={activeTab === 'info'}     onClick={() => setActiveTab('info')} />
+        <TabButton label="Settings"          active={activeTab === 'settings'} onClick={() => setActiveTab('settings')} />
       </div>
 
       {activeTab === 'info' && (
@@ -154,15 +172,17 @@ export default function LeaderProfile() {
               <input
                 type="text"
                 className="input-style"
+                placeholder="e.g., 3 years"
                 value={form.experience}
                 onChange={e => handleFormChange('experience', e.target.value)}
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="label-style">Location</label>
+              <label className="label-style">Location / Area</label>
               <input
                 type="text"
                 className="input-style"
+                placeholder="e.g., Bandra, Mumbai"
                 value={form.location}
                 onChange={e => handleFormChange('location', e.target.value)}
               />
@@ -194,21 +214,27 @@ export default function LeaderProfile() {
           </div>
 
           <div>
-            <label className="label-style">Bio</label>
+            <label className="label-style">Bio <span className="text-slate-400 font-normal">(optional)</span></label>
             <textarea
               rows={4}
               className="input-style resize-none"
+              placeholder="Write a short professional bio..."
               value={form.bio}
               onChange={e => handleFormChange('bio', e.target.value)}
             />
           </div>
 
+          {error && (
+            <p className="text-xs text-rose-500 bg-rose-50 border border-rose-200 px-3 py-2 rounded-lg">{error}</p>
+          )}
+
           <div className="flex items-center gap-3">
             <button
               type="submit"
-              className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors"
+              disabled={saving}
+              className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl transition-colors"
             >
-              Save Changes
+              {saving ? 'Saving…' : 'Save Changes'}
             </button>
             {saved && (
               <div className="flex items-center gap-1.5 text-green-600 text-sm font-medium animate-fade-in">
@@ -225,96 +251,69 @@ export default function LeaderProfile() {
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
             <h2 className="font-bold text-slate-800 text-lg">Notifications</h2>
             {[
-              { key: 'newBooking',       label: 'New Booking Assigned',     desc: 'Get notified when a new booking is assigned to you' },
-              { key: 'ticketUpdate',     label: 'Ticket Updates',           desc: 'Receive alerts for replies on your tickets' },
-              { key: 'serviceReminder',  label: 'Service Reminders',        desc: 'Daily reminders for upcoming tasks' },
-              { key: 'systemAlerts',     label: 'System Alerts',            desc: 'Platform maintenance and important notices' },
+              { key: 'newBooking',      label: 'New Booking Assigned',  desc: 'Get notified when a new booking is assigned to you' },
+              { key: 'ticketUpdate',    label: 'Ticket Updates',        desc: 'Receive alerts for replies on tickets' },
+              { key: 'serviceReminder', label: 'Service Reminders',     desc: 'Daily reminders for upcoming tasks' },
+              { key: 'systemAlerts',    label: 'System Alerts',         desc: 'Platform maintenance and important notices' },
             ].map(item => (
               <div key={item.key} className="flex items-center justify-between py-3 border-b border-slate-100 last:border-0">
                 <div>
                   <p className="text-sm font-semibold text-slate-800">{item.label}</p>
                   <p className="text-xs text-slate-400 mt-0.5">{item.desc}</p>
                 </div>
-                <button
-                  onClick={() => toggleNotification(item.key)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${
-                    notifications[item.key] ? 'bg-teal-600' : 'bg-slate-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                      notifications[item.key] ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
+                <Toggle
+                  on={notifications[item.key]}
+                  onToggle={() => setNotifications(p => ({ ...p, [item.key]: !p[item.key] }))}
+                />
               </div>
             ))}
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 space-y-4">
-            <h2 className="font-bold text-slate-800 text-lg">Availability</h2>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-slate-700">Current status</p>
-                <p className="text-xs text-slate-400 mt-0.5">Toggle your availability for new assignments</p>
-              </div>
-              <button
-                onClick={() => setAvailability(prev => prev === 'Available' ? 'Unavailable' : 'Available')}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-colors ${
-                  availability === 'Available'
-                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                    : 'bg-rose-100 text-rose-700 hover:bg-rose-200'
-                }`}
-              >
-                <span className={`w-2 h-2 rounded-full inline-block mr-2 ${availability === 'Available' ? 'bg-green-500' : 'bg-rose-500'}`} />
-                {availability}
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h2 className="font-bold text-slate-800 text-lg mb-4">Change Password</h2>
-            <form onSubmit={handlePasswordUpdate} className="space-y-4">
-              <div>
-                <label className="label-style">Current Password</label>
-                <input
-                  type="password"
-                  className="input-style"
-                  value={passwords.current}
-                  onChange={e => setPasswords(prev => ({ ...prev, current: e.target.value }))}
-                  placeholder="Enter current password"
-                />
-              </div>
-              <div>
-                <label className="label-style">New Password</label>
-                <input
-                  type="password"
-                  className="input-style"
-                  value={passwords.next}
-                  onChange={e => setPasswords(prev => ({ ...prev, next: e.target.value }))}
-                  placeholder="Enter new password"
-                />
-              </div>
-              <div>
-                <label className="label-style">Confirm New Password</label>
-                <input
-                  type="password"
-                  className="input-style"
-                  value={passwords.confirm}
-                  onChange={e => setPasswords(prev => ({ ...prev, confirm: e.target.value }))}
-                  placeholder="Confirm new password"
-                />
-              </div>
-              <button
-                type="submit"
-                className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors"
-              >
-                Update Password
-              </button>
-            </form>
+            <h2 className="font-bold text-slate-800 text-lg">Change Password</h2>
+            <PasswordChangeForm />
           </div>
         </div>
       )}
     </div>
+  );
+}
+
+function PasswordChangeForm() {
+  const [current, setCurrent] = useState('');
+  const [next,    setNext]    = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error,   setError]   = useState('');
+  const [success, setSuccess] = useState(false);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    setError('');
+    if (!current) { setError('Please enter your current password.'); return; }
+    if (next.length < 8) { setError('New password must be at least 8 characters.'); return; }
+    if (next !== confirm) { setError('Passwords do not match.'); return; }
+    setSuccess(true);
+    setCurrent(''); setNext(''); setConfirm('');
+    setTimeout(() => setSuccess(false), 3000);
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {[
+        { label: 'Current Password', value: current, onChange: setCurrent, placeholder: 'Enter current password' },
+        { label: 'New Password',     value: next,    onChange: setNext,    placeholder: 'At least 8 characters' },
+        { label: 'Confirm',          value: confirm, onChange: setConfirm, placeholder: 'Repeat new password' },
+      ].map(f => (
+        <div key={f.label}>
+          <label className="label-style">{f.label}</label>
+          <input type="password" className="input-style" value={f.value} onChange={e => f.onChange(e.target.value)} placeholder={f.placeholder} />
+        </div>
+      ))}
+      {error && <p className="text-xs text-rose-500">{error}</p>}
+      {success && <p className="text-xs text-green-600 font-medium">Password updated successfully!</p>}
+      <button type="submit" className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors">
+        Update Password
+      </button>
+    </form>
   );
 }

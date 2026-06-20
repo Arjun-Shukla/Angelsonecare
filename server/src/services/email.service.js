@@ -3,6 +3,9 @@ import { env } from '../config/env.js';
 import { logger } from '../utils/logger.js';
 import { welcomeTemplate } from '../emails/templates/welcome.js';
 import { bookingCreatedTemplate } from '../emails/templates/bookingCreated.js';
+import { bookingAcceptedTemplate } from '../emails/templates/bookingAccepted.js';
+import { bookingRejectedTemplate } from '../emails/templates/bookingRejected.js';
+import { otpEmailTemplate } from '../emails/templates/otpEmail.js';
 import { ticketRaisedTemplate } from '../emails/templates/ticketRaised.js';
 import { serviceCompletedTemplate } from '../emails/templates/serviceCompleted.js';
 
@@ -154,8 +157,55 @@ export const sendServiceCompletedNotification = async (booking) => {
   }
 };
 
+// ─── 5. Booking Accepted Notification ────────────────────────────────────────
+// Trigger: after admin accepts a booking (booking.controller.acceptBooking).
+//
+// `booking` must include populated client and leader (if assigned).
+
+export const sendBookingAcceptedNotification = async (booking) => {
+  if (booking.client?.email) {
+    const { subject, html, text } = bookingAcceptedTemplate({
+      booking,
+      clientUrl: CLIENT_URL,
+    });
+    await sendEmail({ to: booking.client.email, subject, html, text });
+  }
+};
+
+// ─── 6. Booking Rejected Notification ────────────────────────────────────────
+// Trigger: after admin rejects a booking (booking.controller.rejectBooking).
+//
+// `booking` must include populated client.
+
+export const sendBookingRejectedNotification = async (booking) => {
+  if (booking.client?.email) {
+    const { subject, html, text } = bookingRejectedTemplate({
+      booking,
+      clientUrl: CLIENT_URL,
+    });
+    await sendEmail({ to: booking.client.email, subject, html, text });
+  }
+};
+
+// ─── 7. OTP Email ─────────────────────────────────────────────────────────────
+// Trigger: after leader/admin requests service completion (generateOtp).
+//
+// `params`: { clientEmail, clientName, otp, bookingId, service, expiryMinutes }
+
+export const sendOtpEmail = async ({ clientEmail, clientName, otp, bookingId, service, expiryMinutes }) => {
+  if (!clientEmail) return;
+  const { subject, html, text } = otpEmailTemplate({
+    clientName,
+    otp,
+    bookingId,
+    service,
+    expiryMinutes,
+  });
+  await sendEmail({ to: clientEmail, subject, html, text });
+};
+
 // ─── Legacy stub aliases (keep existing callers from breaking) ────────────────
 export const sendBookingCreated = sendBookingCreatedNotification;
 export const sendTicketUpdate   = sendTicketRaisedNotification;
 export const sendBookingStatus  = sendServiceCompletedNotification;
-export const sendOtp            = async () => {};
+export const sendOtp            = sendOtpEmail;

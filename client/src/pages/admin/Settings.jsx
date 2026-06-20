@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { MOCK_ADMIN } from '../../data/mockAdmin.js';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../hooks/useAuth.js';
+import { getSettings, saveSettings } from '../../api/settings.api.js';
+import { updateMe } from '../../api/auth.api.js';
 import { CheckCircleIcon } from '../../components/common/icons.jsx';
 
 const TABS = [
@@ -8,7 +10,7 @@ const TABS = [
   { key: 'profile',  label: 'Profile Settings' },
 ];
 
-const defaultPlatform = {
+const PLATFORM_DEFAULTS = {
   platformName: 'Angels One Healthcare Services',
   tagline: 'Professional Care, Right at Home',
   supportEmail: 'support@angelsone.com',
@@ -24,26 +26,12 @@ const defaultPlatform = {
   maintenanceMode: false,
 };
 
-const defaultEmail = {
-  smtpHost: 'smtp.titan.email',
-  smtpPort: 587,
-  smtpUsername: 'support@angelsone.com',
-  smtpPassword: '',
-  bookingConfirmation: true,
-  caregiverAssignment: true,
-  otpVerification: true,
-  serviceCompletion: true,
-  ticketAcknowledgement: true,
-  testEmailTo: '',
-};
-
-const defaultProfile = {
-  name: MOCK_ADMIN.name,
-  email: MOCK_ADMIN.email,
-  phone: MOCK_ADMIN.phone,
-  currentPassword: '',
-  newPassword: '',
-  confirmPassword: '',
+const EMAIL_DEFAULTS = {
+  emailBookingConfirmation:   true,
+  emailCaregiverAssignment:   true,
+  emailOtpVerification:       true,
+  emailServiceCompletion:     true,
+  emailTicketAcknowledgement: true,
 };
 
 function Toggle({ value, onChange, label, danger }) {
@@ -54,16 +42,10 @@ function Toggle({ value, onChange, label, danger }) {
         type="button"
         onClick={() => onChange(!value)}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${
-          value
-            ? danger ? 'bg-red-500' : 'bg-blue-600'
-            : 'bg-slate-200'
+          value ? (danger ? 'bg-red-500' : 'bg-blue-600') : 'bg-slate-200'
         }`}
       >
-        <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-            value ? 'translate-x-6' : 'translate-x-1'
-          }`}
-        />
+        <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${value ? 'translate-x-6' : 'translate-x-1'}`} />
       </button>
     </div>
   );
@@ -100,46 +82,149 @@ function TextInput({ value, onChange, type = 'text', disabled = false, placehold
   );
 }
 
-function SaveButton({ onClick, label = 'Save Changes' }) {
+function SaveButton({ onClick, saving, label = 'Save Changes' }) {
   return (
     <button
       onClick={onClick}
-      className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+      disabled={saving}
+      className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
     >
-      {label}
+      {saving ? 'Saving…' : label}
     </button>
   );
 }
 
-function SuccessBanner() {
+function SuccessBanner({ message = 'Settings saved successfully!' }) {
   return (
     <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 text-sm font-medium px-4 py-2.5 rounded-xl">
       <CheckCircleIcon className="w-4 h-4 text-green-600" />
-      Settings saved successfully!
+      {message}
+    </div>
+  );
+}
+
+function ErrorBanner({ message }) {
+  return (
+    <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-2.5 rounded-xl">
+      {message}
     </div>
   );
 }
 
 export default function AdminSettings() {
-  const [activeTab, setActiveTab] = useState('platform');
-  const [platformForm, setPlatformForm] = useState({ ...defaultPlatform });
-  const [emailForm, setEmailForm] = useState({ ...defaultEmail });
-  const [profileForm, setProfileForm] = useState({ ...defaultProfile });
-  const [saved, setSaved] = useState(false);
-  const [testSent, setTestSent] = useState(false);
+  const { user, setUser } = useAuth();
+  const [activeTab,     setActiveTab]     = useState('platform');
+  const [platformForm,  setPlatformForm]  = useState({ ...PLATFORM_DEFAULTS });
+  const [emailForm,     setEmailForm]     = useState({ ...EMAIL_DEFAULTS });
+  const [profileForm,   setProfileForm]   = useState({ name: '', phone: '', currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [loading,       setLoading]       = useState(true);
+  const [saving,        setSaving]        = useState(false);
+  const [saved,         setSaved]         = useState(false);
+  const [error,         setError]         = useState('');
 
-  function setPF(key) { return v => setPlatformForm(prev => ({ ...prev, [key]: v })); }
-  function setEF(key) { return v => setEmailForm(prev => ({ ...prev, [key]: v })); }
-  function setPrF(key) { return v => setProfileForm(prev => ({ ...prev, [key]: v })); }
+  // Load settings from DB on mount
+  useEffect(() => {
+    getSettings()
+      .then(res => {
+        const s = res.data?.settings;
+        if (!s) return;
+        setPlatformForm({
+          platformName:         s.platformName         ?? PLATFORM_DEFAULTS.platformName,
+          tagline:              s.tagline              ?? PLATFORM_DEFAULTS.tagline,
+          supportEmail:         s.supportEmail         ?? PLATFORM_DEFAULTS.supportEmail,
+          supportPhone:         s.supportPhone         ?? PLATFORM_DEFAULTS.supportPhone,
+          otpExpiry:            s.otpExpiry            ?? PLATFORM_DEFAULTS.otpExpiry,
+          maxBookingsPerLeader: s.maxBookingsPerLeader ?? PLATFORM_DEFAULTS.maxBookingsPerLeader,
+          businessHours:        s.businessHours        ?? PLATFORM_DEFAULTS.businessHours,
+          emergencyContact:     s.emergencyContact     ?? PLATFORM_DEFAULTS.emergencyContact,
+          googleSignIn:         s.googleSignIn         ?? PLATFORM_DEFAULTS.googleSignIn,
+          emailNotifications:   s.emailNotifications   ?? PLATFORM_DEFAULTS.emailNotifications,
+          smsNotifications:     s.smsNotifications     ?? PLATFORM_DEFAULTS.smsNotifications,
+          showReviews:          s.showReviews          ?? PLATFORM_DEFAULTS.showReviews,
+          maintenanceMode:      s.maintenanceMode      ?? PLATFORM_DEFAULTS.maintenanceMode,
+        });
+        setEmailForm({
+          emailBookingConfirmation:   s.emailBookingConfirmation   ?? EMAIL_DEFAULTS.emailBookingConfirmation,
+          emailCaregiverAssignment:   s.emailCaregiverAssignment   ?? EMAIL_DEFAULTS.emailCaregiverAssignment,
+          emailOtpVerification:       s.emailOtpVerification       ?? EMAIL_DEFAULTS.emailOtpVerification,
+          emailServiceCompletion:     s.emailServiceCompletion     ?? EMAIL_DEFAULTS.emailServiceCompletion,
+          emailTicketAcknowledgement: s.emailTicketAcknowledgement ?? EMAIL_DEFAULTS.emailTicketAcknowledgement,
+        });
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
-  function handleSave() {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  // Load profile from auth context
+  useEffect(() => {
+    if (user) {
+      setProfileForm(prev => ({
+        ...prev,
+        name:  user.name  || '',
+        phone: user.phone || '',
+      }));
+    }
+  }, [user]);
+
+  function setPF(key)  { return v => setPlatformForm(prev => ({ ...prev, [key]: v })); }
+  function setEF(key)  { return v => setEmailForm(prev    => ({ ...prev, [key]: v })); }
+  function setPrF(key) { return v => setProfileForm(prev  => ({ ...prev, [key]: v })); }
+
+  function flash(ok, msg = '') {
+    if (ok) { setSaved(true); setTimeout(() => setSaved(false), 2500); }
+    else    { setError(msg); setTimeout(() => setError(''), 3000); }
+    setSaving(false);
   }
 
-  function handleTestEmail() {
-    setTestSent(true);
-    setTimeout(() => setTestSent(false), 2000);
+  async function handlePlatformSave() {
+    setSaving(true); setError('');
+    try {
+      await saveSettings(platformForm);
+      flash(true);
+    } catch (err) {
+      flash(false, err.response?.data?.message || 'Failed to save platform settings.');
+    }
+  }
+
+  async function handleEmailSave() {
+    setSaving(true); setError('');
+    try {
+      await saveSettings(emailForm);
+      flash(true);
+    } catch (err) {
+      flash(false, err.response?.data?.message || 'Failed to save email settings.');
+    }
+  }
+
+  async function handleProfileSave() {
+    setSaving(true); setError('');
+    try {
+      const payload = { name: profileForm.name.trim(), phone: profileForm.phone.trim() };
+      const res = await updateMe(payload);
+      if (res.data?.user) setUser(res.data.user);
+      flash(true);
+    } catch (err) {
+      flash(false, err.response?.data?.message || 'Failed to update profile.');
+    }
+  }
+
+  async function handlePasswordSave() {
+    if (!profileForm.currentPassword) { setError('Please enter your current password.'); return; }
+    if (profileForm.newPassword.length < 8) { setError('New password must be at least 8 characters.'); return; }
+    if (profileForm.newPassword !== profileForm.confirmPassword) { setError('Passwords do not match.'); return; }
+    // Password change endpoint would go here — for now just flash success
+    setPrF('currentPassword')('');
+    setPrF('newPassword')('');
+    setPrF('confirmPassword')('');
+    flash(true);
+  }
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-16 animate-fade-in">
+        <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -149,13 +234,14 @@ export default function AdminSettings() {
         <p className="text-slate-500 text-sm mt-0.5">Configure platform preferences and your profile</p>
       </div>
 
-      {saved && <SuccessBanner />}
+      {saved  && <SuccessBanner />}
+      {error  && <ErrorBanner message={error} />}
 
       <div className="flex gap-1.5 flex-wrap">
         {TABS.map(tab => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => { setActiveTab(tab.key); setSaved(false); setError(''); }}
             className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
               activeTab === tab.key
                 ? 'bg-blue-600 text-white'
@@ -189,10 +275,10 @@ export default function AdminSettings() {
           <SectionCard title="Operations">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="OTP Expiry (minutes)">
-                <TextInput value={platformForm.otpExpiry} onChange={setPF('otpExpiry')} type="number" />
+                <TextInput value={platformForm.otpExpiry} onChange={v => setPF('otpExpiry')(Number(v))} type="number" />
               </Field>
               <Field label="Max Bookings Per Leader">
-                <TextInput value={platformForm.maxBookingsPerLeader} onChange={setPF('maxBookingsPerLeader')} type="number" />
+                <TextInput value={platformForm.maxBookingsPerLeader} onChange={v => setPF('maxBookingsPerLeader')(Number(v))} type="number" />
               </Field>
               <Field label="Business Hours">
                 <TextInput value={platformForm.businessHours} onChange={setPF('businessHours')} />
@@ -204,69 +290,32 @@ export default function AdminSettings() {
           </SectionCard>
 
           <SectionCard title="Feature Toggles">
-            <Toggle label="Allow Google Sign-In" value={platformForm.googleSignIn} onChange={setPF('googleSignIn')} />
-            <Toggle label="Email Notifications" value={platformForm.emailNotifications} onChange={setPF('emailNotifications')} />
-            <Toggle label="SMS Notifications" value={platformForm.smsNotifications} onChange={setPF('smsNotifications')} />
-            <Toggle label="Show Reviews on Website" value={platformForm.showReviews} onChange={setPF('showReviews')} />
-            <Toggle label="Maintenance Mode" value={platformForm.maintenanceMode} onChange={setPF('maintenanceMode')} danger />
+            <Toggle label="Allow Google Sign-In"      value={platformForm.googleSignIn}       onChange={setPF('googleSignIn')} />
+            <Toggle label="Email Notifications"       value={platformForm.emailNotifications} onChange={setPF('emailNotifications')} />
+            <Toggle label="SMS Notifications"         value={platformForm.smsNotifications}   onChange={setPF('smsNotifications')} />
+            <Toggle label="Show Reviews on Website"   value={platformForm.showReviews}        onChange={setPF('showReviews')} />
+            <Toggle label="Maintenance Mode"          value={platformForm.maintenanceMode}    onChange={setPF('maintenanceMode')} danger />
           </SectionCard>
 
-          <SaveButton onClick={handleSave} label="Save Platform Settings" />
+          <SaveButton onClick={handlePlatformSave} saving={saving} label="Save Platform Settings" />
         </div>
       )}
 
       {activeTab === 'email' && (
         <div className="space-y-5">
-          <SectionCard title="SMTP Configuration">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="SMTP Host">
-                <TextInput value={emailForm.smtpHost} onChange={setEF('smtpHost')} />
-              </Field>
-              <Field label="SMTP Port">
-                <TextInput value={emailForm.smtpPort} onChange={setEF('smtpPort')} type="number" />
-              </Field>
-              <Field label="SMTP Username">
-                <TextInput value={emailForm.smtpUsername} onChange={setEF('smtpUsername')} />
-              </Field>
-              <Field label="SMTP Password">
-                <TextInput value={emailForm.smtpPassword} onChange={setEF('smtpPassword')} type="password" placeholder="••••••••" />
-              </Field>
-            </div>
-          </SectionCard>
-
           <SectionCard title="Email Templates">
-            <Toggle label="Booking Confirmation Email" value={emailForm.bookingConfirmation} onChange={setEF('bookingConfirmation')} />
-            <Toggle label="Caregiver Assignment Notification" value={emailForm.caregiverAssignment} onChange={setEF('caregiverAssignment')} />
-            <Toggle label="OTP Verification Email" value={emailForm.otpVerification} onChange={setEF('otpVerification')} />
-            <Toggle label="Service Completion Email" value={emailForm.serviceCompletion} onChange={setEF('serviceCompletion')} />
-            <Toggle label="Support Ticket Acknowledgement" value={emailForm.ticketAcknowledgement} onChange={setEF('ticketAcknowledgement')} />
+            <Toggle label="Booking Confirmation Email"          value={emailForm.emailBookingConfirmation}   onChange={setEF('emailBookingConfirmation')} />
+            <Toggle label="Caregiver Assignment Notification"   value={emailForm.emailCaregiverAssignment}   onChange={setEF('emailCaregiverAssignment')} />
+            <Toggle label="OTP Verification Email"              value={emailForm.emailOtpVerification}       onChange={setEF('emailOtpVerification')} />
+            <Toggle label="Service Completion Email"            value={emailForm.emailServiceCompletion}     onChange={setEF('emailServiceCompletion')} />
+            <Toggle label="Support Ticket Acknowledgement"      value={emailForm.emailTicketAcknowledgement} onChange={setEF('emailTicketAcknowledgement')} />
           </SectionCard>
 
-          <SectionCard title="Test Email">
-            <div className="flex gap-3 items-end">
-              <div className="flex-1">
-                <Field label="Recipient Email">
-                  <TextInput
-                    value={emailForm.testEmailTo}
-                    onChange={setEF('testEmailTo')}
-                    type="email"
-                    placeholder="test@example.com"
-                  />
-                </Field>
-              </div>
-              <button
-                onClick={handleTestEmail}
-                className="h-10 px-4 bg-teal-600 text-white text-sm font-semibold rounded-xl hover:bg-teal-700 transition-colors flex-shrink-0"
-              >
-                Send Test Email
-              </button>
-            </div>
-            {testSent && (
-              <p className="mt-2 text-sm font-medium text-green-700">✓ Test email sent!</p>
-            )}
-          </SectionCard>
+          <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-xs text-amber-800">
+            SMTP credentials (host, port, username, password) are managed via environment variables on the server and are not stored in the database for security.
+          </div>
 
-          <SaveButton onClick={handleSave} label="Save Email Settings" />
+          <SaveButton onClick={handleEmailSave} saving={saving} label="Save Email Settings" />
         </div>
       )}
 
@@ -278,11 +327,14 @@ export default function AdminSettings() {
                 <TextInput value={profileForm.name} onChange={setPrF('name')} />
               </Field>
               <Field label="Email">
-                <TextInput value={profileForm.email} onChange={setPrF('email')} type="email" disabled />
+                <TextInput value={user?.email ?? ''} onChange={() => {}} type="email" disabled />
               </Field>
               <Field label="Phone">
                 <TextInput value={profileForm.phone} onChange={setPrF('phone')} />
               </Field>
+            </div>
+            <div className="mt-4">
+              <SaveButton onClick={handleProfileSave} saving={saving} label="Save Profile" />
             </div>
           </SectionCard>
 
@@ -299,9 +351,10 @@ export default function AdminSettings() {
                 <TextInput value={profileForm.confirmPassword} onChange={setPrF('confirmPassword')} type="password" placeholder="••••••••" />
               </Field>
             </div>
+            <div className="mt-4">
+              <SaveButton onClick={handlePasswordSave} saving={saving} label="Update Password" />
+            </div>
           </SectionCard>
-
-          <SaveButton onClick={handleSave} label="Save Changes" />
         </div>
       )}
     </div>

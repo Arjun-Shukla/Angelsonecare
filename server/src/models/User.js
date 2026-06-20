@@ -47,6 +47,22 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    dob: {
+      type: Date,
+      default: null,
+    },
+    // Leader-specific profile fields
+    bio:             { type: String, default: '' },
+    location:        { type: String, default: '' },
+    experience:      { type: String, default: '' },
+    specializations: { type: [String], default: [] },
+    address: {
+      line1:   { type: String, default: '' },
+      area:    { type: String, default: '' },
+      city:    { type: String, default: '' },
+      state:   { type: String, default: '' },
+      pincode: { type: String, default: '' },
+    },
   },
   { timestamps: true }
 );

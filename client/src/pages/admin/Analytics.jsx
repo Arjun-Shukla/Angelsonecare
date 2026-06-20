@@ -1,9 +1,6 @@
-import {
-  MOCK_REVENUE_CHART,
-  MOCK_BOOKING_CHART,
-  MOCK_SERVICE_DISTRIBUTION,
-  MOCK_LEADERS,
-} from '../../data/mockAdmin.js';
+import { useState, useEffect } from 'react';
+import { getDashboard, getBookingTrends, getRevenue } from '../../api/analytics.api.js';
+import { getAllLeaders } from '../../api/user.api.js';
 import {
   ArrowTrendingUpIcon,
   ClipboardListIcon,
@@ -11,19 +8,20 @@ import {
 } from '../../components/common/icons.jsx';
 
 function LineChart({ data, height = 180 }) {
+  if (!data || data.length < 2) return <p className="text-xs text-slate-400 text-center py-8">No data yet.</p>;
   const values = data.map(d => d.revenue);
-  const max = Math.max(...values);
+  const max = Math.max(...values) || 1;
   const min = Math.min(...values) * 0.85;
   const W = 560, H = height;
   const padL = 10, padR = 10, padT = 12, padB = 28;
   const cW = W - padL - padR, cH = H - padT - padB;
   const pts = data.map((d, i) => ({
     x: padL + (i / (data.length - 1)) * cW,
-    y: padT + cH - ((d.revenue - min) / (max - min)) * cH,
+    y: padT + cH - ((d.revenue - min) / ((max - min) || 1)) * cH,
   }));
   const line = pts.map(p => `${p.x},${p.y}`).join(' ');
   const area = [`${pts[0].x},${padT + cH}`, ...pts.map(p => `${p.x},${p.y}`), `${pts[pts.length - 1].x},${padT + cH}`].join(' ');
-  const fmt = (n) => n >= 100000 ? `₹${(n / 100000).toFixed(1)}L` : `₹${n}`;
+  const fmt = (n) => n >= 100000 ? `₹${(n / 100000).toFixed(1)}L` : n >= 1000 ? `₹${(n / 1000).toFixed(0)}K` : `₹${n}`;
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
       <defs>
@@ -46,14 +44,15 @@ function LineChart({ data, height = 180 }) {
 }
 
 function BarChart({ data, height = 160 }) {
-  const max = Math.max(...data.map(d => d.count));
+  if (!data || data.length === 0) return <p className="text-xs text-slate-400 text-center py-8">No data yet.</p>;
+  const max = Math.max(...data.map(d => d.count)) || 1;
   const W = 520, H = height;
   const padL = 10, padB = 28, padT = 20;
-  const barW = 44, gap = (W - padL - data.length * barW) / (data.length - 1);
+  const barW = 44, gap = data.length > 1 ? (W - padL - data.length * barW) / (data.length - 1) : 0;
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
       {data.map((d, i) => {
-        const bH = ((d.count / max) * (H - padB - padT));
+        const bH = ((d.count / max) * (H - padB - padT)) || 2;
         const x = padL + i * (barW + gap);
         const y = H - padB - bH;
         return (
@@ -70,6 +69,7 @@ function BarChart({ data, height = 160 }) {
 
 function DonutChart({ segments }) {
   const total = segments.reduce((s, d) => s + d.count, 0);
+  if (total === 0) return <p className="text-xs text-slate-400 text-center py-8">No completed services yet.</p>;
   const cx = 90, cy = 90, r = 65, strokeW = 22;
   let cumAngle = -Math.PI / 2;
   const arcs = segments.map((seg) => {
@@ -83,7 +83,7 @@ function DonutChart({ segments }) {
     return {
       d: `M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`,
       color: seg.color,
-      name: seg.name,
+      name:  seg.name,
       count: seg.count,
     };
   });
@@ -110,13 +110,6 @@ function DonutChart({ segments }) {
   );
 }
 
-const TOP_STATS = [
-  { label: 'YTD Revenue', value: '₹42,18,500', Icon: ArrowTrendingUpIcon, accent: 'teal' },
-  { label: 'Total Bookings', value: '1,247', Icon: ClipboardListIcon, accent: 'blue' },
-  { label: 'Avg Booking Value', value: '₹3,381', Icon: CurrencyRupeeIcon, accent: 'violet' },
-  { label: 'Growth vs Q1', value: '+23%', Icon: ArrowTrendingUpIcon, accent: 'green' },
-];
-
 const accentMap = {
   teal:   { bg: 'bg-teal-100',   text: 'text-teal-600',   num: 'text-teal-700' },
   blue:   { bg: 'bg-blue-100',   text: 'text-blue-600',   num: 'text-blue-700' },
@@ -124,114 +117,175 @@ const accentMap = {
   green:  { bg: 'bg-green-100',  text: 'text-green-600',  num: 'text-green-700' },
 };
 
-const totalServiceRevenue = MOCK_SERVICE_DISTRIBUTION.reduce((s, d) => s + d.count, 0);
-
-const sortedLeaders = [...MOCK_LEADERS].sort((a, b) => b.completedBookings - a.completedBookings);
+function fmtRevenue(n) {
+  if (n >= 10000000) return `₹${(n / 10000000).toFixed(2)}Cr`;
+  if (n >= 100000)   return `₹${(n / 100000).toFixed(2)}L`;
+  if (n >= 1000)     return `₹${(n / 1000).toFixed(1)}K`;
+  return `₹${n}`;
+}
 
 export default function Analytics() {
+  const [dash,         setDash]         = useState(null);
+  const [bookingData,  setBookingData]  = useState([]);
+  const [revenueData,  setRevenueData]  = useState([]);
+  const [serviceDist,  setServiceDist]  = useState([]);
+  const [leaders,      setLeaders]      = useState([]);
+  const [loading,      setLoading]      = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      getDashboard().catch(() => null),
+      getBookingTrends(6).catch(() => null),
+      getRevenue(6).catch(() => null),
+      getAllLeaders().catch(() => null),
+    ]).then(([dashRes, bookRes, revRes, ldrsRes]) => {
+      if (dashRes?.data)   setDash(dashRes.data);
+      if (bookRes?.data)   setBookingData(bookRes.data.bookings  || []);
+      if (revRes?.data) {
+        setRevenueData(revRes.data.revenue             || []);
+        setServiceDist(revRes.data.serviceDistribution || []);
+      }
+      if (ldrsRes?.data)   setLeaders(ldrsRes.data.users || []);
+    }).finally(() => setLoading(false));
+  }, []);
+
+  const topStats = dash
+    ? [
+        { label: 'Total Revenue',    value: fmtRevenue(dash.totalRevenue),    Icon: CurrencyRupeeIcon,  accent: 'teal'   },
+        { label: 'Total Bookings',   value: dash.totalBookings,               Icon: ClipboardListIcon,  accent: 'blue'   },
+        { label: 'Active Services',  value: dash.activeServices,              Icon: ArrowTrendingUpIcon, accent: 'violet' },
+        { label: 'Completed',        value: dash.completedServices,           Icon: ArrowTrendingUpIcon, accent: 'green'  },
+      ]
+    : [];
+
+  const totalServiceCount = serviceDist.reduce((s, d) => s + d.count, 0);
+
   return (
     <div className="animate-fade-in space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Platform performance overview · 2026</p>
+        <p className="text-slate-500 text-sm mt-0.5">Platform performance overview</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {TOP_STATS.map(stat => {
-          const a = accentMap[stat.accent];
-          return (
-            <div key={stat.label} className="bg-white rounded-2xl border border-slate-100 p-5">
-              <div className={`w-10 h-10 rounded-xl ${a.bg} flex items-center justify-center mb-3`}>
-                <stat.Icon className={`w-5 h-5 ${a.text}`} />
+      {loading ? (
+        <div className="flex justify-center py-16">
+          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : (
+        <>
+          {dash && (
+            <>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {topStats.map(stat => {
+                  const a = accentMap[stat.accent];
+                  return (
+                    <div key={stat.label} className="bg-white rounded-2xl border border-slate-100 p-5">
+                      <div className={`w-10 h-10 rounded-xl ${a.bg} flex items-center justify-center mb-3`}>
+                        <stat.Icon className={`w-5 h-5 ${a.text}`} />
+                      </div>
+                      <p className={`text-2xl font-black ${a.num} leading-none mb-1`}>{stat.value}</p>
+                      <p className="text-xs text-slate-500">{stat.label}</p>
+                    </div>
+                  );
+                })}
               </div>
-              <p className={`text-2xl font-black ${a.num} leading-none mb-1`}>{stat.value}</p>
-              <p className="text-xs text-slate-500">{stat.label}</p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {[
+                  { label: 'Total Clients',  value: dash.totalClients,  color: 'text-blue-700' },
+                  { label: 'Total Leaders',  value: dash.totalLeaders,  color: 'text-teal-700' },
+                  { label: 'Pending',        value: dash.pendingBookings, color: 'text-amber-700' },
+                  { label: 'Open Tickets',   value: dash.openTickets,   color: 'text-rose-700' },
+                ].map(s => (
+                  <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 text-center">
+                    <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <h2 className="text-base font-bold text-slate-900 mb-4">Revenue Trend</h2>
+              <LineChart data={revenueData} />
             </div>
-          );
-        })}
-      </div>
+            <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <h2 className="text-base font-bold text-slate-900 mb-4">Bookings by Month</h2>
+              <BarChart data={bookingData} />
+            </div>
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl border border-slate-100 p-5">
-          <h2 className="text-base font-bold text-slate-900 mb-4">Revenue Trend (2026)</h2>
-          <LineChart data={MOCK_REVENUE_CHART} />
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-100 p-5">
-          <h2 className="text-base font-bold text-slate-900 mb-4">Bookings by Month</h2>
-          <BarChart data={MOCK_BOOKING_CHART} />
-        </div>
-      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <h2 className="text-base font-bold text-slate-900 mb-4">Service Distribution</h2>
+              <DonutChart segments={serviceDist} />
+            </div>
+            <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <h2 className="text-base font-bold text-slate-900 mb-4">Leader Performance</h2>
+              {leaders.length === 0 ? (
+                <p className="text-xs text-slate-400 text-center py-8">No leaders registered yet.</p>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-100">
+                      <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">Name</th>
+                      <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">Location</th>
+                      <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {leaders.map(l => (
+                      <tr key={l._id} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-2.5">
+                          <p className="text-xs font-semibold text-slate-800">{l.name}</p>
+                          <p className="text-[10px] text-slate-400">{l.email}</p>
+                        </td>
+                        <td className="py-2.5 text-xs text-slate-500">{l.location || '—'}</td>
+                        <td className="py-2.5">
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            l.isActive !== false ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
+                          }`}>
+                            {l.isActive !== false ? 'ACTIVE' : 'INACTIVE'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl border border-slate-100 p-5">
-          <h2 className="text-base font-bold text-slate-900 mb-4">Service Distribution</h2>
-          <DonutChart segments={MOCK_SERVICE_DISTRIBUTION} />
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-100 p-5">
-          <h2 className="text-base font-bold text-slate-900 mb-4">Leader Performance</h2>
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-100">
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">Name</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">Done</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">Rating</th>
-                <th className="text-left text-xs font-semibold text-slate-500 uppercase tracking-wide pb-2">On-Time</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {sortedLeaders.map(l => (
-                <tr key={l.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-2.5">
-                    <p className="text-xs font-semibold text-slate-800">{l.name}</p>
-                    <p className="text-[10px] text-slate-400">{l.location}</p>
-                  </td>
-                  <td className="py-2.5 text-xs font-bold text-slate-700">{l.completedBookings}</td>
-                  <td className="py-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-amber-600">{l.rating}</span>
-                      <div className="h-1.5 w-16 rounded-full bg-slate-100 overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-amber-400"
-                          style={{ width: `${(l.rating / 5) * 100}%` }}
-                        />
+          {serviceDist.length > 0 && (
+            <div className="bg-white rounded-2xl border border-slate-100 p-5">
+              <h2 className="text-base font-bold text-slate-900 mb-4">Service Revenue Breakdown</h2>
+              <div className="space-y-3">
+                {serviceDist.map(seg => {
+                  const pct = totalServiceCount ? Math.round((seg.count / totalServiceCount) * 100) : 0;
+                  return (
+                    <div key={seg.name} className="flex items-center gap-4">
+                      <div className="w-32 flex-shrink-0">
+                        <p className="text-xs font-semibold text-slate-700 truncate">{seg.name}</p>
+                      </div>
+                      <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: seg.color }} />
+                      </div>
+                      <div className="w-12 text-right flex-shrink-0">
+                        <span className="text-xs font-bold text-slate-700">{pct}%</span>
+                      </div>
+                      <div className="w-12 text-right flex-shrink-0">
+                        <span className="text-xs text-slate-500">{seg.count}</span>
                       </div>
                     </div>
-                  </td>
-                  <td className="py-2.5 text-xs font-bold text-green-700">{l.onTimePercent}%</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-slate-100 p-5">
-        <h2 className="text-base font-bold text-slate-900 mb-4">Service Revenue Breakdown</h2>
-        <div className="space-y-3">
-          {MOCK_SERVICE_DISTRIBUTION.map(seg => {
-            const pct = Math.round((seg.count / totalServiceRevenue) * 100);
-            return (
-              <div key={seg.name} className="flex items-center gap-4">
-                <div className="w-32 flex-shrink-0">
-                  <p className="text-xs font-semibold text-slate-700 truncate">{seg.name}</p>
-                </div>
-                <div className="flex-1 h-2 rounded-full bg-slate-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all"
-                    style={{ width: `${pct}%`, background: seg.color }}
-                  />
-                </div>
-                <div className="w-12 text-right flex-shrink-0">
-                  <span className="text-xs font-bold text-slate-700">{pct}%</span>
-                </div>
-                <div className="w-12 text-right flex-shrink-0">
-                  <span className="text-xs text-slate-500">{seg.count}</span>
-                </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        </div>
-      </div>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

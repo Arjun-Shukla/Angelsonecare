@@ -1,18 +1,26 @@
-/**
- * Review model — client feedback submitted after service completion.
- *
- * Planned fields:
- *   client     : ObjectId ref User, required
- *   booking    : ObjectId ref Booking, required (one review per booking)
- *   rating     : Number, 1–5, required
- *   comment    : String
- *   isApproved : Boolean, default false (admin moderates before public display)
- *   timestamps : createdAt / updatedAt
- *
- * Relationships:
- *   - 1—1 Booking (Review.booking, unique)
- *
- * TODO (implementation): define mongoose schema + unique index on booking, export model.
- */
+import mongoose from 'mongoose';
 
-export default null;
+const { Schema } = mongoose;
+
+const reviewSchema = new Schema({
+  reviewId:   { type: String, unique: true, sparse: true },
+  client:     { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  booking:    { type: Schema.Types.ObjectId, ref: 'Booking', required: true, unique: true },
+  rating:     { type: Number, min: 1, max: 5, required: true },
+  title:      { type: String, trim: true, default: '' },
+  comment:    { type: String, trim: true, default: '' },
+  isApproved:  { type: Boolean, default: false },
+  isFeatured:  { type: Boolean, default: false },
+}, { timestamps: true });
+
+reviewSchema.pre('save', function (next) {
+  if (this.isNew && !this.reviewId) {
+    this.reviewId = `REV-${Date.now().toString().slice(-8)}`;
+  }
+  next();
+});
+
+reviewSchema.index({ client: 1, createdAt: -1 });
+reviewSchema.index({ isApproved: 1, rating: -1 });
+
+export default mongoose.model('Review', reviewSchema);

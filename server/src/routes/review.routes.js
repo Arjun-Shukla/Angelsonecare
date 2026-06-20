@@ -22,7 +22,9 @@ router.get('/', asyncHandler(reviewController.listReviews));
 router.post('/', protect, authorize(ROLES.CLIENT), asyncHandler(reviewController.createReview));
 router.get('/me', protect, authorize(ROLES.CLIENT), asyncHandler(reviewController.listMyReviews));
 
-router.patch('/:id/approve', protect, authorize(ROLES.ADMIN), asyncHandler(reviewController.approveReview));
-router.delete('/:id', protect, authorize(ROLES.ADMIN), asyncHandler(reviewController.deleteReview));
+router.get('/admin/all', protect, authorize(ROLES.ADMIN), asyncHandler(reviewController.listAllReviews));
+router.patch('/:id/approve',  protect, authorize(ROLES.ADMIN), asyncHandler(reviewController.approveReview));
+router.patch('/:id/featured', protect, authorize(ROLES.ADMIN), asyncHandler(reviewController.toggleFeatured));
+router.delete('/:id',         protect, authorize(ROLES.ADMIN), asyncHandler(reviewController.deleteReview));
 
 export default router;

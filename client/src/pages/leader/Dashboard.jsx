@@ -1,30 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  MOCK_LEADER,
-  MOCK_LEADER_BOOKINGS,
-  MOCK_LEADER_TICKETS,
-  MOCK_TODAY_TASKS,
-} from '../../data/mockLeader.js';
+import { useAuth } from '../../hooks/useAuth.js';
+import { listBookings } from '../../api/booking.api.js';
+import { listTickets } from '../../api/ticket.api.js';
+import { SocketContext } from '../../context/SocketContext.jsx';
 import {
   ClipboardListIcon,
   CheckCircleIcon,
   BellIcon,
   ArrowRightIcon,
-  CheckIcon,
-  CalendarIcon,
+  KeyIcon,
+  WrenchScrewdriverIcon,
 } from '../../components/common/icons.jsx';
 
-const PALETTE = {
-  blue:   { icon: 'bg-blue-100 text-blue-600',    sel: 'border-blue-500 bg-blue-50' },
-  teal:   { icon: 'bg-teal-100 text-teal-600',    sel: 'border-teal-500 bg-teal-50' },
-  orange: { icon: 'bg-orange-100 text-orange-600', sel: 'border-orange-500 bg-orange-50' },
-  violet: { icon: 'bg-violet-100 text-violet-600', sel: 'border-violet-500 bg-violet-50' },
-  rose:   { icon: 'bg-rose-100 text-rose-600',    sel: 'border-rose-500 bg-rose-50' },
-  green:  { icon: 'bg-green-100 text-green-600',  sel: 'border-green-500 bg-green-50' },
+const ACTIVE_STATUSES  = ['ACCEPTED', 'IN_PROGRESS', 'COMPLETION_REQUESTED'];
+const WORKING_STATUSES = ['ACCEPTED', 'IN_PROGRESS'];
+
+const STATUS_LABEL = {
+  PENDING:              'Pending',
+  ACCEPTED:             'Accepted',
+  IN_PROGRESS:          'In Progress',
+  COMPLETION_REQUESTED: 'Awaiting OTP',
+  COMPLETED:            'Completed',
 };
 
-function StatCard({ label, value, colorClass, Icon }) {
+const STATUS_COLOR = {
+  ACCEPTED:             'bg-green-100 text-green-700',
+  IN_PROGRESS:          'bg-blue-100 text-blue-700',
+  COMPLETION_REQUESTED: 'bg-purple-100 text-purple-700',
+  COMPLETED:            'bg-teal-100 text-teal-700',
+  PENDING:              'bg-amber-100 text-amber-700',
+};
+
+function StatCard({ label, value, colorClass, Icon, loading }) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-100">
       <div className="flex items-center justify-between mb-3">
@@ -33,240 +41,257 @@ function StatCard({ label, value, colorClass, Icon }) {
           <Icon className="w-5 h-5" />
         </div>
       </div>
-      <p className="text-3xl font-bold text-slate-800">{value}</p>
+      {loading
+        ? <div className="h-9 w-10 bg-slate-100 animate-pulse rounded-lg" />
+        : <p className="text-3xl font-bold text-slate-800">{value}</p>
+      }
+    </div>
+  );
+}
+
+function ActiveBookingCard({ booking }) {
+  const id = booking._id || booking.id;
+  const canOtp = ['ACCEPTED', 'IN_PROGRESS', 'COMPLETION_REQUESTED'].includes(booking.status);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <div className="flex items-start justify-between gap-3 mb-4">
+        <div>
+          <p className="font-semibold text-slate-800">{booking.service}</p>
+          <p className="text-xs font-mono text-slate-500 mt-0.5">#{id.slice(-8).toUpperCase()}</p>
+        </div>
+        <span className={`text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${STATUS_COLOR[booking.status] || 'bg-slate-100 text-slate-600'}`}>
+          {STATUS_LABEL[booking.status] || booking.status}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
+        <div>
+          <p className="text-xs text-slate-400 font-medium">Client</p>
+          <p className="font-semibold text-slate-700">{booking.client?.name || '—'}</p>
+          {booking.client?.phone && (
+            <a href={`tel:${booking.client.phone}`} className="text-xs text-teal-600 hover:underline">
+              {booking.client.phone}
+            </a>
+          )}
+        </div>
+        <div>
+          <p className="text-xs text-slate-400 font-medium">Patient</p>
+          <p className="font-semibold text-slate-700">{booking.patient || '—'}</p>
+          <p className="text-xs text-slate-500">
+            {booking.patientAge ? `${booking.patientAge}y` : ''}
+            {booking.gender ? ` · ${booking.gender}` : ''}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-slate-400 font-medium">Start Date</p>
+          <p className="text-sm font-medium text-slate-700">
+            {booking.startDate ? new Date(booking.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-slate-400 font-medium">Shift</p>
+          <p className="text-sm font-medium text-slate-700">
+            {[booking.shift, booking.shiftTime].filter(Boolean).join(' · ') || '—'}
+          </p>
+        </div>
+      </div>
+
+      {booking.notes && (
+        <div className="bg-amber-50 border border-amber-100 rounded-xl px-3 py-2 mb-4">
+          <p className="text-xs text-amber-800">{booking.notes}</p>
+        </div>
+      )}
+
+      <div className="flex gap-2 flex-wrap">
+        <Link
+          to={`/leader/progress/${id}`}
+          className="flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl transition-colors"
+        >
+          <WrenchScrewdriverIcon className="w-4 h-4" />
+          Update Progress
+        </Link>
+        {canOtp && (
+          <Link
+            to={`/leader/verify/${id}`}
+            className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-colors"
+          >
+            <KeyIcon className="w-4 h-4" />
+            Verify OTP
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function RecentActivity({ bookings }) {
+  const recent = [...bookings]
+    .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+    .slice(0, 5);
+
+  if (recent.length === 0) {
+    return (
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+        <h2 className="font-bold text-slate-800 text-sm mb-3">Recent Activity</h2>
+        <p className="text-sm text-slate-400">No recent activity.</p>
+      </div>
+    );
+  }
+
+  const activityText = (b) => {
+    if (b.status === 'ACCEPTED')             return `${b.service} — accepted & assigned`;
+    if (b.status === 'IN_PROGRESS')          return `${b.service} — service in progress`;
+    if (b.status === 'COMPLETION_REQUESTED') return `${b.service} — OTP verification pending`;
+    if (b.status === 'COMPLETED')            return `${b.service} — service completed`;
+    return `${b.service} updated`;
+  };
+
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+      <h2 className="font-bold text-slate-800 text-sm mb-4">Recent Activity</h2>
+      <div className="relative">
+        <div className="absolute left-2 top-2 bottom-2 w-px bg-slate-100" />
+        <ul className="space-y-4">
+          {recent.map(b => {
+            const id = b._id || b.id;
+            return (
+              <li key={id} className="flex gap-4 pl-6 relative">
+                <span className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-teal-500 bg-white flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs text-slate-400 font-medium">
+                    {new Date(b.updatedAt || b.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} · {new Date(b.updatedAt || b.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                  <p className="text-sm text-slate-700 mt-0.5">{activityText(b)}</p>
+                  <p className="text-xs text-slate-400 font-mono">#{id.slice(-8).toUpperCase()} · {b.client?.name}</p>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+      <Link to="/leader/bookings" className="block text-center text-xs text-teal-600 hover:underline mt-4 font-medium">
+        View all bookings →
+      </Link>
     </div>
   );
 }
 
 export default function LeaderDashboard() {
-  const [tasks, setTasks] = useState(MOCK_TODAY_TASKS);
+  const { user } = useAuth();
+  const { socket } = useContext(SocketContext);
+  const [bookings,    setBookings]    = useState([]);
+  const [openTickets, setOpenTickets] = useState(0);
+  const [loading,     setLoading]     = useState(true);
 
-  const firstName = MOCK_LEADER.name.split(' ')[0];
-  const assigned = MOCK_LEADER_BOOKINGS.filter(b => b.status === 'ACTIVE' || b.status === 'PENDING').length;
-  const inProgress = MOCK_LEADER_BOOKINGS.filter(b => b.status === 'ACTIVE').length;
-  const openTickets = MOCK_LEADER_TICKETS.filter(t => t.status === 'OPEN').length;
+  const firstName = user?.name?.split(' ')[0] ?? 'there';
+  const today = new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-  const activeBooking = MOCK_LEADER_BOOKINGS.find(b => b.status === 'ACTIVE');
-  const pendingBooking = MOCK_LEADER_BOOKINGS.find(b => b.status === 'PENDING');
-  const recentUpdates = activeBooking ? activeBooking.updates.slice(0, 3) : [];
+  useEffect(() => {
+    Promise.all([
+      listBookings().catch(() => ({ data: { bookings: [] } })),
+      listTickets().catch(() => ({ data: { tickets: [] } })),
+    ]).then(([bookRes, tickRes]) => {
+      setBookings(bookRes.data?.bookings ?? []);
+      setOpenTickets((tickRes.data?.tickets ?? []).filter(t => t.status === 'OPEN').length);
+    }).finally(() => setLoading(false));
+  }, []);
 
-  function toggleTask(id) {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t));
-  }
+  useEffect(() => {
+    if (!socket) return;
+    const upsert = (updated) => {
+      setBookings(prev => {
+        const idx = prev.findIndex(b => (b._id || b.id) === (updated._id || updated.id));
+        if (idx === -1) return [updated, ...prev];
+        const next = [...prev]; next[idx] = updated; return next;
+      });
+    };
+    socket.on('booking:created',        upsert);
+    socket.on('booking:status_updated', upsert);
+    return () => {
+      socket.off('booking:created',        upsert);
+      socket.off('booking:status_updated', upsert);
+    };
+  }, [socket]);
 
-  const allDone = tasks.every(t => t.done);
+  const activeBookings    = bookings.filter(b => ACTIVE_STATUSES.includes(b.status));
+  const workingBookings   = bookings.filter(b => WORKING_STATUSES.includes(b.status));
+  const completedBookings = bookings.filter(b => b.status === 'COMPLETED');
 
   return (
     <div className="animate-fade-in space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-800">Good morning, {firstName}!</h1>
-        <p className="text-sm text-slate-500 mt-1">Jun 20, 2026 · {MOCK_LEADER.location}</p>
+        <p className="text-sm text-slate-500 mt-1">{today}{user?.location ? ` · ${user.location}` : ''}</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Assigned"
-          value={assigned}
-          colorClass="bg-teal-100 text-teal-600"
-          Icon={ClipboardListIcon}
-        />
-        <StatCard
-          label="In Progress"
-          value={inProgress}
-          colorClass="bg-blue-100 text-blue-600"
-          Icon={ArrowRightIcon}
-        />
-        <StatCard
-          label="Completed Total"
-          value={MOCK_LEADER.totalCompleted}
-          colorClass="bg-green-100 text-green-600"
-          Icon={CheckCircleIcon}
-        />
-        <StatCard
-          label="Open Tickets"
-          value={openTickets}
-          colorClass="bg-amber-100 text-amber-600"
-          Icon={BellIcon}
-        />
+        <StatCard label="Total Assigned"  value={bookings.length}           colorClass="bg-teal-100 text-teal-600"   Icon={ClipboardListIcon} loading={loading} />
+        <StatCard label="Active"          value={activeBookings.length}     colorClass="bg-blue-100 text-blue-600"   Icon={ArrowRightIcon}    loading={loading} />
+        <StatCard label="Completed Total" value={completedBookings.length}  colorClass="bg-green-100 text-green-600" Icon={CheckCircleIcon}   loading={loading} />
+        <StatCard label="Open Tickets"    value={openTickets}               colorClass="bg-amber-100 text-amber-600" Icon={BellIcon}          loading={loading} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-slate-800">Today's Tasks</h2>
-              <span className="text-xs text-slate-400 font-medium">Jun 20, 2026</span>
-            </div>
-            {allDone ? (
-              <div className="flex flex-col items-center py-8 text-center">
-                <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mb-3">
-                  <CheckCircleIcon className="w-7 h-7 text-teal-600" />
-                </div>
-                <p className="font-semibold text-slate-700">All done!</p>
-                <p className="text-sm text-slate-400 mt-1">Great work today, {firstName}.</p>
-              </div>
-            ) : (
-              <ul className="space-y-3">
-                {tasks.map(task => (
-                  <li key={task.id} className="flex items-start gap-3">
-                    <button
-                      onClick={() => toggleTask(task.id)}
-                      className={`mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                        task.done
-                          ? 'bg-teal-600 border-teal-600'
-                          : 'border-slate-300 hover:border-teal-400'
-                      }`}
-                    >
-                      {task.done && <CheckIcon className="w-3 h-3 text-white" strokeWidth={3} />}
-                    </button>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">{task.time}</span>
-                        <span className={`text-sm ${task.done ? 'line-through text-slate-400' : 'text-slate-700'}`}>
-                          {task.task}
-                        </span>
-                      </div>
-                      <Link
-                        to={`/leader/progress/${task.bookingId}`}
-                        className="text-xs text-teal-600 hover:underline mt-0.5 inline-block"
-                      >
-                        #{task.bookingId}
-                      </Link>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-slate-800">
+              Active Assignments
+              {!loading && activeBookings.length > 0 && (
+                <span className="ml-2 text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
+                  {activeBookings.length}
+                </span>
+              )}
+            </h2>
+            <Link to="/leader/bookings" className="text-xs text-teal-600 hover:text-teal-700 font-semibold">
+              View all →
+            </Link>
           </div>
 
-          {activeBooking && (
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-slate-800">Active Booking</h2>
-                <span className="px-2.5 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">ACTIVE</span>
-              </div>
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${PALETTE[activeBooking.serviceColor]?.icon || 'bg-slate-100 text-slate-600'}`}>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d={activeBooking.svgPath} />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-800">{activeBooking.service}</p>
-                  <p className="text-xs text-slate-500">#{activeBooking.id}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
-                <div>
-                  <p className="text-xs text-slate-400 font-medium">Client</p>
-                  <p className="font-semibold text-slate-700">{activeBooking.client.name}</p>
-                  <a href={`tel:${activeBooking.client.phone}`} className="text-xs text-teal-600 hover:underline">{activeBooking.client.phone}</a>
-                </div>
-                <div>
-                  <p className="text-xs text-slate-400 font-medium">Patient</p>
-                  <p className="font-semibold text-slate-700">{activeBooking.patient}</p>
-                  <p className="text-xs text-slate-500">{activeBooking.patientAge}y · {activeBooking.gender}</p>
-                </div>
-              </div>
-              <div className="mb-4">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
-                  <span>Progress</span>
-                  <span className="font-semibold text-teal-700">{activeBooking.progressPercent}%</span>
-                </div>
-                <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-teal-500 rounded-full transition-all"
-                    style={{ width: `${activeBooking.progressPercent}%` }}
-                  />
-                </div>
-              </div>
-              <p className="text-xs text-slate-500 italic mb-4">{activeBooking.currentTask}</p>
-              <div className="flex gap-3 flex-wrap">
-                <Link
-                  to={`/leader/progress/${activeBooking.id}`}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl transition-colors"
-                >
-                  Update Progress
-                  <ArrowRightIcon className="w-4 h-4" />
-                </Link>
-                <Link
-                  to={`/leader/verify/${activeBooking.id}`}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 text-slate-500 text-sm font-semibold rounded-xl cursor-not-allowed"
-                >
-                  Verify OTP
-                </Link>
-              </div>
+          {loading ? (
+            <div className="flex justify-center py-16">
+              <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
             </div>
+          ) : activeBookings.length === 0 ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-10 text-center">
+              <CheckCircleIcon className="w-10 h-10 text-slate-200 mx-auto mb-3" />
+              <p className="font-semibold text-slate-500">No active assignments</p>
+              <p className="text-xs text-slate-400 mt-1">New assignments will appear here when the admin assigns them to you.</p>
+            </div>
+          ) : (
+            activeBookings.map(b => <ActiveBookingCard key={b._id || b.id} booking={b} />)
           )}
         </div>
 
-        <div className="space-y-6">
-          {pendingBooking && (
+        <div className="space-y-4">
+          {!loading && workingBookings.length > 0 && (
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="font-bold text-slate-800 text-sm">Upcoming Assignment</h2>
-                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-xs font-bold">PENDING</span>
+              <h2 className="font-bold text-slate-800 text-sm mb-3">Needs Your Action</h2>
+              <div className="space-y-2">
+                {workingBookings.slice(0, 3).map(b => {
+                  const id = b._id || b.id;
+                  return (
+                    <div key={id} className="flex items-center justify-between gap-2 py-2 border-b border-slate-50 last:border-0">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-800 truncate">{b.service}</p>
+                        <p className="text-xs text-slate-500 font-mono">#{id.slice(-8).toUpperCase()}</p>
+                        <p className="text-xs text-slate-400">{b.client?.name}</p>
+                      </div>
+                      <Link
+                        to={`/leader/progress/${id}`}
+                        className="flex-shrink-0 p-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-lg transition-colors"
+                        title="Update Progress"
+                      >
+                        <WrenchScrewdriverIcon className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${PALETTE[pendingBooking.serviceColor]?.icon || 'bg-slate-100 text-slate-600'}`}>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d={pendingBooking.svgPath} />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-800 text-sm">{pendingBooking.service}</p>
-                  <p className="text-xs text-slate-500">#{pendingBooking.id}</p>
-                </div>
-              </div>
-              <div className="space-y-1 text-xs text-slate-600 mb-3">
-                <div className="flex items-center gap-1.5">
-                  <CalendarIcon className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{pendingBooking.startDate} → {pendingBooking.endDate}</span>
-                </div>
-                <p className="text-slate-500">Client: <span className="font-medium text-slate-700">{pendingBooking.client.name}</span></p>
-              </div>
-              <p className="text-xs text-amber-700 font-medium bg-amber-50 rounded-lg px-3 py-2 mb-3">
-                Starts Jun 25 — 5 days from now
-              </p>
-              <Link
-                to="/leader/bookings"
-                className="flex items-center gap-1 text-teal-600 hover:text-teal-700 text-sm font-semibold"
-              >
-                View Details
-                <ArrowRightIcon className="w-4 h-4" />
-              </Link>
             </div>
           )}
 
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
-            <h2 className="font-bold text-slate-800 text-sm mb-4">Recent Updates</h2>
-            {recentUpdates.length === 0 ? (
-              <p className="text-sm text-slate-400">No updates yet.</p>
-            ) : (
-              <div className="relative">
-                <div className="absolute left-2 top-2 bottom-2 w-px bg-slate-100" />
-                <ul className="space-y-4">
-                  {recentUpdates.map((u, i) => (
-                    <li key={i} className="flex gap-4 pl-6 relative">
-                      <span className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-teal-500 bg-white flex-shrink-0" />
-                      <div className="min-w-0">
-                        <p className="text-xs text-slate-400 font-medium">{u.date} · {u.time}</p>
-                        <p className="text-sm text-slate-700 mt-0.5 line-clamp-2">{u.note}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {activeBooking && (
-              <Link
-                to={`/leader/progress/${activeBooking.id}`}
-                className="block text-center text-xs text-teal-600 hover:underline mt-4 font-medium"
-              >
-                View all updates →
-              </Link>
-            )}
-          </div>
+          {!loading && <RecentActivity bookings={bookings} />}
         </div>
       </div>
     </div>

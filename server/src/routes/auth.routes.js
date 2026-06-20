@@ -24,8 +24,10 @@ router.get(
   asyncHandler(authController.googleCallback)
 );
 
+router.post('/login',            asyncHandler(authController.login));
 router.post('/register',         asyncHandler(authController.register));
 router.get('/me',      protect,  asyncHandler(authController.getMe));
+router.patch('/me',    protect,  asyncHandler(authController.updateMe));
 router.post('/refresh',          asyncHandler(authController.refresh));
 router.post('/logout',           asyncHandler(authController.logout));
 

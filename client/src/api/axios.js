@@ -1,18 +1,41 @@
-/**
- * Axios instance — shared HTTP client.
- *
- * Purpose: Pre-configured axios with baseURL (VITE_API_URL), credentials, and
- * interceptors for attaching the access token and handling 401 -> token refresh.
- *
- * TODO (implementation): request interceptor (auth header) + response
- * interceptor (refresh-on-401, redirect on failure).
- */
-
 import axios from 'axios';
 
 const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`,
   withCredentials: true,
 });
+
+// Called by AuthContext whenever the access token changes (login/logout/refresh)
+export const setAuthToken = (token) => {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+};
+
+// On 401 try to refresh via the httpOnly cookie, then retry the original request
+api.interceptors.response.use(
+  (res) => res,
+  async (err) => {
+    const original = err.config;
+    if (err.response?.status === 401 && !original._retry) {
+      original._retry = true;
+      try {
+        const { data } = await api.post('/auth/refresh');
+        const newToken = data.data.accessToken;
+        localStorage.setItem('accessToken', newToken);
+        setAuthToken(newToken);
+        original.headers['Authorization'] = `Bearer ${newToken}`;
+        return api(original);
+      } catch {
+        localStorage.removeItem('accessToken');
+        setAuthToken(null);
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(err);
+  }
+);
 
 export default api;

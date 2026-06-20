@@ -1,31 +1,39 @@
-/**
- * Socket.IO initialization + connection auth.
- *
- * Purpose: Create the io instance, authenticate each socket via JWT from the
- * handshake, join role/user rooms, and register feature handlers. Exposes a
- * getter so the rest of the app (emitters) can access io.
- *
- * Rooms joined on connect: user:{id}, role:admin | role:leader (by role).
- *
- * TODO (implementation):
- *  - io.use(authMiddleware) -> verify token, attach socket.user
- *  - on 'connection': join rooms, register handlers, handle disconnect
- */
-
-import { registerBookingHandlers } from './handlers/booking.socket.js';
-import { registerTicketHandlers } from './handlers/ticket.socket.js';
-import { registerDashboardHandlers } from './handlers/dashboard.socket.js';
+import { Server } from 'socket.io';
+import { env } from '../config/env.js';
+import { verifyAccessToken } from '../utils/jwt.js';
+import { ROOMS } from '../constants/events.js';
+import { ROLES } from '../constants/roles.js';
 
 let io = null;
 
 export const initSocket = (httpServer) => {
-  // io = new Server(httpServer, { cors: { origin: env.clientUrl, credentials: true } });
-  // io.use(socketAuthMiddleware);
-  // io.on('connection', (socket) => {
-  //   registerBookingHandlers(io, socket);
-  //   registerTicketHandlers(io, socket);
-  //   registerDashboardHandlers(io, socket);
-  // });
+  io = new Server(httpServer, {
+    cors: { origin: env.clientUrl, credentials: true },
+  });
+
+  // Authenticate every socket connection via the JWT passed in handshake auth
+  io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+    if (!token) return next(new Error('No auth token provided'));
+    try {
+      socket.user = verifyAccessToken(token); // { sub, role, email }
+      next();
+    } catch {
+      next(new Error('Invalid or expired token'));
+    }
+  });
+
+  io.on('connection', (socket) => {
+    // Every user joins their personal room: user:<userId>
+    socket.join(ROOMS.user(socket.user.sub));
+
+    // Role-based rooms so we can broadcast to all admins / all leaders at once
+    if (socket.user.role === ROLES.ADMIN)  socket.join(ROOMS.roleAdmin);
+    if (socket.user.role === ROLES.LEADER) socket.join(ROOMS.roleLeader);
+
+    socket.on('disconnect', () => {});
+  });
+
   return io;
 };
 

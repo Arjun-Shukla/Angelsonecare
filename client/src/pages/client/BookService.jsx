@@ -5,6 +5,7 @@ import {
   MapPinIcon, CurrencyRupeeIcon, ExclamationCircleIcon,
 } from '../../components/common/icons.jsx';
 import EmailSentToast from '../../components/common/EmailSentToast.jsx';
+import { createBooking as apiCreateBooking } from '../../api/booking.api.js';
 
 // ── Static data ────────────────────────────────────────────────────────────────
 const SERVICES = [
@@ -684,7 +685,9 @@ export default function BookService() {
   const [confirmed,      setConfirmed]      = useState(false);
   const [saved,          setSaved]          = useState(false);
   const [showEmailToast, setShowEmailToast] = useState(false);
-  const [bookingId]               = useState(() => 'AO' + Math.floor(100000 + Math.random() * 900000));
+  const [submitting,     setSubmitting]     = useState(false);
+  const [submitError,    setSubmitError]    = useState('');
+  const [bookingId,      setBookingId]      = useState('');
 
   const TOTAL = STEP_LABELS.length;
   const price = computePrice(booking);
@@ -737,10 +740,53 @@ export default function BookService() {
     setTimeout(() => setSaved(false), 2000);
   };
 
-  const handleConfirm = () => {
-    setConfirmed(true);
-    setShowEmailToast(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleConfirm = async () => {
+    setSubmitError('');
+    setSubmitting(true);
+    try {
+      const shiftObj = SHIFTS.find((s) => s.label === booking.shift);
+      const durObj   = DURATIONS.find((d) => d.label === booking.duration);
+      const days     = booking.duration === 'Custom' ? +booking.customDays : (durObj?.days ?? 0);
+
+      let endDate;
+      if (booking.date && days > 1) {
+        const start = new Date(booking.date);
+        start.setDate(start.getDate() + days - 1);
+        endDate = start.toISOString().split('T')[0];
+      }
+
+      const address = [booking.address, booking.city, booking.state, booking.pincode]
+        .filter(Boolean).join(', ');
+
+      const noteParts = [];
+      if (booking.extras.length) noteParts.push(`Add-ons: ${booking.extras.join(', ')}`);
+      if (booking.notes.trim())  noteParts.push(booking.notes.trim());
+
+      const payload = {
+        service:      booking.service.name,
+        patient:      booking.patientName,
+        patientAge:   booking.patientAge ? +booking.patientAge : undefined,
+        gender:       booking.gender.toUpperCase(),
+        relationship: booking.relationship,
+        startDate:    booking.date,
+        endDate:      endDate || undefined,
+        shift:        booking.shift,
+        shiftTime:    shiftObj?.time || '',
+        address,
+        amount:       price?.total || 0,
+        notes:        noteParts.join('\n') || undefined,
+      };
+
+      const res = await apiCreateBooking(payload);
+      setBookingId(res.data.booking._id || res.data.booking.id);
+      setConfirmed(true);
+      setShowEmailToast(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      setSubmitError(err.response?.data?.message || 'Failed to submit booking. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // ── Success screen ─────────────────────────────────────────────────────────
@@ -896,13 +942,22 @@ export default function BookService() {
                   <ArrowRightIcon className="w-4 h-4" />
                 </button>
               ) : (
-                <button
-                  type="button" onClick={handleConfirm}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600 text-sm font-bold text-white shadow-md hover:bg-green-700 hover:shadow-lg transition-all"
-                >
-                  <CheckCircleIcon className="w-4 h-4" />
-                  Confirm Booking
-                </button>
+                <div className="flex flex-col items-end gap-2">
+                  {submitError && (
+                    <p className="text-xs text-red-600 font-medium">{submitError}</p>
+                  )}
+                  <button
+                    type="button" onClick={handleConfirm} disabled={submitting}
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-600 text-sm font-bold text-white shadow-md hover:bg-green-700 hover:shadow-lg transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? (
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    ) : (
+                      <CheckCircleIcon className="w-4 h-4" />
+                    )}
+                    {submitting ? 'Submitting…' : 'Confirm Booking'}
+                  </button>
+                </div>
               )}
             </div>
 

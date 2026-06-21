@@ -12,10 +12,15 @@ if (missing.length) {
   process.exit(1);
 }
 
+const normalizeUrl = (url) => {
+  if (!url) return url;
+  return /^https?:\/\//i.test(url) ? url.replace(/\/$/, '') : `https://${url.replace(/\/$/, '')}`;
+};
+
 export const env = {
   port: parseInt(process.env.PORT || '5000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
-  clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+  clientUrl: normalizeUrl(process.env.CLIENT_URL) || 'http://localhost:5173',
 
   mongoUri: process.env.MONGO_URI,
 
@@ -29,7 +34,7 @@ export const env = {
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID || '',
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-    callbackUrl: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:5000/api/auth/google/callback',
+    callbackUrl: normalizeUrl(process.env.GOOGLE_CALLBACK_URL) || 'http://localhost:5000/api/auth/google/callback',
   },
 
   razorpay: {

@@ -23,6 +23,8 @@ app.use(cookieParser());
 configurePassport(passport);
 app.use(passport.initialize());
 
+app.get('/health', (req, res) => res.status(200).json({ success: true, status: 'healthy' }));
+
 app.use('/api', apiRoutes);
 
 app.use(notFound);

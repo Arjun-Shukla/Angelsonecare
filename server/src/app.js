@@ -18,8 +18,17 @@ const clientDist = join(__dirname, '../../client/dist');
 
 const app = express();
 
+const ALLOWED_ORIGINS = [
+  env.clientUrl,
+  'https://www.angelsonecare.in',
+  'https://angelsonecare.in',
+].filter(Boolean);
+
 app.use(cors({
-  origin: env.clientUrl,
+  origin: (origin, cb) => {
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    cb(new Error(`CORS: origin ${origin} not allowed`));
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));

@@ -22,15 +22,19 @@ const ALLOWED_ORIGINS = [
   env.clientUrl,
   'https://www.angelsonecare.in',
   'https://angelsonecare.in',
+  'https://angelsonecare.vercel.app',
 ].filter(Boolean);
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, cb) => {
     if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-    cb(new Error(`CORS: origin ${origin} not allowed`));
+    cb(null, false);
   },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

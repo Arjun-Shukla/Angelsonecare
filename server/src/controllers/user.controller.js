@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import { sendSuccess, ApiError } from '../utils/apiResponse.js';
 import { ROLES } from '../constants/roles.js';
@@ -33,8 +34,7 @@ export const createLeader = async (req, res) => {
   const existing = await User.findOne({ email: email.toLowerCase().trim() });
   if (existing) throw new ApiError(409, 'A user with this email already exists');
 
-  const bcrypt = await import('bcryptjs');
-  const hash = await bcrypt.default.hash(password, 12);
+  const hash = await bcrypt.hash(password, 12);
 
   const leader = await User.create({
     name:            name.trim(),

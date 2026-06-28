@@ -1,5 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
+import Booking from '../models/Booking.js';
+import ServiceSession from '../models/ServiceSession.js';
 import { sendSuccess, ApiError } from '../utils/apiResponse.js';
 import { ROLES } from '../constants/roles.js';
 
@@ -74,9 +76,19 @@ export const updateUser = async (req, res) => {
   sendSuccess(res, { data: { user }, message: 'User updated successfully' });
 };
 
-// DELETE /api/users/:id — Admin soft-deletes by deactivating
+// DELETE /api/users/:id — Hard delete leader + clean up all references
 export const deleteUser = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true });
+  const user = await User.findById(req.params.id);
   if (!user) throw new ApiError(404, 'User not found');
-  sendSuccess(res, { message: 'User deactivated successfully' });
+
+  // Unassign leader from all bookings
+  await Booking.updateMany({ leader: user._id }, { $set: { leader: null } });
+
+  // Delete all service sessions assigned to this leader
+  await ServiceSession.deleteMany({ leader: user._id });
+
+  // Delete the user
+  await User.findByIdAndDelete(user._id);
+
+  sendSuccess(res, { message: 'Leader deleted successfully' });
 };

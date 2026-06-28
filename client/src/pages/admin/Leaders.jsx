@@ -93,7 +93,7 @@ function LeaderCard({ leader, index, onEdit, onToggle }) {
           }`}
         >
           {isActive
-            ? <><NoSymbolIcon className="w-3.5 h-3.5" /> Deactivate</>
+            ? <><NoSymbolIcon className="w-3.5 h-3.5" /> Delete</>
             : <><CheckIcon className="w-3.5 h-3.5" /> Activate</>
           }
         </button>
@@ -145,16 +145,24 @@ export default function Leaders() {
   }
 
   async function handleToggle(id, currentlyActive) {
-    try {
-      if (currentlyActive) {
+    if (currentlyActive) {
+      const confirmed = window.confirm(
+        'Are you sure you want to delete this leader? This will remove them from all bookings and cannot be undone.'
+      );
+      if (!confirmed) return;
+      try {
         await deactivateUser(id);
-        setLeaders(prev => prev.map(l => l._id === id ? { ...l, isActive: false } : l));
-      } else {
+        setLeaders(prev => prev.filter(l => l._id !== id));
+      } catch {
+        // silent
+      }
+    } else {
+      try {
         const res = await updateUser(id, { isActive: true });
         setLeaders(prev => prev.map(l => l._id === id ? { ...l, ...res.data?.user } : l));
+      } catch {
+        // silent
       }
-    } catch {
-      // silent
     }
   }
 

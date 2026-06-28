@@ -30,6 +30,7 @@ configurePassport(passport);
 app.use(passport.initialize());
 
 app.get('/health', (req, res) => res.status(200).json({ success: true, status: 'healthy' }));
+app.get('/', (req, res) => res.status(200).json({ success: true, message: 'Angels One API' }));
 
 app.use('/api', apiRoutes);
 

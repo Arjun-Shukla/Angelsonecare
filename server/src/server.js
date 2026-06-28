@@ -19,9 +19,6 @@ process.on('uncaughtException', (err) => {
 
 const start = async () => {
   try {
-    await connectDB();
-    await verifyMailer(); // already catches its own errors internally
-
     const httpServer = http.createServer(app);
     initSocket(httpServer);
 
@@ -43,9 +40,13 @@ const start = async () => {
       process.exit(1);
     });
 
-    httpServer.listen(env.port, () => {
+    // Bind the port first so Render detects it immediately, then connect DB
+    httpServer.listen(env.port, '0.0.0.0', () => {
       logger.info(`Angels One API listening on port ${env.port} [${env.nodeEnv}]`);
     });
+
+    await connectDB();
+    await verifyMailer(); // already catches its own errors internally
 
     const shutdown = () => {
       logger.info('Shutting down...');

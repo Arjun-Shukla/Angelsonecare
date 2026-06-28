@@ -2,12 +2,19 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { existsSync } from 'fs';
 
 import { env } from './config/env.js';
 import { configurePassport } from './config/passport.js';
 import apiRoutes from './routes/index.js';
 import { notFound } from './middleware/notFound.middleware.js';
 import { errorHandler } from './middleware/error.middleware.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname  = dirname(__filename);
+const clientDist = join(__dirname, '../../client/dist');
 
 const app = express();
 
@@ -19,7 +26,6 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Configure Google OAuth strategy then attach Passport to the request pipeline
 configurePassport(passport);
 app.use(passport.initialize());
 
@@ -27,7 +33,17 @@ app.get('/health', (req, res) => res.status(200).json({ success: true, status: '
 
 app.use('/api', apiRoutes);
 
-app.use(notFound);
+// Serve built React app in production
+if (existsSync(clientDist)) {
+  app.use(express.static(clientDist));
+  // SPA fallback — let React Router handle client-side routes
+  app.get('*', (req, res) => {
+    res.sendFile(join(clientDist, 'index.html'));
+  });
+} else {
+  app.use(notFound);
+}
+
 app.use(errorHandler);
 
 export default app;

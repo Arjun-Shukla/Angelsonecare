@@ -1,11 +1,12 @@
 import { useState, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   HeartIcon, CheckCircleIcon, ArrowLeftIcon, ArrowRightIcon,
   MapPinIcon, CurrencyRupeeIcon, ExclamationCircleIcon,
 } from '../../components/common/icons.jsx';
 import EmailSentToast from '../../components/common/EmailSentToast.jsx';
 import { createBooking as apiCreateBooking } from '../../api/booking.api.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 
 // ── Static data ────────────────────────────────────────────────────────────────
 const SERVICES = [
@@ -679,6 +680,8 @@ function StepReview({ booking, price, onEdit }) {
 
 // ── Main BookService ───────────────────────────────────────────────────────────
 export default function BookService() {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [step,      setStep]      = useState(1);
   const [booking,   setBooking]   = useState(INITIAL);
   const [errors,    setErrors]    = useState({});
@@ -741,6 +744,10 @@ export default function BookService() {
   };
 
   const handleConfirm = async () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/app/book' } });
+      return;
+    }
     setSubmitError('');
     setSubmitting(true);
     try {

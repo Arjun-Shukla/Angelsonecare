@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { HeartIcon, UserGroupIcon, ScissorsIcon, BoltIcon, SparklesIcon, CpuChipIcon, ArrowRightIcon } from '../common/icons.jsx';
 
 const SERVICES = [
@@ -97,13 +98,13 @@ export default function Services() {
                   ))}
                 </div>
 
-                <a
-                  href="#contact"
+                <Link
+                  to="/book"
                   className={`inline-flex items-center gap-1.5 text-sm font-semibold ${c.icon} group-hover:gap-2.5 transition-all`}
                 >
                   Book This Service
                   <ArrowRightIcon className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             );
           })}

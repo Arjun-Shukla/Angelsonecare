@@ -13,5 +13,6 @@ router.post('/', asyncHandler(ctrl.createMessage));
 // Protected — admin and leader only
 router.get('/', protect, authorize(ROLES.ADMIN, ROLES.LEADER), asyncHandler(ctrl.listMessages));
 router.patch('/:id/read', protect, authorize(ROLES.ADMIN, ROLES.LEADER), asyncHandler(ctrl.markRead));
+router.delete('/:id',     protect, authorize(ROLES.ADMIN, ROLES.LEADER), asyncHandler(ctrl.deleteMessage));
 
 export default router;

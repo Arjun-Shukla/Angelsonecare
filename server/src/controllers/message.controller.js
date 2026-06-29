@@ -39,3 +39,9 @@ export const markRead = async (req, res) => {
   if (!msg) throw new ApiError(404, 'Message not found');
   sendSuccess(res, { data: { message: msg } });
 };
+
+export const deleteMessage = async (req, res) => {
+  const msg = await ContactMessage.findByIdAndDelete(req.params.id);
+  if (!msg) throw new ApiError(404, 'Message not found');
+  sendSuccess(res, { message: 'Message deleted' });
+};

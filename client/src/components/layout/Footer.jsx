@@ -32,7 +32,7 @@ export default function Footer() {
             <p className="text-blue-100 mt-1">Get professional care delivered right to your doorstep.</p>
           </div>
           <Link
-            to="/login"
+            to="/book"
             className="shrink-0 bg-white text-blue-700 font-bold px-8 py-3.5 rounded-full hover:bg-blue-50 transition-colors shadow-lg"
           >
             Book a Service

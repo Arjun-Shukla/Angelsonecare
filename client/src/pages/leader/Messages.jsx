@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSocket } from '../../context/SocketContext.jsx';
-import { getMessages, markMessageRead } from '../../api/message.api.js';
-import { EnvelopeIcon, PhoneIcon, CheckCircleIcon } from '../../components/common/icons.jsx';
+import { getMessages, markMessageRead, deleteMessage } from '../../api/message.api.js';
+import { EnvelopeIcon, PhoneIcon, CheckCircleIcon, TrashIcon } from '../../components/common/icons.jsx';
 
-function MessageCard({ msg, onRead }) {
-  const [marking, setMarking] = useState(false);
+function MessageCard({ msg, onRead, onDelete }) {
+  const [marking,  setMarking]  = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   async function handleRead() {
     if (msg.isRead || marking) return;
@@ -14,6 +15,17 @@ function MessageCard({ msg, onRead }) {
       onRead(msg._id);
     } catch { /* silent */ } finally {
       setMarking(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!window.confirm('Delete this message permanently?')) return;
+    setDeleting(true);
+    try {
+      await deleteMessage(msg._id);
+      onDelete(msg._id);
+    } catch { /* silent */ } finally {
+      setDeleting(false);
     }
   }
 
@@ -56,16 +68,26 @@ function MessageCard({ msg, onRead }) {
             <p className="text-sm text-slate-700 mt-3 leading-relaxed">{msg.message}</p>
           </div>
         </div>
-        {!msg.isRead && (
+        <div className="flex gap-2 flex-shrink-0">
+          {!msg.isRead && (
+            <button
+              onClick={handleRead}
+              disabled={marking}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors"
+            >
+              <CheckCircleIcon className="w-4 h-4" />
+              {marking ? '…' : 'Mark Read'}
+            </button>
+          )}
           <button
-            onClick={handleRead}
-            disabled={marking}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors flex-shrink-0"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 transition-colors"
           >
-            <CheckCircleIcon className="w-4 h-4" />
-            {marking ? '…' : 'Mark Read'}
+            <TrashIcon className="w-4 h-4" />
+            {deleting ? '…' : 'Delete'}
           </button>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -96,9 +118,8 @@ export default function LeaderMessages() {
     return () => socket.off('message:new', handleNew);
   }, [socket]);
 
-  const handleRead = (id) => {
-    setMessages(prev => prev.map(m => m._id === id ? { ...m, isRead: true } : m));
-  };
+  const handleRead   = (id) => setMessages(prev => prev.map(m => m._id === id ? { ...m, isRead: true } : m));
+  const handleDelete = (id) => setMessages(prev => prev.filter(m => m._id !== id));
 
   const filtered = filter === 'ALL'
     ? messages
@@ -151,7 +172,7 @@ export default function LeaderMessages() {
       ) : (
         <div className="space-y-3">
           {filtered.map(msg => (
-            <MessageCard key={msg._id} msg={msg} onRead={handleRead} />
+            <MessageCard key={msg._id} msg={msg} onRead={handleRead} onDelete={handleDelete} />
           ))}
         </div>
       )}

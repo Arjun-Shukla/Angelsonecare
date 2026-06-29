@@ -65,15 +65,6 @@ export default function Login() {
       heading="Welcome back"
       subheading="Sign in to your Angels One account"
     >
-      <div className="mb-5 rounded-xl bg-blue-50 border border-blue-200 p-4">
-        <p className="text-xs font-bold text-blue-700 mb-2 uppercase tracking-wide">Test Accounts</p>
-        <div className="space-y-1.5 text-xs text-slate-600 font-mono">
-          <p><span className="text-slate-400">Client →</span> testclient@angelsone.dev / <strong>Test@1234</strong></p>
-          <p><span className="text-slate-400">Leader →</span> testleader@angelsone.dev / <strong>Test@1234</strong></p>
-          <p><span className="text-slate-400">Admin  →</span> testadmin@angelsone.dev  / <strong>Test@1234</strong></p>
-        </div>
-      </div>
-
       <ErrorBanner message={authError} />
 
       <form onSubmit={onSubmit} noValidate className="space-y-5">

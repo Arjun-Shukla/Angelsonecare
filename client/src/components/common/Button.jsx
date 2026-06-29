@@ -1,12 +1,12 @@
 import { ArrowRightIcon } from './icons.jsx';
 
 const variants = {
-  primary:   'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-lg',
-  secondary: 'bg-white text-blue-600 border-2 border-blue-600 hover:bg-blue-50',
-  teal:      'bg-teal-600 text-white hover:bg-teal-700 shadow-md hover:shadow-lg',
-  ghost:     'text-blue-600 hover:bg-blue-50',
-  white:     'bg-white text-blue-700 shadow-md hover:shadow-lg hover:bg-blue-50',
-  'white-outline': 'bg-transparent text-white border-2 border-white hover:bg-white hover:text-blue-700',
+  primary:   'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:from-indigo-700 hover:to-indigo-800 shadow-md hover:shadow-lg hover:-translate-y-0.5',
+  secondary: 'bg-white text-indigo-600 border-2 border-indigo-600 hover:bg-indigo-50',
+  teal:      'bg-emerald-600 text-white hover:bg-emerald-700 shadow-md hover:shadow-lg',
+  ghost:     'text-indigo-600 hover:bg-indigo-50',
+  white:     'bg-white text-indigo-700 shadow-md hover:shadow-lg hover:bg-indigo-50',
+  'white-outline': 'bg-transparent text-white border-2 border-white/60 hover:border-white hover:bg-white hover:text-indigo-700',
 };
 
 const sizes = {

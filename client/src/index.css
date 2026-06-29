@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -10,19 +10,40 @@
   }
 
   body {
-    @apply font-sans text-slate-800 antialiased;
+    @apply font-sans text-slate-800 antialiased bg-white;
   }
 
   *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-blue-500;
+    @apply outline-2 outline-offset-2 outline-indigo-500;
+  }
+
+  ::selection {
+    @apply bg-indigo-100 text-indigo-900;
+  }
+
+  /* Offset scrolled-to sections below the fixed navbar */
+  section[id] {
+    scroll-margin-top: 80px;
+  }
+
+  /* Honour reduced-motion — kill CSS animations and transitions */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration:       0.01ms !important;
+      animation-iteration-count: 1     !important;
+      transition-duration:      0.01ms !important;
+      scroll-behavior:          auto   !important;
+    }
   }
 }
 
 @layer utilities {
+  /* Brand gradient text */
   .text-gradient {
-    @apply bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-indigo-600 to-emerald-500 bg-clip-text text-transparent;
   }
 
+  /* Layout */
   .section-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
@@ -31,17 +52,38 @@
     @apply py-20 lg:py-28;
   }
 
-  .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+  /* Section label badge */
+  .section-badge {
+    @apply inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-700 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest border border-indigo-100;
   }
 
+  /* Card */
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-hover;
+  }
+
+  /* Forms */
   .label-style {
     @apply block text-sm font-semibold text-slate-700 mb-1.5;
   }
 
   .input-style {
     @apply w-full px-4 py-3 rounded-xl border border-slate-200 text-slate-800 text-sm placeholder-slate-400
-           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-           transition-shadow;
+           bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent
+           transition-all duration-200 hover:border-slate-300;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+
+  .glass-dark {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-white/10;
+  }
+
+  /* Gradient backgrounds */
+  .bg-hero {
+    background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 30%, #4f46e5 60%, #059669 100%);
   }
 }

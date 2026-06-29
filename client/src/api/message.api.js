@@ -1,5 +1,5 @@
 import api from './axios.js';
 
-export const sendContactMessage = (data) => api.post('/messages', data);
-export const getMessages        = ()     => api.get('/messages');
-export const markMessageRead    = (id)   => api.patch(`/messages/${id}/read`);
+export const sendContactMessage = async (data)  => { const { data: r } = await api.post('/messages', data); return r; };
+export const getMessages        = async ()       => { const { data } = await api.get('/messages'); return data; };
+export const markMessageRead    = async (id)     => { const { data } = await api.patch(`/messages/${id}/read`); return data; };

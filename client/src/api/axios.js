@@ -33,7 +33,9 @@ api.interceptors.response.use(
       } catch {
         localStorage.removeItem('accessToken');
         setAuthToken(null);
-        window.location.href = '/login';
+        // Do NOT redirect here — ProtectedRoute already redirects authenticated
+        // routes to /login when user is null. Redirecting here would break public
+        // pages (e.g. homepage Testimonials) for visitors with expired sessions.
       }
     }
     return Promise.reject(err);

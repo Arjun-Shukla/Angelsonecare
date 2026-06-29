@@ -15,6 +15,7 @@ import {
   ArrowRightOnRectangleIcon,
   ChartBarIcon,
   HomeModernIcon,
+  EnvelopeIcon,
 } from '../common/icons.jsx';
 
 const navItems = [
@@ -22,6 +23,7 @@ const navItems = [
   { label: 'Bookings',   to: '/admin/bookings',             Icon: ClipboardListIcon },
   { label: 'Leaders',    to: '/admin/leaders',              Icon: UserGroupIcon },
   { label: 'Tickets',    to: '/admin/tickets',              Icon: TagIcon },
+  { label: 'Messages',   to: '/admin/messages',             Icon: EnvelopeIcon },
   { label: 'Reviews',    to: '/admin/reviews',              Icon: StarIcon },
   { label: 'Analytics',  to: '/admin/analytics',            Icon: ChartBarIcon },
 ];

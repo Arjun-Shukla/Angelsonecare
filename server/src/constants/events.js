@@ -24,6 +24,9 @@ export const SOCKET_EVENTS = {
 
   // Notifications
   NOTIFICATION_NEW: 'notification:new',
+
+  // Contact messages
+  MESSAGE_NEW: 'message:new',
 };
 
 /**

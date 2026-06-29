@@ -13,12 +13,14 @@ import {
   BellIcon,
   ArrowRightOnRectangleIcon,
   HomeModernIcon,
+  EnvelopeIcon,
 } from '../common/icons.jsx';
 
 const navItems = [
   { label: 'Dashboard',         to: '/leader',          end: true,  Icon: Squares2x2Icon },
   { label: 'Assigned Bookings', to: '/leader/bookings',             Icon: ClipboardListIcon },
   { label: 'Tickets',           to: '/leader/tickets',              Icon: TagIcon },
+  { label: 'Messages',          to: '/leader/messages',             Icon: EnvelopeIcon },
   { label: 'Profile',           to: '/leader/profile',              Icon: UserCircleIcon },
 ];
 

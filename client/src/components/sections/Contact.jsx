@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PhoneIcon, MailIcon, MapPinIcon, ClockIcon, CheckCircleIcon } from '../common/icons.jsx';
+import { sendContactMessage } from '../../api/message.api.js';
 
 const CONTACT_INFO = [
   {
@@ -43,20 +44,25 @@ const SERVICES_LIST = [
 ];
 
 export default function Contact() {
-  const [form, setForm]       = useState({ name: '', email: '', phone: '', service: '', message: '' });
+  const [form, setForm]           = useState({ name: '', email: '', phone: '', service: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading]  = useState(false);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState('');
 
   const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulated submit delay — backend integration comes later
-    setTimeout(() => {
-      setLoading(false);
+    setError('');
+    try {
+      await sendContactMessage(form);
       setSubmitted(true);
-    }, 1000);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to send message. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -187,6 +193,9 @@ export default function Contact() {
                     />
                   </div>
 
+                  {error && (
+                    <p className="text-sm text-red-600 mb-3 text-center">{error}</p>
+                  )}
                   <button
                     type="submit"
                     disabled={loading}

@@ -37,6 +37,7 @@ import AssignedBookings from '../pages/leader/AssignedBookings.jsx';
 import UpdateProgress from '../pages/leader/UpdateProgress.jsx';
 import VerifyOTP from '../pages/leader/VerifyOTP.jsx';
 import LeaderTickets from '../pages/leader/Tickets.jsx';
+import LeaderMessages from '../pages/leader/Messages.jsx';
 
 // Admin pages
 import AdminDashboard from '../pages/admin/Dashboard.jsx';
@@ -46,6 +47,7 @@ import AdminTickets   from '../pages/admin/Tickets.jsx';
 import AdminReviews   from '../pages/admin/Reviews.jsx';
 import Analytics      from '../pages/admin/Analytics.jsx';
 import AdminSettings  from '../pages/admin/Settings.jsx';
+import AdminMessages  from '../pages/admin/Messages.jsx';
 
 export default function AppRoutes() {
   return (
@@ -70,6 +72,7 @@ export default function AppRoutes() {
             <Route path="/leader/verify/:id"   element={<VerifyOTP />} />
             <Route path="/leader/tickets"      element={<LeaderTickets />} />
             <Route path="/leader/clients/:id"  element={<ClientDetail />} />
+            <Route path="/leader/messages"     element={<LeaderMessages />} />
             <Route path="/leader/profile"      element={<LeaderProfile />} />
           </Route>
         </Route>
@@ -85,6 +88,7 @@ export default function AppRoutes() {
             <Route path="/admin/tickets"   element={<AdminTickets />} />
             <Route path="/admin/reviews"   element={<AdminReviews />} />
             <Route path="/admin/analytics" element={<Analytics />} />
+            <Route path="/admin/messages"  element={<AdminMessages />} />
             <Route path="/admin/settings"  element={<AdminSettings />} />
           </Route>
         </Route>

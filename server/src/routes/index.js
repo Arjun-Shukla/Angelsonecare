@@ -14,6 +14,7 @@ import ticketRoutes from './ticket.routes.js';
 import reviewRoutes from './review.routes.js';
 import analyticsRoutes from './analytics.routes.js';
 import settingsRoutes  from './settings.routes.js';
+import messageRoutes  from './message.routes.js';
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.use('/tickets', ticketRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/settings',  settingsRoutes);
+router.use('/messages',  messageRoutes);
 
 export default router;

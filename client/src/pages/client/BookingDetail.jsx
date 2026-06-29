@@ -11,14 +11,14 @@ import {
 const STATUS_STYLES = {
   ACTIVE: 'bg-green-100 text-green-700',
   PENDING: 'bg-amber-100 text-amber-700',
-  COMPLETED: 'bg-blue-100 text-blue-700',
+  COMPLETED: 'bg-indigo-100 text-indigo-700',
   CANCELLED: 'bg-slate-100 text-slate-600',
 };
 
 const COLOR_MAP = {
-  blue: { bg: 'bg-blue-100', text: 'text-blue-600', avatar: 'bg-blue-600' },
+  blue: { bg: 'bg-indigo-100', text: 'text-indigo-600', avatar: 'bg-indigo-600' },
   orange: { bg: 'bg-orange-100', text: 'text-orange-600', avatar: 'bg-orange-500' },
-  teal: { bg: 'bg-teal-100', text: 'text-teal-600', avatar: 'bg-teal-600' },
+  teal: { bg: 'bg-emerald-100', text: 'text-emerald-600', avatar: 'bg-emerald-600' },
   rose: { bg: 'bg-rose-100', text: 'text-rose-600', avatar: 'bg-rose-500' },
 };
 
@@ -53,11 +53,11 @@ function TimelineCard({ booking }) {
             <div className="flex flex-col items-center">
               <div className={`w-3 h-3 rounded-full mt-0.5 flex-shrink-0 border-2 ${
                 item.done
-                  ? 'bg-blue-600 border-blue-600'
+                  ? 'bg-indigo-600 border-indigo-600'
                   : 'bg-white border-slate-300'
               }`} />
               {idx < booking.timeline.length - 1 && (
-                <div className={`w-px flex-1 mt-1 ${item.done ? 'bg-blue-200' : 'bg-slate-100'}`} />
+                <div className={`w-px flex-1 mt-1 ${item.done ? 'bg-indigo-200' : 'bg-slate-100'}`} />
               )}
             </div>
             <div className="min-w-0 pb-0">
@@ -168,7 +168,7 @@ export default function BookingDetail() {
     return (
       <div className="animate-fade-in text-center py-24">
         <p className="text-slate-500 text-lg font-medium mb-4">Booking not found</p>
-        <Link to="/app/bookings" className="text-blue-600 hover:text-blue-700 font-semibold flex items-center gap-2 justify-center">
+        <Link to="/app/bookings" className="text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-2 justify-center">
           <ArrowLeftIcon className="w-4 h-4" />
           Back to My Bookings
         </Link>
@@ -181,7 +181,7 @@ export default function BookingDetail() {
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center gap-2 text-sm text-slate-500">
-        <Link to="/app/bookings" className="flex items-center gap-1.5 hover:text-blue-600 transition-colors font-medium">
+        <Link to="/app/bookings" className="flex items-center gap-1.5 hover:text-indigo-600 transition-colors font-medium">
           <ArrowLeftIcon className="w-4 h-4" />
           My Bookings
         </Link>
@@ -194,7 +194,7 @@ export default function BookingDetail() {
           <ServiceIcon svgPath={booking.svgPath} color={booking.serviceColor} size="lg" />
           <div className="flex-1 min-w-0">
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <h1 className="text-xl font-bold text-slate-800">{booking.service}</h1>
+              <h1 className="text-xl font-black text-slate-800">{booking.service}</h1>
               <StatusBadge status={booking.status} />
             </div>
             <p className="text-sm text-slate-500">Booking ID: <span className="font-semibold text-slate-700">#{booking.id}</span></p>
@@ -243,7 +243,7 @@ export default function BookingDetail() {
                 <p className="text-slate-400 text-xs mb-1.5">Add-ons</p>
                 <div className="flex flex-wrap gap-2">
                   {booking.extras.map(e => (
-                    <span key={e} className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-1 rounded-full">{e}</span>
+                    <span key={e} className="bg-indigo-50 text-indigo-700 text-xs font-medium px-2.5 py-1 rounded-full">{e}</span>
                   ))}
                 </div>
               </div>
@@ -268,21 +268,21 @@ export default function BookingDetail() {
       <div className="flex flex-wrap items-center gap-3 pt-2">
         <Link
           to="/app/bookings"
-          className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600 font-medium transition-colors"
+          className="flex items-center gap-2 text-sm text-slate-600 hover:text-indigo-600 font-medium transition-colors"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           Back to My Bookings
         </Link>
         <Link
           to="/app/tickets"
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
         >
           Raise Ticket for this Booking
         </Link>
         {booking.status === 'COMPLETED' && !hasReview && (
           <Link
             to="/app/reviews"
-            className="bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
           >
             Write a Review
           </Link>

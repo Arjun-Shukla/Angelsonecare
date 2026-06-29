@@ -62,7 +62,7 @@ function OtpInput({ otp, setOtp, inputRefs, disabled }) {
           onChange={e => handleChange(e, i)}
           onKeyDown={e => handleKeyDown(e, i)}
           onPaste={i === 0 ? handlePaste : undefined}
-          className="w-12 h-14 text-center text-xl font-bold border-2 border-slate-200 rounded-xl focus:border-teal-500 focus:ring-2 focus:ring-teal-200 outline-none transition-all text-slate-800 bg-white disabled:bg-slate-50 disabled:text-slate-300"
+          className="w-12 h-14 text-center text-xl font-bold border-2 border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all text-slate-800 bg-white disabled:bg-slate-50 disabled:text-slate-300"
         />
       ))}
     </div>
@@ -96,7 +96,7 @@ export default function VerifyOTP() {
   if (loading) {
     return (
       <div className="animate-fade-in flex justify-center py-24">
-        <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -110,7 +110,7 @@ export default function VerifyOTP() {
           <p className="text-slate-500 mb-6">No booking with ID "{id}" was found.</p>
           <Link
             to="/leader/bookings"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             Back to Bookings
@@ -185,13 +185,13 @@ export default function VerifyOTP() {
           <div className="flex flex-col sm:flex-row gap-3">
             <Link
               to="/leader/bookings"
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors"
             >
               View Assigned Bookings
             </Link>
             <Link
               to="/leader"
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 border-2 border-slate-200 text-slate-700 hover:border-teal-400 font-semibold rounded-xl transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 py-2.5 border-2 border-slate-200 text-slate-700 hover:border-indigo-400 font-semibold rounded-xl transition-colors"
             >
               Back to Dashboard
             </Link>
@@ -212,7 +212,7 @@ export default function VerifyOTP() {
       />
 
       <div className="flex items-center gap-2 text-sm text-slate-500">
-        <Link to={`/leader/progress/${booking._id || id}`} className="flex items-center gap-1 hover:text-teal-600 transition-colors font-medium">
+        <Link to={`/leader/progress/${booking._id || id}`} className="flex items-center gap-1 hover:text-indigo-600 transition-colors font-medium">
           <ArrowLeftIcon className="w-4 h-4" />
           Update Progress
         </Link>
@@ -246,8 +246,8 @@ export default function VerifyOTP() {
       {/* Phase 1: Generate OTP */}
       {phase === 'generate' && (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 text-center">
-          <div className="w-16 h-16 rounded-full bg-teal-50 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-teal-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+          <div className="w-16 h-16 rounded-full bg-indigo-50 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
             </svg>
           </div>
@@ -264,7 +264,7 @@ export default function VerifyOTP() {
           <button
             onClick={handleGenerateOtp}
             disabled={genBusy}
-            className="w-full flex items-center justify-center gap-2 py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
           >
             {genBusy ? (
               <><ArrowPathIcon className="w-4 h-4 animate-spin" /> Sending OTP…</>
@@ -299,7 +299,7 @@ export default function VerifyOTP() {
             <button
               type="submit"
               disabled={!isComplete || status === 'loading'}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
             >
               {status === 'loading' ? (
                 <><ArrowPathIcon className="w-4 h-4 animate-spin" /> Verifying…</>
@@ -312,7 +312,7 @@ export default function VerifyOTP() {
             <button
               onClick={() => { setGenError(''); setOtp(['', '', '', '', '', '']); handleGenerateOtp(); }}
               disabled={genBusy}
-              className="w-full flex items-center justify-center gap-2 py-2.5 border border-slate-200 hover:border-teal-400 hover:bg-teal-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold text-slate-600 hover:text-teal-700 rounded-xl transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-2.5 border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold text-slate-600 hover:text-indigo-700 rounded-xl transition-colors"
             >
               {genBusy ? (
                 <><ArrowPathIcon className="w-4 h-4 animate-spin" /> Sending new OTP…</>

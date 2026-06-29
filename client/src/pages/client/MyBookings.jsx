@@ -9,9 +9,9 @@ const FILTERS = ['ALL', 'PENDING', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETION_REQUES
 const STATUS_STYLES = {
   PENDING:              'bg-amber-100 text-amber-700',
   ACCEPTED:             'bg-green-100 text-green-700',
-  IN_PROGRESS:          'bg-blue-100 text-blue-700',
+  IN_PROGRESS:          'bg-indigo-100 text-indigo-700',
   COMPLETION_REQUESTED: 'bg-purple-100 text-purple-700',
-  COMPLETED:            'bg-teal-100 text-teal-700',
+  COMPLETED:            'bg-emerald-100 text-emerald-700',
   CANCELLED:            'bg-slate-100 text-slate-600',
   REJECTED:             'bg-red-100 text-red-700',
 };
@@ -123,14 +123,14 @@ function BookingCard({ booking }) {
     }`}>
       <div className="flex items-start gap-3 mb-3">
         <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${
-          showOtp ? 'bg-purple-100' : 'bg-blue-100'
+          showOtp ? 'bg-purple-100' : 'bg-indigo-100'
         }`}>
           {showOtp ? (
             <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
             </svg>
           ) : (
-            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
           )}
@@ -162,7 +162,7 @@ function BookingCard({ booking }) {
       {extras.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-4">
           {extras.map(e => (
-            <span key={e} className="bg-blue-50 text-blue-700 text-xs font-medium px-2 py-0.5 rounded-full">{e}</span>
+            <span key={e} className="bg-indigo-50 text-indigo-700 text-xs font-medium px-2 py-0.5 rounded-full">{e}</span>
           ))}
         </div>
       )}
@@ -187,7 +187,7 @@ function BookingCard({ booking }) {
       <div className="flex gap-2 pt-3 mt-1">
         <Link
           to={`/app/bookings/${id}`}
-          className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+          className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
         >
           View Details
           <ArrowRightIcon className="w-4 h-4" />
@@ -195,7 +195,7 @@ function BookingCard({ booking }) {
         {booking.status === 'COMPLETED' && (
           <Link
             to="/app/reviews"
-            className="ml-auto text-sm font-semibold text-teal-600 hover:text-teal-700 border border-teal-200 hover:bg-teal-50 px-3 py-1 rounded-lg transition-colors"
+            className="ml-auto text-sm font-semibold text-emerald-600 hover:text-emerald-700 border border-emerald-200 hover:bg-emerald-50 px-3 py-1 rounded-lg transition-colors"
           >
             Write Review
           </Link>
@@ -263,9 +263,9 @@ export default function MyBookings() {
   if (loading) {
     return (
       <div className="animate-fade-in space-y-4">
-        <h1 className="text-2xl font-bold text-slate-800">My Bookings</h1>
+        <h1 className="text-2xl font-black text-slate-800">My Bookings</h1>
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -274,7 +274,7 @@ export default function MyBookings() {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">My Bookings</h1>
+        <h1 className="text-2xl font-black text-slate-800">My Bookings</h1>
         <p className="text-slate-500 text-sm mt-1">Track all your service bookings in one place.</p>
       </div>
 
@@ -292,7 +292,7 @@ export default function MyBookings() {
               onClick={() => setFilter(f)}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
                 filter === f
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-indigo-600 text-white shadow-sm'
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >

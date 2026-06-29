@@ -101,13 +101,13 @@ export default function Login() {
                 name="remember"
                 checked={values.remember}
                 onChange={onChange}
-                className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
               />
               <span className="text-sm text-slate-600">Remember me</span>
             </label>
             <Link
               to="/forgot-password"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+              className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
             >
               Forgot password?
             </Link>
@@ -117,7 +117,7 @@ export default function Login() {
         <button
           type="submit"
           disabled={loading}
-          className="mt-1 w-full flex items-center justify-center gap-2.5 rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+          className="mt-1 w-full flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:from-indigo-700 hover:to-indigo-800 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading && (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />
@@ -136,7 +136,7 @@ export default function Login() {
 
       <p className="mt-8 text-center text-sm text-slate-600">
         Don't have an account?{' '}
-        <Link to="/signup" className="font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+        <Link to="/signup" className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">
           Sign up for free
         </Link>
       </p>

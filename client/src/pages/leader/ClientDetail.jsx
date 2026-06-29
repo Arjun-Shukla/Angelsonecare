@@ -11,8 +11,8 @@ import {
 } from '../../components/common/icons.jsx';
 
 const PALETTE = {
-  blue:   { icon: 'bg-blue-100 text-blue-600',    sel: 'border-blue-500 bg-blue-50' },
-  teal:   { icon: 'bg-teal-100 text-teal-600',    sel: 'border-teal-500 bg-teal-50' },
+  blue:   { icon: 'bg-indigo-100 text-indigo-600',    sel: 'border-indigo-500 bg-indigo-50' },
+  teal:   { icon: 'bg-emerald-100 text-emerald-600',    sel: 'border-emerald-500 bg-emerald-50' },
   orange: { icon: 'bg-orange-100 text-orange-600', sel: 'border-orange-500 bg-orange-50' },
   violet: { icon: 'bg-violet-100 text-violet-600', sel: 'border-violet-500 bg-violet-50' },
   rose:   { icon: 'bg-rose-100 text-rose-600',    sel: 'border-rose-500 bg-rose-50' },
@@ -20,9 +20,9 @@ const PALETTE = {
 };
 
 const STATUS_STYLES = {
-  ACTIVE:    'bg-teal-100 text-teal-700',
+  ACTIVE:    'bg-emerald-100 text-emerald-700',
   PENDING:   'bg-amber-100 text-amber-700',
-  COMPLETED: 'bg-blue-100 text-blue-700',
+  COMPLETED: 'bg-indigo-100 text-indigo-700',
 };
 
 function StatusBadge({ status }) {
@@ -47,7 +47,7 @@ export default function ClientDetail() {
           <p className="text-slate-500 mb-6">No client with ID "{id}" was found in your bookings.</p>
           <Link
             to="/leader/bookings"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             Back to Bookings
@@ -70,7 +70,7 @@ export default function ClientDetail() {
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex items-center gap-2 text-sm text-slate-500">
-        <Link to="/leader/bookings" className="flex items-center gap-1 hover:text-teal-600 transition-colors font-medium">
+        <Link to="/leader/bookings" className="flex items-center gap-1 hover:text-emerald-600 transition-colors font-medium">
           <ArrowLeftIcon className="w-4 h-4" />
           Assigned Bookings
         </Link>
@@ -80,7 +80,7 @@ export default function ClientDetail() {
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
             <div className="flex flex-col items-center text-center mb-6">
-              <div className="w-20 h-20 rounded-full bg-teal-600 flex items-center justify-center text-white text-2xl font-bold mb-4">
+              <div className="w-20 h-20 rounded-full bg-emerald-600 flex items-center justify-center text-white text-2xl font-bold mb-4">
                 {initials}
               </div>
               <h2 className="text-xl font-bold text-slate-800">{client.name}</h2>
@@ -91,7 +91,7 @@ export default function ClientDetail() {
                 <MailIcon className="w-5 h-5 text-slate-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs text-slate-400 font-medium mb-0.5">Email</p>
-                  <a href={`mailto:${client.email}`} className="text-sm text-slate-700 hover:text-teal-600 break-all">
+                  <a href={`mailto:${client.email}`} className="text-sm text-slate-700 hover:text-emerald-600 break-all">
                     {client.email}
                   </a>
                 </div>
@@ -100,7 +100,7 @@ export default function ClientDetail() {
                 <PhoneIcon className="w-5 h-5 text-slate-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs text-slate-400 font-medium mb-0.5">Phone</p>
-                  <a href={`tel:${client.phone}`} className="text-sm text-slate-700 hover:text-teal-600">
+                  <a href={`tel:${client.phone}`} className="text-sm text-slate-700 hover:text-emerald-600">
                     {client.phone}
                   </a>
                 </div>
@@ -117,14 +117,14 @@ export default function ClientDetail() {
             <div className="mt-6 space-y-2">
               <a
                 href={`tel:${client.phone}`}
-                className="flex items-center justify-center gap-2 w-full py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-sm rounded-xl transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm rounded-xl transition-colors"
               >
                 <PhoneIcon className="w-4 h-4" />
                 Call Client
               </a>
               <a
                 href={`mailto:${client.email}`}
-                className="flex items-center justify-center gap-2 w-full py-2.5 border-2 border-slate-200 hover:border-teal-400 text-slate-700 font-semibold text-sm rounded-xl transition-colors"
+                className="flex items-center justify-center gap-2 w-full py-2.5 border-2 border-slate-200 hover:border-emerald-400 text-slate-700 font-semibold text-sm rounded-xl transition-colors"
               >
                 <MailIcon className="w-4 h-4" />
                 Send Email
@@ -170,18 +170,18 @@ export default function ClientDetail() {
               <div className="mb-4">
                 <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
                   <span>Progress</span>
-                  <span className="font-semibold text-teal-700">{currentBooking.progressPercent}%</span>
+                  <span className="font-semibold text-emerald-700">{currentBooking.progressPercent}%</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-teal-500 rounded-full"
+                    className="h-full bg-emerald-500 rounded-full"
                     style={{ width: `${currentBooking.progressPercent}%` }}
                   />
                 </div>
               </div>
               <Link
                 to={`/leader/progress/${currentBooking.id}`}
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 hover:text-teal-700"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
               >
                 Update Progress
                 <ArrowRightIcon className="w-4 h-4" />
@@ -226,7 +226,7 @@ export default function ClientDetail() {
               {currentBooking.extras && currentBooking.extras.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {currentBooking.extras.map(extra => (
-                    <span key={extra} className="px-3 py-1 bg-teal-50 text-teal-700 text-xs font-medium rounded-full border border-teal-200">
+                    <span key={extra} className="px-3 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded-full border border-emerald-200">
                       {extra}
                     </span>
                   ))}

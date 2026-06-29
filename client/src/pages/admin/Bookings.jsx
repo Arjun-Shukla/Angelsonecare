@@ -9,9 +9,9 @@ const STATUS_FILTERS = ['ALL', 'PENDING', 'ACCEPTED', 'IN_PROGRESS', 'COMPLETION
 const STATUS_BADGE = {
   PENDING:              'bg-amber-100 text-amber-700',
   ACCEPTED:             'bg-green-100 text-green-700',
-  IN_PROGRESS:          'bg-blue-100 text-blue-700',
+  IN_PROGRESS:          'bg-indigo-100 text-indigo-700',
   COMPLETION_REQUESTED: 'bg-purple-100 text-purple-700',
-  COMPLETED:            'bg-teal-100 text-teal-700',
+  COMPLETED:            'bg-emerald-100 text-emerald-700',
   REJECTED:             'bg-red-100 text-red-700',
   CANCELLED:            'bg-slate-100 text-slate-500',
 };
@@ -90,7 +90,7 @@ function InlineAction({ booking, leaders, onAction }) {
           <button
             onClick={handleAccept}
             disabled={busy || !leadId}
-            className="px-2.5 py-1 bg-teal-600 text-white text-xs font-semibold rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-colors"
+            className="px-2.5 py-1 bg-emerald-600 text-white text-xs font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-50 transition-colors"
           >
             {busy ? '…' : 'Confirm'}
           </button>
@@ -211,7 +211,7 @@ export default function AdminBookings() {
       <div className="animate-fade-in space-y-4">
         <h1 className="text-2xl font-bold text-slate-900">Booking Management</h1>
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -238,7 +238,7 @@ export default function AdminBookings() {
             placeholder="Search by ID, client, or patient..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 h-10 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-3 h-10 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
         <div className="flex gap-1.5 flex-wrap">
@@ -248,7 +248,7 @@ export default function AdminBookings() {
               onClick={() => setFilter(s)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
                 filter === s
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-indigo-600 text-white'
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
@@ -280,7 +280,7 @@ export default function AdminBookings() {
               return (
                 <tr key={id} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3">
-                    <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-lg font-mono">{id.slice(-8)}</span>
+                    <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-lg font-mono">{id.slice(-8)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-medium text-slate-800 text-xs">{b.client?.name || '—'}</p>
@@ -329,7 +329,7 @@ export default function AdminBookings() {
           return (
             <div key={id} className="bg-white rounded-2xl border border-slate-100 p-4">
               <div className="flex items-start justify-between mb-2">
-                <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-lg font-mono">{id.slice(-8)}</span>
+                <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-lg font-mono">{id.slice(-8)}</span>
                 <StatusChip status={b.status} />
               </div>
               <p className="font-semibold text-slate-800 text-sm">{b.service}</p>

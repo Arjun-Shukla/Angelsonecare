@@ -55,7 +55,7 @@ export default function ForgotPassword() {
           <div className="mt-9 w-full space-y-3">
             <Link
               to="/login"
-              className="block w-full text-center rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg"
+              className="block w-full text-center rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:from-indigo-700 hover:to-indigo-800 hover:shadow-lg"
             >
               Back to Sign In
             </Link>
@@ -94,7 +94,7 @@ export default function ForgotPassword() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+          className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:from-indigo-700 hover:to-indigo-800 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading && (
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true" />
@@ -106,7 +106,7 @@ export default function ForgotPassword() {
       <p className="mt-6 text-center">
         <Link
           to="/login"
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           Back to Sign In

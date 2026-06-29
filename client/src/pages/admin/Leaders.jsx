@@ -9,7 +9,7 @@ import {
   StarIcon,
 } from '../../components/common/icons.jsx';
 
-const AVATAR_COLORS = ['bg-blue-600', 'bg-teal-600', 'bg-violet-600', 'bg-orange-500'];
+const AVATAR_COLORS = ['bg-indigo-600', 'bg-emerald-600', 'bg-violet-600', 'bg-orange-500'];
 
 const ALL_SPECIALIZATIONS = [
   'Elder Care', 'Home Nursing', 'Physiotherapy', 'Patient Caretaker',
@@ -52,7 +52,7 @@ function LeaderCard({ leader, index, onEdit, onToggle }) {
       {leader.specializations?.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
           {leader.specializations.map(s => (
-            <span key={s} className="text-[10px] font-semibold bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full">{s}</span>
+            <span key={s} className="text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">{s}</span>
           ))}
         </div>
       )}
@@ -79,7 +79,7 @@ function LeaderCard({ leader, index, onEdit, onToggle }) {
       <div className="flex items-center gap-2 pt-3 border-t border-slate-50">
         <button
           onClick={() => onEdit(leader)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-blue-200 text-blue-600 text-xs font-semibold hover:bg-blue-50 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-indigo-200 text-indigo-600 text-xs font-semibold hover:bg-indigo-50 transition-colors"
         >
           <PencilSquareIcon className="w-3.5 h-3.5" />
           Edit
@@ -249,7 +249,7 @@ export default function Leaders() {
         </div>
         <button
           onClick={() => { setShowAddForm(true); setEditId(null); setAddForm({ ...emptyForm }); setFormError(''); setCredentials(null); }}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white text-sm font-semibold rounded-xl hover:bg-teal-700 transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-xl hover:bg-emerald-700 transition-colors self-start sm:self-auto"
         >
           <PlusIcon className="w-4 h-4" />
           Add New Leader
@@ -291,7 +291,7 @@ export default function Leaders() {
                       disabled={field.disabled}
                       value={addForm[field.key]}
                       onChange={e => setAddForm(prev => ({ ...prev, [field.key]: e.target.value }))}
-                      className={`w-full h-9 px-3 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${field.disabled ? 'bg-slate-50 text-slate-400' : ''}`}
+                      className={`w-full h-9 px-3 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${field.disabled ? 'bg-slate-50 text-slate-400' : ''}`}
                     />
                   </div>
                 ))}
@@ -306,7 +306,7 @@ export default function Leaders() {
                       onClick={() => toggleSpec(spec)}
                       className={`text-xs font-semibold px-3 py-1.5 rounded-full border transition-colors ${
                         addForm.specializations.includes(spec)
-                          ? 'bg-teal-600 text-white border-teal-600'
+                          ? 'bg-emerald-600 text-white border-emerald-600'
                           : 'border-slate-200 text-slate-600 hover:bg-slate-50'
                       }`}
                     >
@@ -322,7 +322,7 @@ export default function Leaders() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="px-5 py-2 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
+                  className="px-5 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
                 >
                   {saving ? 'Saving…' : editId ? 'Save Changes' : 'Create Leader'}
                 </button>
@@ -345,13 +345,13 @@ export default function Leaders() {
           placeholder="Search leaders..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full pl-9 pr-3 h-10 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full pl-9 pr-3 h-10 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">

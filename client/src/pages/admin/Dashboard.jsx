@@ -11,7 +11,7 @@ import { getLeaders } from '../../api/user.api.js';
 import { SocketContext } from '../../context/SocketContext.jsx';
 
 const accentMap = {
-  blue:   { bg: 'bg-blue-100',   text: 'text-blue-600',   num: 'text-blue-700' },
+  blue:   { bg: 'bg-indigo-100',  text: 'text-indigo-600',  num: 'text-indigo-700' },
   green:  { bg: 'bg-green-100',  text: 'text-green-600',  num: 'text-green-700' },
   teal:   { bg: 'bg-teal-100',   text: 'text-teal-600',   num: 'text-teal-700' },
   violet: { bg: 'bg-violet-100', text: 'text-violet-600', num: 'text-violet-700' },
@@ -72,7 +72,7 @@ function PendingBookingRow({ booking, leaders, onResolved }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-3 border-b border-slate-50 last:border-0">
       <div className="flex items-start gap-3">
-        <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-1 rounded-lg flex-shrink-0 font-mono">
+        <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-lg flex-shrink-0 font-mono">
           {id.slice(-8)}
         </span>
         <div>
@@ -124,7 +124,7 @@ function PendingBookingRow({ booking, leaders, onResolved }) {
             <button
               onClick={handleAccept}
               disabled={busy || !leadId}
-              className="px-3 py-1.5 bg-teal-600 text-white text-xs font-semibold rounded-lg hover:bg-teal-700 disabled:opacity-50 transition-colors"
+              className="px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 disabled:opacity-50 transition-colors"
             >
               {busy ? '…' : 'Confirm'}
             </button>
@@ -212,9 +212,9 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="animate-fade-in space-y-4">
-        <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+        <h1 className="text-2xl font-black text-slate-900">Admin Dashboard</h1>
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -224,7 +224,7 @@ export default function AdminDashboard() {
     <div className="animate-fade-in space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+          <h1 className="text-2xl font-black text-slate-900">Admin Dashboard</h1>
           <p className="text-slate-500 text-sm mt-0.5">{new Date().toLocaleDateString('en-IN', { dateStyle: 'long' })} · Angels One Healthcare Services</p>
         </div>
         <button
@@ -277,7 +277,7 @@ export default function AdminDashboard() {
                   </div>
                   <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                     b.status === 'COMPLETION_REQUESTED' ? 'bg-purple-100 text-purple-700' :
-                    b.status === 'IN_PROGRESS'          ? 'bg-blue-100 text-blue-700' :
+                    b.status === 'IN_PROGRESS'          ? 'bg-indigo-100 text-indigo-700' :
                                                          'bg-green-100 text-green-700'
                   }`}>
                     {b.status.replace(/_/g, ' ')}

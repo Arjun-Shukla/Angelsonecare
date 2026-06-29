@@ -45,12 +45,12 @@ function SidebarContent({ onClose }) {
     <div className="flex flex-col h-full">
       <div className="border-b border-slate-700/50 px-6 py-5">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center flex-shrink-0">
             <HeartIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-base font-bold text-white tracking-tight">Angels One</span>
-            <span className="block text-[9px] text-blue-400 tracking-widest uppercase mt-0.5">Admin Portal</span>
+            <span className="text-base font-black text-white tracking-tight">Angels One</span>
+            <span className="block text-[9px] text-indigo-400 tracking-widest uppercase mt-0.5">Admin Portal</span>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ function SidebarContent({ onClose }) {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`
             }
@@ -90,7 +90,7 @@ function SidebarContent({ onClose }) {
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-indigo-600 text-white shadow-sm'
                   : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`
             }
@@ -104,7 +104,7 @@ function SidebarContent({ onClose }) {
       <div className="bg-slate-800 rounded-xl mx-3 p-3 mt-3 mb-3">
         <p className="text-slate-400 text-xs uppercase tracking-wide mb-1.5">Platform Status</p>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0"></span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"></span>
           <span className="text-xs text-slate-300">All Systems Operational</span>
         </div>
       </div>
@@ -112,12 +112,12 @@ function SidebarContent({ onClose }) {
       <div className="border-t border-slate-700/50 px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               RA
             </div>
             <div className="min-w-0">
               <p className="text-sm font-semibold text-white truncate">Rajesh Angels</p>
-              <span className="inline-block bg-blue-600/20 text-blue-400 text-[10px] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
+              <span className="inline-block bg-indigo-600/20 text-indigo-400 text-[10px] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
             </div>
           </div>
           <button
@@ -172,7 +172,7 @@ export default function AdminLayout() {
         >
           <MenuIcon className="w-5 h-5" />
         </button>
-        <span className="text-base font-bold text-white">Angels One Admin</span>
+        <span className="text-base font-black text-white">Angels One Admin</span>
         <button className="p-1.5 rounded-lg text-white hover:bg-slate-800">
           <BellIcon className="w-5 h-5" />
         </button>

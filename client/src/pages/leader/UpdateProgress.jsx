@@ -12,7 +12,7 @@ const ACTIVE_STATUSES = ['ACCEPTED', 'IN_PROGRESS'];
 
 function Toast({ message }) {
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-teal-600 text-white px-5 py-3 rounded-2xl shadow-lg animate-fade-in">
+    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-lg animate-fade-in">
       <CheckIcon className="w-4 h-4" strokeWidth={3} />
       <span className="text-sm font-semibold">{message}</span>
     </div>
@@ -22,7 +22,7 @@ function Toast({ message }) {
 function UpdateItem({ update }) {
   return (
     <li className="flex gap-4 pl-6 relative">
-      <span className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-teal-500 bg-white flex-shrink-0" />
+      <span className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-emerald-500 bg-white flex-shrink-0" />
       <div className="min-w-0 pb-4">
         <p className="text-xs text-slate-400 font-medium">{update.date} · {update.time}</p>
         <p className="text-sm text-slate-700 mt-1">{update.note}</p>
@@ -34,9 +34,9 @@ function UpdateItem({ update }) {
 const STATUS_BADGE = {
   PENDING:              'bg-amber-100 text-amber-700',
   ACCEPTED:             'bg-green-100 text-green-700',
-  IN_PROGRESS:          'bg-blue-100 text-blue-700',
+  IN_PROGRESS:          'bg-indigo-100 text-indigo-700',
   COMPLETION_REQUESTED: 'bg-purple-100 text-purple-700',
-  COMPLETED:            'bg-teal-100 text-teal-700',
+  COMPLETED:            'bg-emerald-100 text-emerald-700',
 };
 
 export default function UpdateProgress() {
@@ -59,7 +59,7 @@ export default function UpdateProgress() {
   if (loading) {
     return (
       <div className="animate-fade-in flex justify-center py-24">
-        <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -73,7 +73,7 @@ export default function UpdateProgress() {
           <p className="text-slate-500 mb-6">No booking with ID "{id}" was found.</p>
           <Link
             to="/leader/bookings"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-semibold transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition-colors"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             Back to Bookings
@@ -116,7 +116,7 @@ export default function UpdateProgress() {
       {toast && <Toast message="Progress update logged!" />}
 
       <div className="flex items-center gap-2 text-sm text-slate-500">
-        <Link to="/leader/bookings" className="flex items-center gap-1 hover:text-teal-600 transition-colors font-medium">
+        <Link to="/leader/bookings" className="flex items-center gap-1 hover:text-emerald-600 transition-colors font-medium">
           <ArrowLeftIcon className="w-4 h-4" />
           Assigned Bookings
         </Link>
@@ -145,7 +145,7 @@ export default function UpdateProgress() {
           <div>
             <p className="text-xs text-slate-400 font-medium mb-1">Client</p>
             <p className="text-sm font-semibold text-slate-800">{booking.client?.name}</p>
-            <a href={`tel:${booking.client?.phone}`} className="text-xs text-teal-600 hover:underline">
+            <a href={`tel:${booking.client?.phone}`} className="text-xs text-emerald-600 hover:underline">
               {booking.client?.phone || ''}
             </a>
           </div>
@@ -187,7 +187,7 @@ export default function UpdateProgress() {
             <button
               type="submit"
               disabled={!note.trim() || submitting}
-              className="w-full py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
+              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors"
             >
               {submitting ? 'Saving…' : 'Log Update'}
             </button>
@@ -218,7 +218,7 @@ export default function UpdateProgress() {
       <div className="flex items-center justify-between gap-4 flex-wrap bg-white rounded-2xl shadow-sm border border-slate-100 p-4">
         <Link
           to="/leader/bookings"
-          className="flex items-center gap-2 text-sm text-slate-600 hover:text-teal-700 font-medium transition-colors"
+          className="flex items-center gap-2 text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors"
         >
           <ArrowLeftIcon className="w-4 h-4" />
           Back to Bookings

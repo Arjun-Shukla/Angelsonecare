@@ -14,7 +14,7 @@ function TabButton({ label, active, onClick }) {
       onClick={onClick}
       className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
         active
-          ? 'bg-teal-600 text-white shadow-sm'
+          ? 'bg-indigo-600 text-white shadow-sm'
           : 'text-slate-600 hover:bg-slate-100 border border-slate-200 bg-white'
       }`}
     >
@@ -27,7 +27,7 @@ function Toggle({ on, onToggle }) {
   return (
     <button
       onClick={onToggle}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${on ? 'bg-teal-600' : 'bg-slate-200'}`}
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${on ? 'bg-indigo-600' : 'bg-slate-200'}`}
     >
       <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
     </button>
@@ -109,13 +109,13 @@ export default function LeaderProfile() {
       {/* Header card */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-          <div className="w-24 h-24 rounded-full bg-teal-600 flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
+          <div className="w-24 h-24 rounded-full bg-emerald-600 flex items-center justify-center text-white text-3xl font-bold flex-shrink-0">
             {initials}
           </div>
           <div className="text-center sm:text-left">
             <h1 className="text-2xl font-bold text-slate-800">{user?.name || '—'}</h1>
             <div className="flex items-center justify-center sm:justify-start gap-2 mt-1 flex-wrap">
-              <span className="px-2.5 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold">LEADER</span>
+              <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">LEADER</span>
               {user?.location && (
                 <span className="text-sm text-slate-500">{user.location}</span>
               )}
@@ -201,8 +201,8 @@ export default function LeaderProfile() {
                     onClick={() => toggleSpecialization(spec)}
                     className={`px-3 py-1.5 rounded-full text-sm font-medium border-2 transition-colors ${
                       selected
-                        ? 'bg-teal-600 border-teal-600 text-white'
-                        : 'border-slate-200 text-slate-600 hover:border-teal-300 hover:bg-teal-50'
+                        ? 'bg-emerald-600 border-emerald-600 text-white'
+                        : 'border-slate-200 text-slate-600 hover:border-emerald-300 hover:bg-emerald-50'
                     }`}
                   >
                     {selected && <CheckIcon className="w-3 h-3 inline mr-1" strokeWidth={3} />}
@@ -232,7 +232,7 @@ export default function LeaderProfile() {
             <button
               type="submit"
               disabled={saving}
-              className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl transition-colors"
+              className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold rounded-xl transition-colors"
             >
               {saving ? 'Saving…' : 'Save Changes'}
             </button>
@@ -311,7 +311,7 @@ function PasswordChangeForm() {
       ))}
       {error && <p className="text-xs text-rose-500">{error}</p>}
       {success && <p className="text-xs text-green-600 font-medium">Password updated successfully!</p>}
-      <button type="submit" className="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl transition-colors">
+      <button type="submit" className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors">
         Update Password
       </button>
     </form>

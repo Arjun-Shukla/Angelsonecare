@@ -19,8 +19,8 @@ const SERVICES = [
 ];
 
 const PALETTE = {
-  blue:   { hover: 'hover:border-blue-300',   sel: 'border-blue-500 ring-2 ring-blue-200 bg-blue-50',     icon: 'bg-blue-100 text-blue-600',     tag: 'bg-blue-50 text-blue-700' },
-  teal:   { hover: 'hover:border-teal-300',   sel: 'border-teal-500 ring-2 ring-teal-200 bg-teal-50',     icon: 'bg-teal-100 text-teal-600',     tag: 'bg-teal-50 text-teal-700' },
+  blue:   { hover: 'hover:border-indigo-300',  sel: 'border-indigo-500 ring-2 ring-indigo-200 bg-indigo-50',   icon: 'bg-indigo-100 text-indigo-600',   tag: 'bg-indigo-50 text-indigo-700' },
+  teal:   { hover: 'hover:border-emerald-300', sel: 'border-emerald-500 ring-2 ring-emerald-200 bg-emerald-50', icon: 'bg-emerald-100 text-emerald-600', tag: 'bg-emerald-50 text-emerald-700' },
   violet: { hover: 'hover:border-violet-300', sel: 'border-violet-500 ring-2 ring-violet-200 bg-violet-50', icon: 'bg-violet-100 text-violet-600', tag: 'bg-violet-50 text-violet-700' },
   orange: { hover: 'hover:border-orange-300', sel: 'border-orange-500 ring-2 ring-orange-200 bg-orange-50', icon: 'bg-orange-100 text-orange-600', tag: 'bg-orange-50 text-orange-700' },
   rose:   { hover: 'hover:border-rose-300',   sel: 'border-rose-500 ring-2 ring-rose-200 bg-rose-50',     icon: 'bg-rose-100 text-rose-600',     tag: 'bg-rose-50 text-rose-700' },
@@ -155,8 +155,8 @@ function SummaryPanel({ booking, price }) {
   return (
     <aside className="hidden lg:block w-80 shrink-0">
       <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-teal-500 px-5 py-4">
-          <p className="text-[11px] font-semibold text-blue-100 uppercase tracking-wider mb-0.5">Booking Summary</p>
+        <div className="bg-gradient-to-r from-indigo-600 to-emerald-500 px-5 py-4">
+          <p className="text-[11px] font-semibold text-indigo-100 uppercase tracking-wider mb-0.5">Booking Summary</p>
           <p className="text-base font-bold text-white">Angels One Healthcare</p>
         </div>
         <div className="p-5 space-y-3">
@@ -172,7 +172,7 @@ function SummaryPanel({ booking, price }) {
               <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5">Add-ons</p>
               <div className="flex flex-wrap gap-1">
                 {booking.extras.map((ex) => (
-                  <span key={ex} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">{ex}</span>
+                  <span key={ex} className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full font-medium">{ex}</span>
                 ))}
               </div>
             </div>
@@ -193,7 +193,7 @@ function SummaryPanel({ booking, price }) {
                 )}
                 <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-2 mt-1">
                   <span>Estimated Total</span>
-                  <span className="text-blue-600">₹{fmt(price.total)}</span>
+                  <span className="text-indigo-600">₹{fmt(price.total)}</span>
                 </div>
                 <p className="text-[10px] text-slate-400 leading-relaxed pt-1">*Taxes may apply. Final price confirmed after caregiver assignment.</p>
               </div>
@@ -226,18 +226,18 @@ function ProgressBar({ step }) {
               <Fragment key={label}>
                 <div className="flex flex-col items-center shrink-0">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
-                    done   ? 'bg-blue-600 border-blue-600 text-white'
-                    : active ? 'bg-white border-blue-600 text-blue-600'
+                    done   ? 'bg-indigo-600 border-indigo-600 text-white'
+                    : active ? 'bg-white border-indigo-600 text-indigo-600'
                     :          'bg-white border-slate-300 text-slate-400'
                   }`}>
                     {done ? '✓' : num}
                   </div>
                   <span className={`text-[10px] font-semibold mt-1 whitespace-nowrap ${
-                    active ? 'text-blue-600' : done ? 'text-blue-500' : 'text-slate-400'
+                    active ? 'text-indigo-600' : done ? 'text-indigo-500' : 'text-slate-400'
                   }`}>{label}</span>
                 </div>
                 {i < STEP_LABELS.length - 1 && (
-                  <div className={`flex-1 h-0.5 mb-4 mx-1 transition-colors ${done ? 'bg-blue-500' : 'bg-slate-200'}`} />
+                  <div className={`flex-1 h-0.5 mb-4 mx-1 transition-colors ${done ? 'bg-indigo-500' : 'bg-slate-200'}`} />
                 )}
               </Fragment>
             );
@@ -278,7 +278,7 @@ function StepService({ booking, errors, onSelect }) {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-0.5">
                     <p className="font-bold text-slate-900 text-sm">{svc.name}</p>
-                    {selected && <CheckCircleIcon className="w-4 h-4 text-blue-500 shrink-0" />}
+                    {selected && <CheckCircleIcon className="w-4 h-4 text-indigo-500 shrink-0" />}
                   </div>
                   <p className="text-xs text-slate-500 leading-relaxed mb-2">{svc.desc}</p>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${pal.tag}`}>
@@ -331,7 +331,7 @@ function StepPatient({ booking, errors, onChange }) {
                   <input
                     type="radio" name="gender" value={g}
                     checked={booking.gender === g} onChange={onChange}
-                    className="h-4 w-4 text-blue-600 border-slate-300 focus:ring-blue-500"
+                    className="h-4 w-4 text-indigo-600 border-slate-300 focus:ring-indigo-500"
                   />
                   <span className="text-sm text-slate-700">{g}</span>
                 </label>
@@ -354,9 +354,9 @@ function StepPatient({ booking, errors, onChange }) {
           <FieldError msg={errors.relationship} />
         </div>
 
-        <div className="rounded-xl bg-blue-50 border border-blue-100 p-4">
-          <p className="text-xs text-blue-700 font-semibold mb-1">Why we ask this</p>
-          <p className="text-xs text-blue-600 leading-relaxed">
+        <div className="rounded-xl bg-indigo-50 border border-indigo-100 p-4">
+          <p className="text-xs text-indigo-700 font-semibold mb-1">Why we ask this</p>
+          <p className="text-xs text-indigo-600 leading-relaxed">
             Patient details help us match the right caregiver and brief them on specific requirements before arrival.
           </p>
         </div>
@@ -408,8 +408,8 @@ function StepDetails({ booking, errors, onChange, onShift }) {
                 aria-pressed={booking.shift === s.label}
                 className={`rounded-xl border-2 p-3 text-left transition-all ${
                   booking.shift === s.label
-                    ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-200'
-                    : 'border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/40'
+                    ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-200'
+                    : 'border-slate-200 bg-white hover:border-indigo-200 hover:bg-indigo-50/40'
                 }`}
               >
                 <p className="text-sm font-bold text-slate-800">{s.label}</p>
@@ -478,7 +478,7 @@ function StepLocation({ booking, errors, onChange }) {
         </div>
 
         <div className="flex items-start gap-3 rounded-xl bg-slate-50 border border-slate-200 p-4">
-          <MapPinIcon className="w-5 h-5 text-blue-500 mt-0.5 shrink-0" />
+          <MapPinIcon className="w-5 h-5 text-indigo-500 mt-0.5 shrink-0" />
           <p className="text-xs text-slate-600 leading-relaxed">
             We serve <strong>Mumbai, Pune, Delhi NCR, Bengaluru, Hyderabad, Chennai</strong> and 50+ cities across India.
             Our team will confirm availability for your pincode.
@@ -531,12 +531,12 @@ function StepSchedule({ booking, errors, onChange, onExtra }) {
                 <label
                   key={ex}
                   className={`flex items-center gap-2.5 p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                    checked ? 'border-blue-400 bg-blue-50' : 'border-slate-200 bg-white hover:border-blue-200'
+                    checked ? 'border-indigo-400 bg-indigo-50' : 'border-slate-200 bg-white hover:border-indigo-200'
                   }`}
                 >
                   <input
                     type="checkbox" checked={checked} onChange={() => onExtra(ex)}
-                    className="h-4 w-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500"
+                    className="h-4 w-4 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500"
                   />
                   <span className="text-sm font-medium text-slate-700">{ex}</span>
                 </label>
@@ -577,7 +577,7 @@ function ReviewSection({ title, step, onEdit, children }) {
         <p className="text-sm font-bold text-slate-800">{title}</p>
         <button
           type="button" onClick={() => onEdit(step)}
-          className="text-xs font-semibold text-blue-600 hover:text-blue-700 hover:underline"
+          className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
         >
           Edit
         </button>
@@ -648,8 +648,8 @@ function StepReview({ booking, price, onEdit }) {
         </ReviewSection>
 
         {price && (
-          <div className="rounded-xl border-2 border-blue-200 bg-blue-50 p-4">
-            <p className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-3">Estimated Cost</p>
+          <div className="rounded-xl border-2 border-indigo-200 bg-indigo-50 p-4">
+            <p className="text-xs font-semibold text-indigo-700 uppercase tracking-wide mb-3">Estimated Cost</p>
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between text-slate-600">
                 <span>₹{fmt(svc.basePrice)}/day × {price.days} day{price.days > 1 ? 's' : ''}</span>
@@ -661,9 +661,9 @@ function StepReview({ booking, price, onEdit }) {
                   <span>−₹{fmt(price.discount)}</span>
                 </div>
               )}
-              <div className="flex justify-between font-bold text-slate-900 border-t border-blue-200 pt-2">
+              <div className="flex justify-between font-bold text-slate-900 border-t border-indigo-200 pt-2">
                 <span>Estimated Total</span>
-                <span className="text-blue-700">₹{fmt(price.total)}</span>
+                <span className="text-indigo-700">₹{fmt(price.total)}</span>
               </div>
             </div>
           </div>
@@ -671,7 +671,7 @@ function StepReview({ booking, price, onEdit }) {
       </div>
       <p className="mt-4 text-xs text-slate-400 leading-relaxed text-center">
         By confirming, you agree to our{' '}
-        <a href="#" className="text-blue-500 hover:underline">Terms of Service</a>.
+        <a href="#" className="text-indigo-500 hover:underline">Terms of Service</a>.
         Payment is collected at service completion — no advance payment required.
       </p>
     </div>
@@ -799,7 +799,7 @@ export default function BookService() {
   // ── Success screen ─────────────────────────────────────────────────────────
   if (confirmed) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex flex-col items-center justify-center px-4 py-16">
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-emerald-50 flex flex-col items-center justify-center px-4 py-16">
         <EmailSentToast
           show={showEmailToast}
           message="Booking confirmation sent!"
@@ -816,10 +816,10 @@ export default function BookService() {
             A dedicated caregiver will be assigned and you will be notified shortly.
           </p>
 
-          <div className="bg-blue-50 rounded-2xl p-5 mb-6">
-            <p className="text-xs text-blue-500 font-semibold uppercase tracking-wide mb-1">Booking Reference</p>
-            <p className="text-3xl font-black text-blue-700 tracking-widest">{bookingId}</p>
-            <p className="text-xs text-blue-400 mt-1">Save this for future reference</p>
+          <div className="bg-indigo-50 rounded-2xl p-5 mb-6">
+            <p className="text-xs text-indigo-500 font-semibold uppercase tracking-wide mb-1">Booking Reference</p>
+            <p className="text-3xl font-black text-indigo-700 tracking-widest">{bookingId}</p>
+            <p className="text-xs text-indigo-400 mt-1">Save this for future reference</p>
           </div>
 
           <div className="text-sm text-left bg-slate-50 rounded-xl p-4 mb-8 space-y-2">
@@ -846,7 +846,7 @@ export default function BookService() {
             {price && (
               <div className="flex justify-between border-t border-slate-200 pt-2">
                 <span className="text-slate-500">Estimated Total</span>
-                <span className="font-bold text-blue-700">₹{fmt(price.total)}</span>
+                <span className="font-bold text-indigo-700">₹{fmt(price.total)}</span>
               </div>
             )}
           </div>
@@ -854,7 +854,7 @@ export default function BookService() {
           <div className="space-y-3">
             <Link
               to="/app/bookings"
-              className="block w-full text-center bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition-colors shadow-md"
+              className="block w-full text-center bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold py-3.5 rounded-xl hover:from-indigo-700 hover:to-indigo-800 transition-all shadow-md"
             >
               View My Bookings
             </Link>
@@ -868,7 +868,7 @@ export default function BookService() {
 
           <p className="mt-6 text-xs text-slate-400">
             Need help?{' '}
-            <a href="tel:+919999999999" className="text-blue-500 font-semibold hover:underline">+91 99999 99999</a>
+            <a href="tel:+919999999999" className="text-indigo-500 font-semibold hover:underline">+91 99999 99999</a>
             {' '}(24/7 Support)
           </p>
         </div>
@@ -883,12 +883,12 @@ export default function BookService() {
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="section-container flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2.5 group" aria-label="Angels One Home">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-sm group-hover:bg-blue-700 transition-colors">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm group-hover:bg-indigo-700 transition-colors">
               <HeartIcon className="w-4 h-4 text-white" />
             </div>
             <div className="leading-tight hidden sm:block">
-              <p className="font-bold text-[15px] leading-none text-blue-700">Angels One</p>
-              <p className="text-[9px] font-medium tracking-widest uppercase text-teal-600">Healthcare Services</p>
+              <p className="font-bold text-[15px] leading-none text-indigo-700">Angels One</p>
+              <p className="text-[9px] font-medium tracking-widest uppercase text-emerald-600">Healthcare Services</p>
             </div>
           </Link>
 
@@ -896,7 +896,7 @@ export default function BookService() {
 
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-blue-600 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-semibold text-slate-500 hover:text-indigo-700 transition-colors"
           >
             <ArrowLeftIcon className="w-4 h-4" />
             <span className="hidden sm:inline">Back to Home</span>
@@ -943,7 +943,7 @@ export default function BookService() {
               {step < TOTAL ? (
                 <button
                   type="button" onClick={handleNext}
-                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 text-sm font-bold text-white shadow-md hover:bg-blue-700 hover:shadow-lg transition-all"
+                  className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 text-sm font-bold text-white shadow-md hover:from-indigo-700 hover:to-indigo-800 hover:shadow-lg transition-all"
                 >
                   {step === TOTAL - 1 ? 'Review Booking' : 'Next'}
                   <ArrowRightIcon className="w-4 h-4" />
@@ -973,9 +973,9 @@ export default function BookService() {
               <details className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
                 <summary className="flex items-center justify-between px-5 py-4 cursor-pointer font-semibold text-slate-700 text-sm select-none">
                   <span className="flex items-center gap-2">
-                    <CurrencyRupeeIcon className="w-4 h-4 text-blue-500" />
+                    <CurrencyRupeeIcon className="w-4 h-4 text-indigo-500" />
                     Booking Summary
-                    {price && <span className="text-blue-600 font-bold">· ₹{fmt(price.total)}</span>}
+                    {price && <span className="text-indigo-600 font-bold">· ₹{fmt(price.total)}</span>}
                   </span>
                   <span className="text-slate-400 text-xs">tap to expand</span>
                 </summary>
@@ -987,7 +987,7 @@ export default function BookService() {
                   {price && (
                     <div className="flex justify-between font-bold text-slate-900 text-sm border-t border-slate-200 pt-2">
                       <span>Estimated Total</span>
-                      <span className="text-blue-600">₹{fmt(price.total)}</span>
+                      <span className="text-indigo-600">₹{fmt(price.total)}</span>
                     </div>
                   )}
                 </div>

@@ -9,7 +9,7 @@ function TabButton({ active, onClick, children }) {
       onClick={onClick}
       className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap ${
         active
-          ? 'bg-blue-600 text-white shadow-sm'
+          ? 'bg-indigo-600 text-white shadow-sm'
           : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
       }`}
     >
@@ -22,7 +22,7 @@ function Toggle({ on, onToggle }) {
   return (
     <button
       onClick={onToggle}
-      className={`relative inline-flex w-11 h-6 rounded-full transition-colors flex-shrink-0 ${on ? 'bg-blue-600' : 'bg-slate-300'}`}
+      className={`relative inline-flex w-11 h-6 rounded-full transition-colors flex-shrink-0 ${on ? 'bg-indigo-600' : 'bg-slate-300'}`}
     >
       <span className={`inline-block w-5 h-5 bg-white rounded-full shadow transition-transform mt-0.5 ${on ? 'translate-x-5' : 'translate-x-0.5'}`} />
     </button>
@@ -121,7 +121,7 @@ function PersonalInfoTab({ user, onUserUpdate }) {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
         <div className="flex items-center gap-5">
           <div className="relative flex-shrink-0">
-            <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center text-white text-2xl font-bold">
+            <div className="w-20 h-20 rounded-full bg-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
               {initial}
             </div>
             <button
@@ -135,7 +135,7 @@ function PersonalInfoTab({ user, onUserUpdate }) {
           <div>
             <p className="font-semibold text-slate-800 text-lg">{form.name}</p>
             <p className="text-sm text-slate-500">{form.email}</p>
-            <span className="inline-block mt-1 text-xs bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-full">CLIENT</span>
+            <span className="inline-block mt-1 text-xs bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full">CLIENT</span>
           </div>
         </div>
       </div>
@@ -195,7 +195,7 @@ function PersonalInfoTab({ user, onUserUpdate }) {
         <button
           type="submit"
           disabled={saving}
-          className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors"
         >
           {saving ? 'Saving…' : 'Save Changes'}
         </button>
@@ -239,7 +239,7 @@ function SecurityTab() {
         {error && <p className="text-xs text-rose-500">{error}</p>}
       </div>
       <div className="flex items-center gap-4">
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+        <button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
           Update Password
         </button>
         {success && (
@@ -284,7 +284,7 @@ function NotificationsTab() {
         ))}
       </div>
       <div className="flex items-center gap-4">
-        <button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
+        <button onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors">
           Save Preferences
         </button>
         {saved && (
@@ -305,7 +305,7 @@ export default function Profile() {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">My Profile</h1>
+        <h1 className="text-2xl font-black text-slate-800">My Profile</h1>
         <p className="text-slate-500 text-sm mt-1">Manage your account information and preferences.</p>
       </div>
 

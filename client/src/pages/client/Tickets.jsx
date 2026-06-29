@@ -9,7 +9,7 @@ const TICKET_STATUS_STYLES = {
   OPEN:        'bg-amber-100 text-amber-700',
   SOLVED:      'bg-green-100 text-green-700',
   UNSOLVED:    'bg-rose-100 text-rose-700',
-  IN_PROGRESS: 'bg-blue-100 text-blue-700',
+  IN_PROGRESS: 'bg-indigo-100 text-indigo-700',
   RESOLVED:    'bg-green-100 text-green-700',
   CLOSED:      'bg-slate-100 text-slate-500',
 };
@@ -114,7 +114,7 @@ function TicketCard({ ticket, currentUserId }) {
           </div>
           <button
             onClick={() => setExpanded(v => !v)}
-            className="flex items-center gap-1 text-xs text-slate-500 hover:text-blue-600 font-medium transition-colors flex-shrink-0 mt-1"
+            className="flex items-center gap-1 text-xs text-slate-500 hover:text-indigo-600 font-medium transition-colors flex-shrink-0 mt-1"
           >
             {expanded ? 'Hide' : 'View Conversation'}
             {expanded ? <ChevronUpIcon className="w-4 h-4" /> : <ChevronDownIcon className="w-4 h-4" />}
@@ -131,14 +131,14 @@ function TicketCard({ ticket, currentUserId }) {
             <div key={idx} className={`flex ${isMyMsg(msg) ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-xs sm:max-w-sm rounded-2xl px-4 py-2.5 ${
                 isMyMsg(msg)
-                  ? 'bg-blue-600 text-white rounded-br-sm'
+                  ? 'bg-indigo-600 text-white rounded-br-sm'
                   : 'bg-white border border-slate-200 text-slate-700 rounded-bl-sm'
               }`}>
                 {!isMyMsg(msg) && (
                   <p className="text-xs font-semibold mb-1 text-slate-500">{msg.sender?.name || 'Support'}</p>
                 )}
                 <p className="text-sm">{msg.text}</p>
-                <p className={`text-xs mt-1 ${isMyMsg(msg) ? 'text-blue-200' : 'text-slate-400'}`}>
+                <p className={`text-xs mt-1 ${isMyMsg(msg) ? 'text-indigo-200' : 'text-slate-400'}`}>
                   {formatAt(msg.at)}
                 </p>
               </div>
@@ -159,12 +159,12 @@ function TicketCard({ ticket, currentUserId }) {
                   onChange={e => setReply(e.target.value)}
                   placeholder="Type your reply..."
                   rows={2}
-                  className="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                  className="flex-1 px-3 py-2 text-sm border border-slate-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white"
                 />
                 <button
                   onClick={handleSend}
                   disabled={sending || !reply.trim()}
-                  className="self-end bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
+                  className="self-end bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-colors"
                 >
                   {sending ? '…' : 'Send'}
                 </button>
@@ -233,7 +233,7 @@ function NewTicketForm({ bookings, onCreated }) {
         </p>
         <button
           onClick={() => setSuccess(null)}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors"
         >
           Raise Another Ticket
         </button>
@@ -304,7 +304,7 @@ function NewTicketForm({ bookings, onCreated }) {
       <button
         type="submit"
         disabled={busy}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
+        className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold py-3 px-6 rounded-xl transition-colors"
       >
         {busy ? 'Submitting…' : 'Submit Ticket'}
       </button>
@@ -359,7 +359,7 @@ export default function Tickets() {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">Support Tickets</h1>
+        <h1 className="text-2xl font-black text-slate-800">Support Tickets</h1>
         <p className="text-slate-500 text-sm mt-1">Raise issues or track existing support requests.</p>
       </div>
 
@@ -370,13 +370,13 @@ export default function Tickets() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
               activeTab === tab.id
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-indigo-600 text-white shadow-sm'
                 : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
             {tab.label}
             {tab.id === 'list' && tickets.length > 0 && (
-              <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'list' ? 'bg-blue-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+              <span className={`ml-2 text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'list' ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
                 {tickets.length}
               </span>
             )}
@@ -388,7 +388,7 @@ export default function Tickets() {
         <div className="space-y-4">
           {loading ? (
             <div className="flex justify-center py-16">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : tickets.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center">
@@ -397,7 +397,7 @@ export default function Tickets() {
               <p className="text-slate-400 text-sm mt-1">Raise a ticket if you need support.</p>
               <button
                 onClick={() => setActiveTab('new')}
-                className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl transition-colors"
+                className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors"
               >
                 Raise a Ticket
               </button>

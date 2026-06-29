@@ -26,17 +26,17 @@ function LineChart({ data, height = 180 }) {
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+          <stop offset="0%" stopColor="#6366f1" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#6366f1" stopOpacity="0" />
         </linearGradient>
       </defs>
       <polygon points={area} fill="url(#revGrad)" />
-      <polyline points={line} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+      <polyline points={line} fill="none" stroke="#6366f1" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
       {pts.map((p, i) => (
         <g key={i}>
-          <circle cx={p.x} cy={p.y} r="4" fill="white" stroke="#3b82f6" strokeWidth="2" />
+          <circle cx={p.x} cy={p.y} r="4" fill="white" stroke="#6366f1" strokeWidth="2" />
           <text x={p.x} y={H - 8} textAnchor="middle" fontSize="10" fill="#94a3b8">{data[i].month}</text>
-          <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize="9" fill="#3b82f6" fontWeight="600">{fmt(data[i].revenue)}</text>
+          <text x={p.x} y={p.y - 8} textAnchor="middle" fontSize="9" fill="#6366f1" fontWeight="600">{fmt(data[i].revenue)}</text>
         </g>
       ))}
     </svg>
@@ -57,7 +57,7 @@ function BarChart({ data, height = 160 }) {
         const y = H - padB - bH;
         return (
           <g key={d.month}>
-            <rect x={x} y={y} width={barW} height={bH} rx="6" fill="#3b82f6" opacity="0.8" />
+            <rect x={x} y={y} width={barW} height={bH} rx="6" fill="#6366f1" opacity="0.8" />
             <text x={x + barW / 2} y={H - 10} textAnchor="middle" fontSize="10" fill="#94a3b8">{d.month}</text>
             <text x={x + barW / 2} y={y - 5} textAnchor="middle" fontSize="10" fill="#1e293b" fontWeight="700">{d.count}</text>
           </g>
@@ -111,8 +111,8 @@ function DonutChart({ segments }) {
 }
 
 const accentMap = {
-  teal:   { bg: 'bg-teal-100',   text: 'text-teal-600',   num: 'text-teal-700' },
-  blue:   { bg: 'bg-blue-100',   text: 'text-blue-600',   num: 'text-blue-700' },
+  teal:   { bg: 'bg-emerald-100',   text: 'text-emerald-600',   num: 'text-emerald-700' },
+  blue:   { bg: 'bg-indigo-100',   text: 'text-indigo-600',   num: 'text-indigo-700' },
   violet: { bg: 'bg-violet-100', text: 'text-violet-600', num: 'text-violet-700' },
   green:  { bg: 'bg-green-100',  text: 'text-green-600',  num: 'text-green-700' },
 };
@@ -169,7 +169,7 @@ export default function Analytics() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <>
@@ -192,8 +192,8 @@ export default function Analytics() {
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
-                  { label: 'Total Clients',  value: dash.totalClients,  color: 'text-blue-700' },
-                  { label: 'Total Leaders',  value: dash.totalLeaders,  color: 'text-teal-700' },
+                  { label: 'Total Clients',  value: dash.totalClients,  color: 'text-indigo-700' },
+                  { label: 'Total Leaders',  value: dash.totalLeaders,  color: 'text-emerald-700' },
                   { label: 'Pending',        value: dash.pendingBookings, color: 'text-amber-700' },
                   { label: 'Open Tickets',   value: dash.openTickets,   color: 'text-rose-700' },
                 ].map(s => (

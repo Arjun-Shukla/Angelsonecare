@@ -26,9 +26,9 @@ const STATUS_LABEL = {
 
 const STATUS_COLOR = {
   ACCEPTED:             'bg-green-100 text-green-700',
-  IN_PROGRESS:          'bg-blue-100 text-blue-700',
+  IN_PROGRESS:          'bg-indigo-100 text-indigo-700',
   COMPLETION_REQUESTED: 'bg-purple-100 text-purple-700',
-  COMPLETED:            'bg-teal-100 text-teal-700',
+  COMPLETED:            'bg-emerald-100 text-emerald-700',
   PENDING:              'bg-amber-100 text-amber-700',
 };
 
@@ -70,7 +70,7 @@ function ActiveBookingCard({ booking }) {
           <p className="text-xs text-slate-400 font-medium">Client</p>
           <p className="font-semibold text-slate-700">{booking.client?.name || '—'}</p>
           {booking.client?.phone && (
-            <a href={`tel:${booking.client.phone}`} className="text-xs text-teal-600 hover:underline">
+            <a href={`tel:${booking.client.phone}`} className="text-xs text-emerald-600 hover:underline">
               {booking.client.phone}
             </a>
           )}
@@ -106,7 +106,7 @@ function ActiveBookingCard({ booking }) {
       <div className="flex gap-2 flex-wrap">
         <Link
           to={`/leader/progress/${id}`}
-          className="flex items-center gap-1.5 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold rounded-xl transition-colors"
+          className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl transition-colors"
         >
           <WrenchScrewdriverIcon className="w-4 h-4" />
           Update Progress
@@ -157,7 +157,7 @@ function RecentActivity({ bookings }) {
             const id = b._id || b.id;
             return (
               <li key={id} className="flex gap-4 pl-6 relative">
-                <span className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-teal-500 bg-white flex-shrink-0" />
+                <span className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-2 border-indigo-500 bg-white flex-shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs text-slate-400 font-medium">
                     {new Date(b.updatedAt || b.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })} · {new Date(b.updatedAt || b.createdAt).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
@@ -170,7 +170,7 @@ function RecentActivity({ bookings }) {
           })}
         </ul>
       </div>
-      <Link to="/leader/bookings" className="block text-center text-xs text-teal-600 hover:underline mt-4 font-medium">
+      <Link to="/leader/bookings" className="block text-center text-xs text-emerald-600 hover:underline mt-4 font-medium">
         View all bookings →
       </Link>
     </div>
@@ -221,13 +221,13 @@ export default function LeaderDashboard() {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">Good morning, {firstName}!</h1>
+        <h1 className="text-2xl font-black text-slate-900">Good morning, {firstName}!</h1>
         <p className="text-sm text-slate-500 mt-1">{today}{user?.location ? ` · ${user.location}` : ''}</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard label="Total Assigned"  value={bookings.length}           colorClass="bg-teal-100 text-teal-600"   Icon={ClipboardListIcon} loading={loading} />
-        <StatCard label="Active"          value={activeBookings.length}     colorClass="bg-blue-100 text-blue-600"   Icon={ArrowRightIcon}    loading={loading} />
+        <StatCard label="Total Assigned"  value={bookings.length}           colorClass="bg-emerald-100 text-emerald-600" Icon={ClipboardListIcon} loading={loading} />
+        <StatCard label="Active"          value={activeBookings.length}     colorClass="bg-indigo-100 text-indigo-600"   Icon={ArrowRightIcon}    loading={loading} />
         <StatCard label="Completed Total" value={completedBookings.length}  colorClass="bg-green-100 text-green-600" Icon={CheckCircleIcon}   loading={loading} />
         <StatCard label="Open Tickets"    value={openTickets}               colorClass="bg-amber-100 text-amber-600" Icon={BellIcon}          loading={loading} />
       </div>
@@ -238,19 +238,19 @@ export default function LeaderDashboard() {
             <h2 className="font-bold text-slate-800">
               Active Assignments
               {!loading && activeBookings.length > 0 && (
-                <span className="ml-2 text-xs font-semibold bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">
+                <span className="ml-2 text-xs font-semibold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full">
                   {activeBookings.length}
                 </span>
               )}
             </h2>
-            <Link to="/leader/bookings" className="text-xs text-teal-600 hover:text-teal-700 font-semibold">
+            <Link to="/leader/bookings" className="text-xs text-emerald-600 hover:text-emerald-700 font-semibold">
               View all →
             </Link>
           </div>
 
           {loading ? (
             <div className="flex justify-center py-16">
-              <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+              <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin" />
             </div>
           ) : activeBookings.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-10 text-center">
@@ -279,7 +279,7 @@ export default function LeaderDashboard() {
                       </div>
                       <Link
                         to={`/leader/progress/${id}`}
-                        className="flex-shrink-0 p-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 rounded-lg transition-colors"
+                        className="flex-shrink-0 p-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors"
                         title="Update Progress"
                       >
                         <WrenchScrewdriverIcon className="w-4 h-4" />

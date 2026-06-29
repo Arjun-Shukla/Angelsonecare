@@ -12,6 +12,7 @@ import {
   BellIcon,
   ArrowRightOnRectangleIcon,
   HomeModernIcon,
+  HeartIcon,
 } from '../common/icons.jsx';
 
 const navItems = [
@@ -37,8 +38,15 @@ function SidebarContent({ user, onNavigate }) {
   return (
     <div className="flex flex-col h-full">
       <div className="px-6 py-5 border-b border-slate-100">
-        <span className="text-xl font-bold text-blue-600 tracking-tight">Angels One</span>
-        <span className="block text-xs text-slate-400 font-medium mt-0.5">Healthcare Services</span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
+            <HeartIcon className="w-4 h-4 text-white" />
+          </div>
+          <div>
+            <span className="text-base font-black text-indigo-700 tracking-tight">Angels One</span>
+            <span className="block text-[10px] text-slate-400 font-medium tracking-widest uppercase mt-0.5">Healthcare</span>
+          </div>
+        </div>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -49,10 +57,10 @@ function SidebarContent({ user, onNavigate }) {
             end={end}
             onClick={onNavigate}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+              `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:bg-indigo-50 hover:text-indigo-700'
               }`
             }
           >
@@ -75,7 +83,7 @@ function SidebarContent({ user, onNavigate }) {
         <div className="pt-2">
           <button
             onClick={() => { navigate('/book'); if (onNavigate) onNavigate(); }}
-            className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2.5 px-4 rounded-full transition-colors shadow-sm"
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-sm font-semibold py-2.5 px-4 rounded-full transition-all shadow-sm hover:shadow-md"
           >
             <span className="text-lg leading-none">+</span>
             Book a Service
@@ -85,7 +93,7 @@ function SidebarContent({ user, onNavigate }) {
 
       <div className="px-3 py-4 border-t border-slate-100">
         <div className="flex items-center gap-3 px-3 py-2 mb-2">
-          <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
             {initial}
           </div>
           <div className="min-w-0 flex-1">
@@ -149,7 +157,7 @@ export default function DashboardLayout() {
         >
           <MenuIcon className="w-5 h-5" />
         </button>
-        <span className="text-base font-bold text-blue-600">Angels One</span>
+        <span className="text-base font-black text-indigo-700">Angels One</span>
         <button className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100">
           <BellIcon className="w-5 h-5" />
         </button>

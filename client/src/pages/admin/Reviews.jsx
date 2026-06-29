@@ -116,7 +116,7 @@ export default function AdminReviews() {
             onClick={() => setFilter(s)}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
               filter === s
-                ? 'bg-blue-600 text-white'
+                ? 'bg-indigo-600 text-white'
                 : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
@@ -127,7 +127,7 @@ export default function AdminReviews() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -141,7 +141,7 @@ export default function AdminReviews() {
               <div key={review._id} className="bg-white rounded-2xl border border-slate-100 p-5">
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                       {initials(clientName)}
                     </div>
                     <div>

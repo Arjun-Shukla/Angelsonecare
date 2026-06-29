@@ -7,7 +7,7 @@ const STATUS_FILTERS = ['ALL', 'OPEN', 'IN_PROGRESS', 'SOLVED', 'UNSOLVED', 'RES
 
 const statusBadge = {
   OPEN:        'bg-amber-100 text-amber-700',
-  IN_PROGRESS: 'bg-blue-100 text-blue-700',
+  IN_PROGRESS: 'bg-indigo-100 text-indigo-700',
   SOLVED:      'bg-green-100 text-green-700',
   UNSOLVED:    'bg-rose-100 text-rose-700',
   RESOLVED:    'bg-green-100 text-green-700',
@@ -36,8 +36,8 @@ function MessageBubble({ msg }) {
   if (role === 'CLIENT') {
     return (
       <div className="flex justify-end mb-2">
-        <div className="max-w-xs sm:max-w-md bg-blue-50 rounded-xl px-3 py-2">
-          <p className="text-[10px] font-bold text-blue-600 mb-0.5">Client · {formatAt(msg.at)}</p>
+        <div className="max-w-xs sm:max-w-md bg-indigo-50 rounded-xl px-3 py-2">
+          <p className="text-[10px] font-bold text-indigo-600 mb-0.5">Client · {formatAt(msg.at)}</p>
           <p className="text-xs text-slate-700">{msg.text}</p>
         </div>
       </div>
@@ -46,8 +46,8 @@ function MessageBubble({ msg }) {
   if (role === 'LEADER') {
     return (
       <div className="flex justify-start mb-2">
-        <div className="max-w-xs sm:max-w-md bg-teal-50 rounded-xl px-3 py-2">
-          <p className="text-[10px] font-bold text-teal-600 mb-0.5">Leader · {formatAt(msg.at)}</p>
+        <div className="max-w-xs sm:max-w-md bg-emerald-50 rounded-xl px-3 py-2">
+          <p className="text-[10px] font-bold text-emerald-600 mb-0.5">Leader · {formatAt(msg.at)}</p>
           <p className="text-xs text-slate-700">{msg.text}</p>
         </div>
       </div>
@@ -115,7 +115,7 @@ function TicketRow({ ticket, onUpdate }) {
     <div className="bg-white rounded-2xl border border-slate-100 p-4">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
         <div className="flex items-start gap-3 flex-wrap">
-          <span className="bg-blue-100 text-blue-700 text-xs font-bold px-2 py-0.5 rounded-lg flex-shrink-0">
+          <span className="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-lg flex-shrink-0">
             {ticket.ticketId || ticket._id?.slice(-8).toUpperCase()}
           </span>
           <p className="text-sm font-semibold text-slate-800">{ticket.subject}</p>
@@ -128,7 +128,7 @@ function TicketRow({ ticket, onUpdate }) {
         </div>
         <button
           onClick={() => setExpanded(v => !v)}
-          className="flex items-center gap-1 text-xs text-blue-600 font-semibold hover:text-blue-800 flex-shrink-0"
+          className="flex items-center gap-1 text-xs text-indigo-600 font-semibold hover:text-indigo-800 flex-shrink-0"
         >
           {expanded
             ? <><ChevronUpIcon className="w-4 h-4" /> Collapse</>
@@ -165,12 +165,12 @@ function TicketRow({ ticket, onUpdate }) {
                   placeholder="Reply as Admin..."
                   value={replyText}
                   onChange={e => setReplyText(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-slate-200 rounded-xl text-xs text-slate-700 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-3 py-2 border border-slate-200 rounded-xl text-xs text-slate-700 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
                 <button
                   onClick={handleReply}
                   disabled={!replyText.trim() || sending}
-                  className="px-3 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors flex-shrink-0"
+                  className="px-3 py-2 bg-indigo-600 text-white text-xs font-semibold rounded-xl hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors flex-shrink-0"
                 >
                   {sending ? '…' : 'Reply'}
                 </button>
@@ -182,7 +182,7 @@ function TicketRow({ ticket, onUpdate }) {
                 <select
                   value={status}
                   onChange={e => { setStatus(e.target.value); setUpdateErr(''); }}
-                  className="h-9 px-2 border border-slate-200 rounded-xl text-xs text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="h-9 px-2 border border-slate-200 rounded-xl text-xs text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   {STATUS_OPTIONS.map(s => (
                     <option key={s} value={s}>{s.replace('_', ' ')}</option>
@@ -280,7 +280,7 @@ export default function AdminTickets() {
         {!loading && (
           <div className="flex flex-wrap gap-2 mt-2">
             <span className="text-xs font-semibold bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full">Open: {counts.OPEN}</span>
-            <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">In Progress: {counts.IN_PROGRESS}</span>
+            <span className="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full">In Progress: {counts.IN_PROGRESS}</span>
             <span className="text-xs font-semibold bg-green-100 text-green-700 px-2.5 py-1 rounded-full">Solved: {counts.SOLVED}</span>
             <span className="text-xs font-semibold bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full">Unsolved: {counts.UNSOLVED}</span>
             <span className="text-xs font-semibold bg-slate-100 text-slate-500 px-2.5 py-1 rounded-full">Closed: {counts.CLOSED + counts.RESOLVED}</span>
@@ -296,7 +296,7 @@ export default function AdminTickets() {
             placeholder="Search tickets..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 h-10 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-3 h-10 border border-slate-200 rounded-xl text-sm text-slate-700 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
         <div className="flex gap-1.5 flex-wrap">
@@ -306,7 +306,7 @@ export default function AdminTickets() {
               onClick={() => setFilter(s)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
                 filter === s
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-indigo-600 text-white'
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
@@ -318,7 +318,7 @@ export default function AdminTickets() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <div className="space-y-3">

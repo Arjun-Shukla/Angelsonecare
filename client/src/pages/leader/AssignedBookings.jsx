@@ -12,9 +12,9 @@ import { SocketContext } from '../../context/SocketContext.jsx';
 const STATUS_STYLES = {
   PENDING:              'bg-amber-100 text-amber-700',
   ACCEPTED:             'bg-green-100 text-green-700',
-  IN_PROGRESS:          'bg-blue-100 text-blue-700',
+  IN_PROGRESS:          'bg-indigo-100 text-indigo-700',
   COMPLETION_REQUESTED: 'bg-purple-100 text-purple-700',
-  COMPLETED:            'bg-teal-100 text-teal-700',
+  COMPLETED:            'bg-emerald-100 text-emerald-700',
 };
 
 const STATUS_LABEL = {
@@ -45,12 +45,12 @@ function FilterTab({ label, count, active, onClick }) {
       onClick={onClick}
       className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${
         active
-          ? 'bg-teal-600 text-white shadow-sm'
+          ? 'bg-indigo-600 text-white shadow-sm'
           : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
       }`}
     >
       {label}
-      <span className={`text-xs px-1.5 py-0.5 rounded-full ${active ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+      <span className={`text-xs px-1.5 py-0.5 rounded-full ${active ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
         {count}
       </span>
     </button>
@@ -92,7 +92,7 @@ function BookingCard({ booking }) {
       <div className="flex gap-2 pt-1 flex-wrap">
         <Link
           to={`/leader/progress/${id}`}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 hover:bg-teal-100 text-teal-700 text-xs font-semibold rounded-xl transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-xl transition-colors"
         >
           <WrenchScrewdriverIcon className="w-3.5 h-3.5" />
           Update Progress
@@ -108,7 +108,7 @@ function BookingCard({ booking }) {
         )}
         <Link
           to={`/leader/clients/${booking.client?._id || booking.client?.id}`}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-xl transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold rounded-xl transition-colors"
         >
           <UserIcon className="w-3.5 h-3.5" />
           Client
@@ -166,7 +166,7 @@ export default function AssignedBookings() {
       <div className="animate-fade-in space-y-4">
         <h1 className="text-2xl font-bold text-slate-800">Assigned Bookings</h1>
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -244,7 +244,7 @@ export default function AssignedBookings() {
                       <Link
                         to={`/leader/progress/${id}`}
                         title="Update Progress"
-                        className="p-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-700 transition-colors"
+                        className="p-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors"
                       >
                         <WrenchScrewdriverIcon className="w-4 h-4" />
                       </Link>
@@ -260,7 +260,7 @@ export default function AssignedBookings() {
                       <Link
                         to={`/leader/clients/${b.client?._id}`}
                         title="Client Details"
-                        className="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 transition-colors"
+                        className="p-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 transition-colors"
                       >
                         <UserIcon className="w-4 h-4" />
                       </Link>

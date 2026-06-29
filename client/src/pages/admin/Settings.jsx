@@ -42,7 +42,7 @@ function Toggle({ value, onChange, label, danger }) {
         type="button"
         onClick={() => onChange(!value)}
         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ${
-          value ? (danger ? 'bg-red-500' : 'bg-blue-600') : 'bg-slate-200'
+          value ? (danger ? 'bg-red-500' : 'bg-indigo-600') : 'bg-slate-200'
         }`}
       >
         <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${value ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -77,7 +77,7 @@ function TextInput({ value, onChange, type = 'text', disabled = false, placehold
       onChange={e => onChange(e.target.value)}
       disabled={disabled}
       placeholder={placeholder}
-      className={`w-full h-10 px-3 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${disabled ? 'bg-slate-50 text-slate-400' : 'bg-white'}`}
+      className={`w-full h-10 px-3 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${disabled ? 'bg-slate-50 text-slate-400' : 'bg-white'}`}
     />
   );
 }
@@ -87,7 +87,7 @@ function SaveButton({ onClick, saving, label = 'Save Changes' }) {
     <button
       onClick={onClick}
       disabled={saving}
-      className="px-5 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
+      className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-semibold rounded-xl hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
     >
       {saving ? 'Saving…' : label}
     </button>
@@ -222,7 +222,7 @@ export default function AdminSettings() {
   if (loading) {
     return (
       <div className="flex justify-center py-16 animate-fade-in">
-        <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -244,7 +244,7 @@ export default function AdminSettings() {
             onClick={() => { setActiveTab(tab.key); setSaved(false); setError(''); }}
             className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors ${
               activeTab === tab.key
-                ? 'bg-blue-600 text-white'
+                ? 'bg-indigo-600 text-white'
                 : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >

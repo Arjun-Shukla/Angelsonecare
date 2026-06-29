@@ -93,7 +93,7 @@ function ReviewForm({ booking, onSubmit }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-teal-100 shadow-sm p-5 space-y-4">
+    <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-emerald-100 shadow-sm p-5 space-y-4">
       <div>
         <p className="font-semibold text-slate-800">{booking.service}</p>
         <p className="text-xs text-slate-400 mt-0.5">
@@ -139,7 +139,7 @@ function ReviewForm({ booking, onSubmit }) {
       <button
         type="submit"
         disabled={busy}
-        className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold py-3 rounded-xl transition-colors"
+        className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-semibold py-3 rounded-xl transition-colors"
       >
         {busy ? 'Submitting…' : 'Submit Review'}
       </button>
@@ -240,7 +240,7 @@ export default function Reviews() {
   if (loading) {
     return (
       <div className="animate-fade-in flex justify-center py-24">
-        <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -250,7 +250,7 @@ export default function Reviews() {
   return (
     <div className="animate-fade-in space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800">Reviews</h1>
+        <h1 className="text-2xl font-black text-slate-800">Reviews</h1>
         <p className="text-slate-500 text-sm mt-1">Share your experience and help others choose the right care.</p>
       </div>
 

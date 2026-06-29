@@ -32,24 +32,24 @@ function MessageCard({ msg, onRead, onDelete }) {
   return (
     <div
       className={`bg-white rounded-2xl border p-5 transition-all ${
-        msg.isRead ? 'border-slate-100' : 'border-blue-200 shadow-sm'
+        msg.isRead ? 'border-slate-100' : 'border-indigo-200 shadow-sm'
       }`}
     >
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div className="flex items-start gap-3 flex-1 min-w-0">
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-            msg.isRead ? 'bg-slate-100' : 'bg-blue-100'
+            msg.isRead ? 'bg-slate-100' : 'bg-indigo-100'
           }`}>
-            <EnvelopeIcon className={`w-5 h-5 ${msg.isRead ? 'text-slate-400' : 'text-blue-600'}`} />
+            <EnvelopeIcon className={`w-5 h-5 ${msg.isRead ? 'text-slate-400' : 'text-indigo-600'}`} />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <p className="text-sm font-bold text-slate-900">{msg.name}</p>
               {!msg.isRead && (
-                <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded-full">NEW</span>
+                <span className="text-[10px] font-bold bg-indigo-600 text-white px-2 py-0.5 rounded-full">NEW</span>
               )}
               {msg.service && (
-                <span className="text-xs font-medium bg-teal-50 text-teal-700 px-2 py-0.5 rounded-full">{msg.service}</span>
+                <span className="text-xs font-medium bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full">{msg.service}</span>
               )}
             </div>
             <div className="flex items-center gap-3 mt-0.5 flex-wrap text-xs text-slate-500">
@@ -136,7 +136,7 @@ export default function AdminMessages() {
         <p className="text-slate-500 text-sm mt-0.5">Contact form enquiries from the website</p>
         {!loading && (
           <div className="flex gap-2 mt-2">
-            <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">Total: {messages.length}</span>
+            <span className="text-xs font-semibold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full">Total: {messages.length}</span>
             {unreadCount > 0 && (
               <span className="text-xs font-semibold bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full">Unread: {unreadCount}</span>
             )}
@@ -151,7 +151,7 @@ export default function AdminMessages() {
             onClick={() => setFilter(f)}
             className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
               filter === f
-                ? 'bg-blue-600 text-white'
+                ? 'bg-indigo-600 text-white'
                 : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
@@ -162,7 +162,7 @@ export default function AdminMessages() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16">

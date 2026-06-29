@@ -73,8 +73,8 @@ function SuccessScreen({ name, email, showToast }) {
         <span className="font-semibold text-slate-700">{email}</span>.
       </p>
 
-      <div className="flex items-center justify-center gap-2 text-sm text-blue-600">
-        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-blue-200 border-t-blue-600" />
+      <div className="flex items-center justify-center gap-2 text-sm text-indigo-600">
+        <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-indigo-200 border-t-indigo-600" />
         Redirecting you to the homepage…
       </div>
     </div>
@@ -236,13 +236,13 @@ export default function Signup() {
                   checked={values.terms}
                   onChange={onChange}
                   onBlur={onBlur}
-                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                 />
                 <span className="text-sm text-slate-600 leading-relaxed">
                   I agree to the{' '}
-                  <a href="#" className="font-semibold text-blue-600 hover:underline">Terms of Service</a>
+                  <a href="#" className="font-semibold text-indigo-600 hover:underline">Terms of Service</a>
                   {' '}and{' '}
-                  <a href="#" className="font-semibold text-blue-600 hover:underline">Privacy Policy</a>
+                  <a href="#" className="font-semibold text-indigo-600 hover:underline">Privacy Policy</a>
                 </span>
               </label>
               {touched.terms && errors.terms && (
@@ -253,7 +253,7 @@ export default function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-blue-600 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:bg-blue-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 py-3.5 text-sm font-bold text-white shadow-md transition-all hover:from-indigo-700 hover:to-indigo-800 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading && (
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -264,7 +264,7 @@ export default function Signup() {
 
           <p className="mt-7 text-center text-sm text-slate-600">
             Already have an account?{' '}
-            <Link to="/login" className="font-semibold text-blue-600 hover:text-blue-700 hover:underline">
+            <Link to="/login" className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">
               Sign in
             </Link>
           </p>

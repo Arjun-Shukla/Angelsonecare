@@ -17,7 +17,7 @@ const PRIORITY_STYLES = {
 
 const STATUS_STYLES = {
   OPEN:        'bg-amber-100 text-amber-700',
-  IN_PROGRESS: 'bg-blue-100 text-blue-700',
+  IN_PROGRESS: 'bg-indigo-100 text-indigo-700',
   SOLVED:      'bg-green-100 text-green-700',
   UNSOLVED:    'bg-rose-100 text-rose-700',
   RESOLVED:    'bg-green-100 text-green-700',
@@ -63,7 +63,7 @@ function MessageBubble({ msg, currentUserId }) {
       <div className="flex justify-start">
         <div className="max-w-xs sm:max-w-sm">
           <p className="text-xs text-slate-400 font-medium mb-1">You · {formatAt(msg.at)}</p>
-          <div className="bg-teal-50 border border-teal-200 rounded-2xl rounded-tl-sm px-4 py-3">
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl rounded-tl-sm px-4 py-3">
             <p className="text-sm text-slate-800">{msg.text}</p>
           </div>
         </div>
@@ -135,7 +135,7 @@ function TicketCard({ ticket, currentUserId, onUpdate }) {
       <div className="p-5">
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="px-2.5 py-1 rounded-full bg-teal-100 text-teal-700 text-xs font-bold font-mono">
+            <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold font-mono">
               {ticket.ticketId || ticket._id?.slice(-8).toUpperCase()}
             </span>
             <h3 className="font-semibold text-slate-800 text-sm">{ticket.subject}</h3>
@@ -159,7 +159,7 @@ function TicketCard({ ticket, currentUserId, onUpdate }) {
       <div className="border-t border-slate-100 px-5 py-3 flex items-center justify-between flex-wrap gap-2">
         <button
           onClick={() => setExpanded(v => !v)}
-          className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-teal-700 transition-colors"
+          className="flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-emerald-700 transition-colors"
         >
           {expanded ? <ChevronUpIcon className="w-4 h-4" /> : <ChevronDownIcon className="w-4 h-4" />}
           {expanded ? 'Collapse' : 'View Conversation'}
@@ -213,7 +213,7 @@ function TicketCard({ ticket, currentUserId, onUpdate }) {
               <button
                 onClick={handleSend}
                 disabled={!reply.trim() || sending}
-                className="px-5 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
+                className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-xl transition-colors"
               >
                 {sending ? 'Sending…' : 'Send Reply'}
               </button>
@@ -293,13 +293,13 @@ export default function LeaderTickets() {
           onClick={() => setActiveTab('all')}
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${
             activeTab === 'all'
-              ? 'bg-teal-600 text-white shadow-sm'
+              ? 'bg-indigo-600 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           <TagIcon className="w-4 h-4" />
           All Tickets
-          <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'all' ? 'bg-teal-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+          <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'all' ? 'bg-indigo-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
             {tickets.length}
           </span>
         </button>
@@ -307,12 +307,12 @@ export default function LeaderTickets() {
           onClick={() => setActiveTab('open')}
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-colors flex items-center gap-2 ${
             activeTab === 'open'
-              ? 'bg-teal-600 text-white shadow-sm'
+              ? 'bg-indigo-600 text-white shadow-sm'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
           Needs Action
-          <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'open' ? 'bg-teal-500 text-white' : 'bg-amber-100 text-amber-700'}`}>
+          <span className={`text-xs px-1.5 py-0.5 rounded-full ${activeTab === 'open' ? 'bg-indigo-500 text-white' : 'bg-amber-100 text-amber-700'}`}>
             {openCount}
           </span>
         </button>
@@ -320,7 +320,7 @@ export default function LeaderTickets() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="w-8 h-8 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : visible.length === 0 ? (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-12 text-center">

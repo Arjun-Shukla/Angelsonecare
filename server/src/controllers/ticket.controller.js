@@ -108,13 +108,13 @@ export const updateStatus = async (req, res) => {
   const VALID = ['OPEN', 'IN_PROGRESS', 'SOLVED', 'UNSOLVED', 'RESOLVED', 'CLOSED'];
   if (!VALID.includes(status)) throw new ApiError(400, `Status must be one of: ${VALID.join(', ')}`);
 
-  const ticket = await Ticket.findByIdAndUpdate(
-    req.params.id,
-    { status, resolvedBy: req.user._id, statusUpdatedAt: new Date() },
-    { new: true }
-  )
-    .populate(POPULATE_USER)
-    .populate(POPULATE_RESOLVED_BY);
+  const ticket = await populateFull(
+    Ticket.findByIdAndUpdate(
+      req.params.id,
+      { status, resolvedBy: req.user._id, statusUpdatedAt: new Date() },
+      { new: true }
+    )
+  );
   if (!ticket) throw new ApiError(404, 'Ticket not found');
 
   // Real-time: push status update to the client and all staff

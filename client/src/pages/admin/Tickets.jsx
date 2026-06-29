@@ -70,6 +70,7 @@ function TicketRow({ ticket, onUpdate }) {
   const [replyText, setReplyText] = useState('');
   const [sending,   setSending]   = useState(false);
   const [updating,  setUpdating]  = useState(false);
+  const [updateErr, setUpdateErr] = useState('');
 
   // Sync when parent updates ticket via socket
   useEffect(() => { setStatus(ticket.status); }, [ticket.status]);
@@ -97,12 +98,14 @@ function TicketRow({ ticket, onUpdate }) {
 
   async function handleStatusUpdate() {
     setUpdating(true);
+    setUpdateErr('');
     try {
       const res = await updateStatus(ticket._id, status);
       const updated = res.data?.ticket;
       onUpdate && onUpdate({ ...ticket, status, ...updated });
-    } catch {
+    } catch (err) {
       setStatus(ticket.status);
+      setUpdateErr(err.response?.data?.message || 'Failed to update status.');
     } finally {
       setUpdating(false);
     }
@@ -173,23 +176,26 @@ function TicketRow({ ticket, onUpdate }) {
                 </button>
               </div>
             )}
-            <div className="flex gap-2 items-center">
-              <select
-                value={status}
-                onChange={e => setStatus(e.target.value)}
-                className="h-9 px-2 border border-slate-200 rounded-xl text-xs text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {STATUS_OPTIONS.map(s => (
-                  <option key={s} value={s}>{s.replace('_', ' ')}</option>
-                ))}
-              </select>
-              <button
-                onClick={handleStatusUpdate}
-                disabled={updating || status === ticket.status}
-                className="px-3 py-2 bg-slate-700 text-white text-xs font-semibold rounded-xl hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
-              >
-                {updating ? '…' : 'Update'}
-              </button>
+            <div className="flex flex-col gap-1">
+              {updateErr && <p className="text-xs text-red-600">{updateErr}</p>}
+              <div className="flex gap-2 items-center">
+                <select
+                  value={status}
+                  onChange={e => { setStatus(e.target.value); setUpdateErr(''); }}
+                  className="h-9 px-2 border border-slate-200 rounded-xl text-xs text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {STATUS_OPTIONS.map(s => (
+                    <option key={s} value={s}>{s.replace('_', ' ')}</option>
+                  ))}
+                </select>
+                <button
+                  onClick={handleStatusUpdate}
+                  disabled={updating || status === ticket.status}
+                  className="px-3 py-2 bg-slate-700 text-white text-xs font-semibold rounded-xl hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 transition-colors"
+                >
+                  {updating ? '…' : 'Update'}
+                </button>
+              </div>
             </div>
           </div>
         </div>

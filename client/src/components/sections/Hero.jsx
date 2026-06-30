@@ -6,7 +6,7 @@ import CountUp from '../common/CountUp.jsx';
 const STATS = [
   { target: 2000, suffix: '+', label: 'Happy Clients',       icon: UserGroupIcon,   color: 'from-indigo-400 to-indigo-600' },
   { target: 50,   suffix: '+', label: 'Expert Caregivers',   icon: SparklesIcon,    color: 'from-emerald-400 to-emerald-600' },
-  { target: 20,   suffix: '+', label: 'Healthcare Services', icon: HeartIcon,       color: 'from-violet-400 to-violet-600' },
+  { target: 15,   suffix: '+', label: 'Healthcare Services', icon: HeartIcon,       color: 'from-violet-400 to-violet-600' },
   { target: 99,   suffix: '%', label: 'Satisfaction Rate',   icon: ShieldCheckIcon, color: 'from-amber-400 to-orange-500' },
 ];
 
@@ -98,8 +98,8 @@ export default function Hero() {
             className="text-lg sm:text-xl text-white/75 leading-relaxed mb-10 max-w-2xl font-light animate-slide-up"
             style={{ animationDelay: '220ms' }}
           >
-            Angels One connects you with verified, compassionate caregivers for home nursing, elder care,
-            post-surgery recovery, and more — with real-time tracking and OTP-secured completion.
+            Angels One Health connects you with verified, compassionate caregivers for home nursing, elder care,
+            physiotherapy care, baby care and more with real-time tracking and OTP-secured completion.
           </p>
 
           {/* CTAs */}

@@ -72,7 +72,7 @@ export default function Testimonials() {
             <span className="text-gradient">Happy Families</span>
           </h2>
           <p className="text-slate-500 mt-4 text-lg leading-relaxed">
-            Real reviews from real clients who trusted Angels One with their loved ones' care.
+            Real reviews from real clients who trusted Angels One Health Care with their loved ones' care.
           </p>
         </div>
 

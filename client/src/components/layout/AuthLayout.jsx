@@ -3,7 +3,7 @@ import { HeartIcon, ShieldCheckIcon, BoltIcon, ClockIcon, ArrowLeftIcon } from '
 
 const TRUST_POINTS = [
   { icon: ShieldCheckIcon, text: 'Every caregiver is government-verified and background-checked' },
-  { icon: BoltIcon,        text: 'OTP-secured service completion — fully fraud-proof' },
+  { icon: BoltIcon,        text: 'OTP-secured service completion - fully fraud-proof' },
   { icon: ClockIcon,       text: '24/7 support and real-time booking status tracking' },
 ];
 
@@ -43,14 +43,14 @@ export default function AuthLayout({ children, heading, subheading }) {
             <div>
               <span className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-200 bg-white/10 px-3 py-1.5 rounded-full mb-5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Trusted by 2,000+ families across UP
+                Trusted by 2,000+ families across India
               </span>
               <h2 className="text-3xl xl:text-4xl font-black text-white leading-tight">
                 Professional Care,<br />
                 <span className="text-emerald-300">Right at Home.</span>
               </h2>
               <p className="text-indigo-100 mt-4 text-sm xl:text-base leading-relaxed max-w-sm">
-                Join thousands of families who rely on Angels One for verified, compassionate home healthcare.
+                Join thousands of families who rely on Angels One Health Care for verified, compassionate home healthcare.
               </p>
             </div>
 
@@ -67,18 +67,8 @@ export default function AuthLayout({ children, heading, subheading }) {
           </div>
 
           {/* Testimonial */}
-          <div className="mt-auto pt-8">
+          {/* <div className="mt-auto pt-8">
             <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5">
-              <div className="flex gap-0.5 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-                  </svg>
-                ))}
-              </div>
-              <p className="text-white/90 text-sm leading-relaxed italic">
-                "The caregiver assigned to my mother was exceptional — professional, punctual, and genuinely caring. I wouldn't trust anyone else."
-              </p>
               <div className="flex items-center gap-2.5 mt-3.5">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-emerald-500 flex items-center justify-center text-white font-bold text-sm shrink-0">P</div>
                 <div>
@@ -87,7 +77,7 @@ export default function AuthLayout({ children, heading, subheading }) {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </aside>
 

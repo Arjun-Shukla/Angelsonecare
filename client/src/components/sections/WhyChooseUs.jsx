@@ -18,7 +18,7 @@ const FEATURES = [
     icon:  ClockIcon,
     color: 'violet',
     title: 'Real-Time Progress Tracking',
-    desc:  'Follow your service live — from acceptance and assignment to each progress update — right from your dashboard.',
+    desc:  'Follow your service live - from acceptance and assignment to each progress update - right from your dashboard.',
   },
   {
     icon:  ClockIcon,
@@ -30,13 +30,13 @@ const FEATURES = [
     icon:  CurrencyRupeeIcon,
     color: 'rose',
     title: 'Transparent, Affordable Pricing',
-    desc:  'No hidden charges. See the full service cost before booking, with flexible payment options including Razorpay.',
+    desc:  'No hidden charges. See the full service cost before booking, with flexible payment options.',
   },
   {
     icon:  SparklesIcon,
     color: 'teal',
     title: 'Effortless Online Booking',
-    desc:  'Book any service in under two minutes — select, schedule, pay, and relax while we handle the rest.',
+    desc:  'Book any service in under two minutes - select, schedule, pay, and relax while we handle the rest.',
   },
 ];
 
@@ -115,9 +115,9 @@ export default function WhyChooseUs() {
           <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left">
               <p className="text-2xl lg:text-3xl font-extrabold text-white leading-tight">
-                Join 2,000+ families who trust Angels One
+                Join 2,000+ families who trust Angels One Health Care
               </p>
-              <p className="text-indigo-200 mt-2">Start with a free consultation — no commitment required.</p>
+              <p className="text-indigo-200 mt-2">Start with a free consultation - no commitment required.</p>
             </div>
             <a
               href="#contact"

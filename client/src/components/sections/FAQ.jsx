@@ -5,35 +5,35 @@ import { useInView } from '../../hooks/useInView.js';
 const FAQS = [
   {
     q: 'How do I book a service?',
-    a: "Simply create an account, browse our services, select the one you need, choose a date and time, complete payment via Razorpay, and we'll confirm your booking instantly. You'll receive a confirmation email with all the details.",
+    a: "Simply create an account, browse our services, select the one you need, choose a date and time and we'll confirm your booking instantly. You'll receive a confirmation in your dashboard with all the details.",
   },
   {
     q: 'How are caregivers verified?',
-    a: 'Every caregiver on Angels One undergoes a thorough background check, credential verification, and identity validation before being onboarded. We also conduct regular performance reviews and client feedback assessments.',
+    a: 'Every caregiver on Angels One Health Care undergoes a thorough background check, credential verification, and identity validation before being onboarded. We also conduct regular performance reviews and client feedback assessments.',
   },
   {
     q: 'What is OTP verification for service completion?',
-    a: 'When a service is completed, the caregiver enters a one-time PIN that you receive on your registered mobile number. This ensures the service was actually delivered and prevents unauthorised closure of bookings.',
+    a: 'When a service is completed, the caregiver enters a one-time PIN that you receive on your Dashboard. This ensures the service was actually delivered and prevents unauthorised closure of bookings.',
   },
   {
     q: 'Can I track my service in real time?',
-    a: 'Yes! Your dashboard shows live booking status updates — from Pending to Accepted, In Progress, and Completed. You also receive real-time notifications at each stage of the service.',
+    a: 'Yes! Your dashboard shows live booking status updates - from Pending to Accepted, In Progress, and Completed. You also receive real-time notifications at each stage of the service.',
   },
   {
     q: 'What payment methods are accepted?',
-    a: 'We support all major payment methods through our Razorpay integration — UPI, credit/debit cards, net banking, wallets, and EMI options are all available. All transactions are encrypted and secure.',
+    a: 'We support all major payment methods through UPI, credit/debit cards, net banking, wallets, and EMI options are all available. All transactions are encrypted and secure.',
   },
   {
     q: 'Can I cancel or reschedule a booking?',
-    a: 'Yes. You can cancel or reschedule from your dashboard before the service begins. Cancellation policies vary by service type — full details are shown at the time of booking.',
+    a: 'Yes. You can cancel or reschedule from your dashboard before the service begins. Cancellation policies vary by service type - full details are shown at the time of booking.',
   },
   {
     q: 'Are services available on weekends and holidays?',
-    a: 'Our customer support is available 24/7, and most of our services operate 7 days a week including public holidays. Service availability may vary by location — contact us for specific schedules.',
+    a: 'Our customer support is available 24/7, and most of our services operate 7 days a week including public holidays. Service availability may vary by location - contact us for specific schedules.',
   },
   {
     q: 'Which areas do you currently serve?',
-    a: 'We currently serve Lucknow, Kanpur, Varanasi, Allahabad, and surrounding areas in Uttar Pradesh. We are rapidly expanding — check our website or contact us to see if we serve your location.',
+    a: 'We currently serve Bengaluru, Delhi, Pune, Calcutta, Mumbai and Chennai. We are rapidly expanding - check our website or contact us to see if we serve your location.',
   },
 ];
 

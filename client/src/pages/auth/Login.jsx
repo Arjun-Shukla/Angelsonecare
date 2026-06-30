@@ -63,7 +63,7 @@ export default function Login() {
   return (
     <AuthLayout
       heading="Welcome back"
-      subheading="Sign in to your Angels One account"
+      subheading="Sign in to your Angels One Health account"
     >
       <ErrorBanner message={authError} />
 

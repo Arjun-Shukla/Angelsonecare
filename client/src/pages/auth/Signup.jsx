@@ -141,7 +141,7 @@ export default function Signup() {
       subheading={
         showSuccess
           ? 'Welcome to Angels One Healthcare Services'
-          : 'Join Angels One and access professional home healthcare'
+          : 'Join Angels One Health Care and access professional home healthcare'
       }
     >
       {showSuccess && successData ? (

@@ -7,31 +7,31 @@ const CONTACT_INFO = [
   {
     icon:  PhoneIcon,
     label: 'Phone',
-    value: '+91 98765 43210',
-    sub:   'Mon – Sat, 8 AM – 9 PM',
-    href:  'tel:+919876543210',
+    value: '+91 9902112580',
+    sub:   'Mon - Sat, 8 AM - 9 PM',
+    href:  'tel:+917047553342',
     color: 'bg-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white',
   },
   {
     icon:  MailIcon,
     label: 'Email',
-    value: 'care@angelsone.in',
+    value: 'hello@angelsonecare.in',
     sub:   'We reply within 24 hours',
-    href:  'mailto:care@angelsone.in',
+    href:  'mailto:hello@angelsonecare.in',
     color: 'bg-emerald-100 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white',
   },
   {
     icon:  MapPinIcon,
     label: 'Address',
-    value: 'Lucknow, Uttar Pradesh',
-    sub:   'India – 226001',
+    value: '4th Main Srikaneteshwar Nager Nandini layout bengalore',
+    sub:   'India  560086',
     href:  '#',
     color: 'bg-violet-100 text-violet-600 group-hover:bg-violet-600 group-hover:text-white',
   },
   {
     icon:  ClockIcon,
     label: 'Working Hours',
-    value: 'Mon – Sat: 8 AM – 9 PM',
+    value: 'Mon - Sat: 8 AM - 9 PM',
     sub:   'Emergency support: 24/7',
     href:  '#',
     color: 'bg-amber-100 text-amber-600 group-hover:bg-amber-500 group-hover:text-white',
@@ -86,13 +86,13 @@ export default function Contact() {
             <span className="text-gradient">Our Team</span>
           </h2>
           <p className="text-slate-500 mt-4 text-lg leading-relaxed">
-            Book a service, ask a question, or request a free consultation — we're here to help.
+            Book a service, ask a question, or request a free consultation - we're here to help.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-5 gap-8">
 
-          {/* Contact info sidebar — slides from left */}
+          {/* Contact info sidebar - slides from left */}
           <div
             ref={sideRef}
             className={`lg:col-span-2 space-y-4 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -128,8 +128,8 @@ export default function Contact() {
                 <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center mx-auto mb-2 shadow-sm">
                   <MapPinIcon className="w-6 h-6 text-indigo-600" />
                 </div>
-                <p className="text-sm text-slate-700 font-semibold">Lucknow, Uttar Pradesh</p>
-                <p className="text-xs text-slate-500 mt-0.5">India – 226001</p>
+                <p className="text-sm text-slate-700 font-semibold">Bengalore, Karnataka</p>
+                <p className="text-xs text-slate-500 mt-0.5">India - 560086</p>
               </div>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function Contact() {
                     <textarea
                       id="message" name="message" rows={4} required
                       value={form.message} onChange={onChange}
-                      placeholder="Tell us about your requirements — patient condition, preferred schedule, location, etc."
+                      placeholder="Tell us about your requirements - patient condition, preferred schedule, location, etc."
                       className="input-style resize-none"
                     />
                   </div>

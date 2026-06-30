@@ -12,7 +12,7 @@ const ACHIEVEMENTS = [
   { target: 5,    suffix: '+', label: 'Years of Service',  color: 'text-indigo-700' },
   { target: 2000, suffix: '+', label: 'Satisfied Clients', color: 'text-emerald-600' },
   { target: 50,   suffix: '+', label: 'Expert Caregivers', color: 'text-indigo-700' },
-  { target: 15,   suffix: '+', label: 'Cities Covered',    color: 'text-emerald-600' },
+  { target: 5,   suffix: '+', label: 'Cities Covered',    color: 'text-emerald-600' },
 ];
 
 // Returns className + style for a reveal transition
@@ -74,7 +74,7 @@ export default function About() {
                   <div className="text-center">
                     <p className="text-2xl font-extrabold text-slate-900">Our Mission</p>
                     <p className="text-slate-500 mt-2 max-w-xs mx-auto leading-relaxed text-sm">
-                      To make quality healthcare accessible, affordable, and personal — wherever you are.
+                      To make quality healthcare accessible, affordable, and personal - wherever you are.
                     </p>
                   </div>
 
@@ -117,12 +117,12 @@ export default function About() {
 
             <p className="text-slate-600 text-lg leading-relaxed mb-5">
               Angels One Healthcare Services was founded with a simple belief: everyone deserves access
-              to professional, compassionate healthcare — right in the comfort of their own home.
+              to professional, compassionate healthcare - right in the comfort of their own home.
             </p>
 
             <p className="text-slate-500 leading-relaxed mb-10">
               Whether you need a nurse for post-surgery care, a physiotherapist for rehabilitation, or a
-              caregiver for your elderly loved ones, we bring experienced professionals to your doorstep —
+              caregiver for your elderly loved ones, we bring experienced professionals to your doorstep -
               vetted, trained, and ready to serve.
             </p>
 

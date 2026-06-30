@@ -129,8 +129,8 @@ export default function Footer() {
                   <PhoneIcon className="w-4 h-4 text-indigo-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-white font-semibold">+91 98765 43210</p>
-                  <p className="text-xs text-slate-600 mt-0.5">Mon – Sat, 8 AM – 9 PM</p>
+                  <p className="text-sm text-white font-semibold">+91 9902112580</p>
+                  <p className="text-xs text-slate-600 mt-0.5">Mon - Sat, 8 AM - 9 PM</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
@@ -138,7 +138,7 @@ export default function Footer() {
                   <MailIcon className="w-4 h-4 text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-white font-semibold">care@angelsone.in</p>
+                  <p className="text-sm text-white font-semibold">hello@angelsonecare.in</p>
                   <p className="text-xs text-slate-600 mt-0.5">We reply within 24 hours</p>
                 </div>
               </li>
@@ -146,7 +146,7 @@ export default function Footer() {
                 <div className="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <MapPinIcon className="w-4 h-4 text-slate-400" />
                 </div>
-                <p className="text-sm text-slate-500">Lucknow, Uttar Pradesh, India</p>
+                <p className="text-sm text-slate-500">Bengalore, Karnataka, India</p>
               </li>
             </ul>
           </div>

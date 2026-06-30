@@ -24,15 +24,15 @@ const navItems = [
   { label: 'Profile',           to: '/leader/profile',              Icon: UserCircleIcon },
 ];
 
-const initials = MOCK_LEADER.name
-  .split(' ')
-  .map(w => w[0])
-  .join('')
-  .toUpperCase();
-
 function SidebarContent({ onClose }) {
-  const navigate    = useNavigate();
-  const { setUser } = useAuth();
+  const navigate        = useNavigate();
+  const { setUser, user } = useAuth();
+
+  const initials = (user?.name || '')
+    .split(' ')
+    .map(w => w[0])
+    .join('')
+    .toUpperCase();
 
   function handleSignOut() {
     setUser(null);
@@ -49,7 +49,7 @@ function SidebarContent({ onClose }) {
             <HeartIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-base font-black text-slate-800 tracking-tight">Angels One</span>
+            <span className="text-base font-black text-slate-800 tracking-tight">Angels One Health</span>
             <span className="block text-xs text-emerald-600 font-semibold mt-0.5">Leader Portal</span>
           </div>
         </div>
@@ -101,7 +101,7 @@ function SidebarContent({ onClose }) {
             {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-slate-800 truncate">{MOCK_LEADER.name}</p>
+            <p className="text-sm font-semibold text-slate-800 truncate">{user?.name}</p>
             <span className="inline-block text-xs bg-emerald-50 text-emerald-700 font-semibold px-1.5 py-0.5 rounded">LEADER</span>
           </div>
         </div>

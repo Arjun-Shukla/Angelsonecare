@@ -140,10 +140,10 @@ function RecentActivity({ bookings }) {
   }
 
   const activityText = (b) => {
-    if (b.status === 'ACCEPTED')             return `${b.service} — accepted & assigned`;
-    if (b.status === 'IN_PROGRESS')          return `${b.service} — service in progress`;
-    if (b.status === 'COMPLETION_REQUESTED') return `${b.service} — OTP verification pending`;
-    if (b.status === 'COMPLETED')            return `${b.service} — service completed`;
+    if (b.status === 'ACCEPTED')             return `${b.service} - accepted & assigned`;
+    if (b.status === 'IN_PROGRESS')          return `${b.service} - service in progress`;
+    if (b.status === 'COMPLETION_REQUESTED') return `${b.service} - OTP verification pending`;
+    if (b.status === 'COMPLETED')            return `${b.service} - service completed`;
     return `${b.service} updated`;
   };
 

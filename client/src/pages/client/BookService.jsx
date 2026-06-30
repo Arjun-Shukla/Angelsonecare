@@ -9,13 +9,50 @@ import { createBooking as apiCreateBooking } from '../../api/booking.api.js';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 // ── Static data ────────────────────────────────────────────────────────────────
+const CATEGORIES = [
+  { id: 'gda',    label: 'GDA Staff',     desc: 'General Duty Attendant' },
+  { id: 'nurse',  label: 'Nurse',         desc: 'Trained nursing staff' },
+  { id: 'gnm',    label: 'GNM / BSc Nurse', desc: 'Qualified nursing degree' },
+  { id: 'doctor', label: 'Doctor Visit',  desc: 'Certified medical doctor' },
+];
+
 const SERVICES = [
-  { id: 'elder-care',    name: 'Elder Care',         desc: 'Compassionate daily care for senior citizens at home',         basePrice: 900,  color: 'blue',   svgPath: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z' },
-  { id: 'home-nursing',  name: 'Home Nursing',       desc: 'Certified nurses for clinical-grade home medical care',         basePrice: 1600, color: 'teal',   svgPath: 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z' },
-  { id: 'patient-care',  name: 'Patient Caretaker',  desc: 'Personal attendant for recovery and daily assistance',          basePrice: 700,  color: 'violet', svgPath: 'M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z' },
-  { id: 'physiotherapy', name: 'Physiotherapy',      desc: 'Expert physiotherapy sessions in the comfort of your home',    basePrice: 1500, color: 'orange', svgPath: 'm3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z' },
-  { id: 'post-surgery',  name: 'Post-Surgery Care',  desc: 'Specialized care and monitoring after surgical procedures',     basePrice: 1100, color: 'rose',   svgPath: 'M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z' },
-  { id: 'medical-assist',name: 'Medical Assistance', desc: 'Vitals monitoring, medication support and general medical care', basePrice: 900,  color: 'green',  svgPath: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z' },
+  {
+    id: 'elder-care', name: 'Elder Care', desc: 'Compassionate daily care for senior citizens at home',
+    color: 'blue',
+    pricing: { gda: 1100, nurse: 1700, gnm: 2200, doctor: 2500 },
+    svgPath: 'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z',
+  },
+  {
+    id: 'home-nursing', name: 'Home Nursing', desc: 'Certified nurses for clinical-grade home medical care',
+    color: 'teal',
+    pricing: {  nurse: 1700, gnm: 2200 },
+    svgPath: 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z',
+  },
+  {
+    id: 'patient-care', name: 'Patient Caretaker', desc: 'Personal attendant for recovery and daily assistance',
+    color: 'violet',
+    pricing: { gda: 1100, nurse: 1700, gnm: 2200, doctor: 2500 },
+    svgPath: 'M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z',
+  },
+  {
+    id: 'physiotherapy', name: 'Physiotherapy', desc: 'Expert physiotherapy sessions in the comfort of your home',
+    color: 'orange',
+    pricing: { gda: 1100, nurse: 1700, gnm: 2200, doctor: 2500 },
+    svgPath: 'm3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z',
+  },
+  {
+    id: 'post-surgery', name: 'Post-Surgery Care', desc: 'Specialized care and monitoring after surgical procedures',
+    color: 'rose',
+    pricing: { gda: 1100, nurse: 1700, gnm: 2200, doctor: 2500 },
+    svgPath: 'M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z',
+  },
+  {
+    id: 'medical-assist', name: 'Medical Assistance', desc: 'Vitals monitoring, medication support and general medical care',
+    color: 'green',
+    pricing: { gda: 1100, nurse: 1700, gnm: 2200, doctor: 2500 },
+    svgPath: 'M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z',
+  },
 ];
 
 const PALETTE = {
@@ -28,19 +65,19 @@ const PALETTE = {
 };
 
 const DURATIONS = [
-  { label: '1 Day',   days: 1  },
-  { label: '3 Days',  days: 3  },
-  { label: '1 Week',  days: 7  },
-  { label: '2 Weeks', days: 14 },
+  { label: '15 Day',   days: 15  },
+  { label: '20 Days',  days: 20  },
+  // { label: '25 Days',  days: 25  },
   { label: '1 Month', days: 30 },
+  { label: '45 Days', days: 45 },
   { label: 'Custom',  days: null },
 ];
 
 const SHIFTS = [
-  { label: 'Morning',   time: '6 AM – 2 PM'  },
-  { label: 'Afternoon', time: '2 PM – 10 PM' },
-  { label: 'Evening',   time: '4 PM – 8 PM'  },
-  { label: 'Night',     time: '10 PM – 6 AM' },
+  { label: 'Morning',   time: '6 AM - 2 PM'  },
+  { label: 'Afternoon', time: '2 PM - 10 PM' },
+  { label: 'Evening',   time: '4 PM - 8 PM'  },
+  { label: 'Night',     time: '10 PM - 6 AM' },
   { label: '24 Hours',  time: 'Full Day'      },
 ];
 
@@ -72,6 +109,7 @@ const STEP_LABELS = ['Service', 'Patient', 'Details', 'Location', 'Schedule', 'R
 
 const INITIAL = {
   service: null,
+  category: null,
   patientName: '', patientAge: '', gender: '', relationship: '',
   duration: '', shift: '', customDays: '',
   address: '', city: '', state: '', pincode: '',
@@ -82,7 +120,7 @@ const INITIAL = {
 const fmt = (n) => new Intl.NumberFormat('en-IN').format(n);
 
 function computePrice(booking) {
-  if (!booking.service || !booking.duration) return null;
+  if (!booking.service || !booking.category || !booking.duration) return null;
   let days;
   if (booking.duration === 'Custom') {
     if (!booking.customDays || +booking.customDays < 1) return null;
@@ -92,16 +130,17 @@ function computePrice(booking) {
     if (!dur?.days) return null;
     days = dur.days;
   }
-  const base = booking.service.basePrice;
+  const base = booking.service.pricing[booking.category.id];
   const subtotal = base * days;
   const discount = days >= 30 ? Math.round(subtotal * 0.1) : 0;
-  return { subtotal, discount, total: subtotal - discount, days };
+  return { subtotal, discount, total: subtotal - discount, days, base };
 }
 
 function validateStep(step, booking) {
   const e = {};
   if (step === 1) {
-    if (!booking.service) e.service = 'Please select a service to continue';
+    if (!booking.service)  e.service  = 'Please select a service to continue';
+    else if (!booking.category) e.category = 'Please select a staff category';
   }
   if (step === 2) {
     if (!booking.patientName.trim())              e.patientName   = 'Patient name is required';
@@ -161,6 +200,7 @@ function SummaryPanel({ booking, price }) {
         </div>
         <div className="p-5 space-y-3">
           <SummaryRow label="Service"  value={booking.service?.name} />
+          <SummaryRow label="Category" value={booking.category?.label} />
           <SummaryRow label="Duration" value={booking.duration === 'Custom' && booking.customDays ? `${booking.customDays} days` : booking.duration} />
           <SummaryRow label="Shift"    value={shiftTime ? `${booking.shift} (${shiftTime})` : booking.shift} />
           <SummaryRow label="City"     value={booking.city} />
@@ -182,7 +222,7 @@ function SummaryPanel({ booking, price }) {
             {price ? (
               <div className="space-y-1.5 text-sm">
                 <div className="flex justify-between text-slate-500">
-                  <span>₹{fmt(booking.service.basePrice)} × {price.days} day{price.days > 1 ? 's' : ''}</span>
+                  <span>₹{fmt(price.base)} × {price.days} day{price.days > 1 ? 's' : ''}</span>
                   <span>₹{fmt(price.subtotal)}</span>
                 </div>
                 {price.discount > 0 && (
@@ -249,21 +289,23 @@ function ProgressBar({ step }) {
 }
 
 // ── Step 1: Service Selection ──────────────────────────────────────────────────
-function StepService({ booking, errors, onSelect }) {
+function StepService({ booking, errors, onSelect, onCategory }) {
+  const svc = booking.service;
   return (
     <div>
       <h2 className="text-xl font-bold text-slate-900 mb-1">Choose a Service</h2>
       <p className="text-slate-500 text-sm mb-5">All professionals are verified, background-checked and trained.</p>
       {errors.service && <FieldError msg={errors.service} />}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-        {SERVICES.map((svc) => {
-          const pal = PALETTE[svc.color];
-          const selected = booking.service?.id === svc.id;
+        {SERVICES.map((s) => {
+          const pal = PALETTE[s.color];
+          const selected = booking.service?.id === s.id;
+          const minPrice = Math.min(...Object.values(s.pricing));
           return (
             <button
-              key={svc.id}
+              key={s.id}
               type="button"
-              onClick={() => onSelect(svc)}
+              onClick={() => onSelect(s)}
               aria-pressed={selected}
               className={`text-left p-4 rounded-2xl border-2 transition-all duration-200 ${
                 selected ? pal.sel : `border-slate-200 bg-white ${pal.hover} hover:shadow-sm`
@@ -272,17 +314,17 @@ function StepService({ booking, errors, onSelect }) {
               <div className="flex items-start gap-3">
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${pal.icon}`}>
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d={svc.svgPath} />
+                    <path strokeLinecap="round" strokeLinejoin="round" d={s.svgPath} />
                   </svg>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2 mb-0.5">
-                    <p className="font-bold text-slate-900 text-sm">{svc.name}</p>
+                    <p className="font-bold text-slate-900 text-sm">{s.name}</p>
                     {selected && <CheckCircleIcon className="w-4 h-4 text-indigo-500 shrink-0" />}
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-2">{svc.desc}</p>
+                  <p className="text-xs text-slate-500 leading-relaxed mb-2">{s.desc}</p>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${pal.tag}`}>
-                    from ₹{fmt(svc.basePrice)}/day
+                    from ₹{fmt(minPrice)}/day
                   </span>
                 </div>
               </div>
@@ -290,6 +332,42 @@ function StepService({ booking, errors, onSelect }) {
           );
         })}
       </div>
+
+      {svc && (
+        <div className="mt-6">
+          <p className="text-sm font-bold text-slate-800 mb-1">Select Staff Category</p>
+          <p className="text-xs text-slate-400 mb-3">Prices shown are per day for <strong>{svc.name}</strong>.</p>
+          {errors.category && <FieldError msg={errors.category} />}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-2">
+            {CATEGORIES.map((cat) => {
+              const price = svc.pricing[cat.id];
+              const selected = booking.category?.id === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => onCategory(cat)}
+                  aria-pressed={selected}
+                  className={`text-left p-3.5 rounded-xl border-2 transition-all duration-200 ${
+                    selected
+                      ? 'border-indigo-500 bg-indigo-50 ring-2 ring-indigo-200'
+                      : 'border-slate-200 bg-white hover:border-indigo-200 hover:bg-indigo-50/30'
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-1">
+                    <p className={`text-xs font-bold leading-tight ${selected ? 'text-indigo-700' : 'text-slate-800'}`}>{cat.label}</p>
+                    {selected && <CheckCircleIcon className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />}
+                  </div>
+                  <p className="text-[10px] text-slate-400 mb-2 leading-tight">{cat.desc}</p>
+                  <p className={`text-sm font-extrabold ${selected ? 'text-indigo-600' : 'text-slate-700'}`}>
+                    ₹{fmt(price)}<span className="text-[10px] font-medium text-slate-400">/day</span>
+                  </p>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -480,7 +558,7 @@ function StepLocation({ booking, errors, onChange }) {
         <div className="flex items-start gap-3 rounded-xl bg-slate-50 border border-slate-200 p-4">
           <MapPinIcon className="w-5 h-5 text-indigo-500 mt-0.5 shrink-0" />
           <p className="text-xs text-slate-600 leading-relaxed">
-            We serve <strong>Mumbai, Pune, Delhi NCR, Bengaluru, Hyderabad, Chennai</strong> and 50+ cities across India.
+            We serve <strong>Mumbai, Pune, Delhi NCR, Bengaluru, Calcutta, Chennai</strong> across India.
             Our team will confirm availability for your pincode.
           </p>
         </div>
@@ -614,6 +692,7 @@ function StepReview({ booking, price, onEdit }) {
               </div>
             </div>
           )}
+          <ReviewItem label="Staff Category" value={booking.category ? `${booking.category.label} - ${booking.category.desc}` : ''} />
         </ReviewSection>
 
         <ReviewSection title="Patient Details" step={2} onEdit={onEdit}>
@@ -652,7 +731,7 @@ function StepReview({ booking, price, onEdit }) {
             <p className="text-xs font-semibold text-indigo-700 uppercase tracking-wide mb-3">Estimated Cost</p>
             <div className="space-y-1.5 text-sm">
               <div className="flex justify-between text-slate-600">
-                <span>₹{fmt(svc.basePrice)}/day × {price.days} day{price.days > 1 ? 's' : ''}</span>
+                <span>₹{fmt(price.base)}/day × {price.days} day{price.days > 1 ? 's' : ''}</span>
                 <span>₹{fmt(price.subtotal)}</span>
               </div>
               {price.discount > 0 && (
@@ -672,7 +751,7 @@ function StepReview({ booking, price, onEdit }) {
       <p className="mt-4 text-xs text-slate-400 leading-relaxed text-center">
         By confirming, you agree to our{' '}
         <a href="#" className="text-indigo-500 hover:underline">Terms of Service</a>.
-        Payment is collected at service completion — no advance payment required.
+        Payment is collected at service completion - no advance payment required.
       </p>
     </div>
   );
@@ -702,8 +781,13 @@ export default function BookService() {
   };
 
   const handleSelect = (svc) => {
-    setBooking((b) => ({ ...b, service: svc }));
-    setErrors((er) => ({ ...er, service: '' }));
+    setBooking((b) => ({ ...b, service: svc, category: null }));
+    setErrors((er) => ({ ...er, service: '', category: '' }));
+  };
+
+  const handleCategory = (cat) => {
+    setBooking((b) => ({ ...b, category: cat }));
+    setErrors((er) => ({ ...er, category: '' }));
   };
 
   const handleShift = (label) => {
@@ -770,8 +854,9 @@ export default function BookService() {
       if (booking.notes.trim())  noteParts.push(booking.notes.trim());
 
       const payload = {
-        service:      booking.service.name,
-        patient:      booking.patientName,
+        service:       booking.service.name,
+        staffCategory: booking.category?.label,
+        patient:       booking.patientName,
         patientAge:   booking.patientAge ? +booking.patientAge : undefined,
         gender:       booking.gender.toUpperCase(),
         relationship: booking.relationship,
@@ -912,7 +997,7 @@ export default function BookService() {
           {/* Form panel */}
           <div className="flex-1 min-w-0">
             <div key={step} className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 animate-fade-in">
-              {step === 1 && <StepService  booking={booking} errors={errors} onSelect={handleSelect} />}
+              {step === 1 && <StepService  booking={booking} errors={errors} onSelect={handleSelect} onCategory={handleCategory} />}
               {step === 2 && <StepPatient  booking={booking} errors={errors} onChange={onChange} />}
               {step === 3 && <StepDetails  booking={booking} errors={errors} onChange={onChange} onShift={handleShift} />}
               {step === 4 && <StepLocation booking={booking} errors={errors} onChange={onChange} />}
@@ -981,6 +1066,7 @@ export default function BookService() {
                 </summary>
                 <div className="border-t border-slate-100 px-5 py-4 space-y-2.5">
                   <SummaryRow label="Service"  value={booking.service?.name} />
+                  <SummaryRow label="Category" value={booking.category?.label} />
                   <SummaryRow label="Duration" value={booking.duration} />
                   <SummaryRow label="Shift"    value={booking.shift} />
                   <SummaryRow label="City"     value={booking.city} />

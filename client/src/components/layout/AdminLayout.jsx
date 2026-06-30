@@ -49,7 +49,7 @@ function SidebarContent({ onClose }) {
             <HeartIcon className="w-5 h-5 text-white" />
           </div>
           <div>
-            <span className="text-base font-black text-white tracking-tight">Angels One</span>
+            <span className="text-base font-black text-white tracking-tight">Angels One Health</span>
             <span className="block text-[9px] text-indigo-400 tracking-widest uppercase mt-0.5">Admin Portal</span>
           </div>
         </div>
@@ -116,7 +116,7 @@ function SidebarContent({ onClose }) {
               RA
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-white truncate">Rajesh Angels</p>
+              <p className="text-sm font-semibold text-white truncate">Ibrahim AK</p>
               <span className="inline-block bg-indigo-600/20 text-indigo-400 text-[10px] px-1.5 py-0.5 rounded font-medium">ADMIN</span>
             </div>
           </div>

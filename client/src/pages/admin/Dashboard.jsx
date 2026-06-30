@@ -248,7 +248,7 @@ export default function AdminDashboard() {
           </span>
         </div>
         {pendingBookings.length === 0 ? (
-          <p className="text-slate-400 text-sm py-4 text-center">No pending bookings — you're all caught up!</p>
+          <p className="text-slate-400 text-sm py-4 text-center">No pending bookings - you're all caught up!</p>
         ) : (
           <div className="space-y-0">
             {pendingBookings.map(booking => (

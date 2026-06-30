@@ -202,7 +202,7 @@ export default function ClientDashboard() {
     <div className="animate-fade-in space-y-6">
       <div>
         <h1 className="text-2xl font-black text-slate-900">Welcome back, {firstName}!</h1>
-        <p className="text-slate-500 text-sm mt-1">Here's what's happening today — {today}</p>
+        <p className="text-slate-500 text-sm mt-1">Here's what's happening today - {today}</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

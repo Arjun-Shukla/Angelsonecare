@@ -4,7 +4,7 @@ import { ShieldCheckIcon, UserGroupIcon, SparklesIcon, HeartIcon, CheckCircleIco
 import CountUp from '../common/CountUp.jsx';
 
 const STATS = [
-  { target: 2000, suffix: '+', label: 'Happy Clients',       icon: UserGroupIcon,   color: 'from-indigo-400 to-indigo-600' },
+  { target: 275, suffix: '+', label: 'Happy Clients',       icon: UserGroupIcon,   color: 'from-indigo-400 to-indigo-600' },
   { target: 50,   suffix: '+', label: 'Expert Caregivers',   icon: SparklesIcon,    color: 'from-emerald-400 to-emerald-600' },
   { target: 15,   suffix: '+', label: 'Healthcare Services', icon: HeartIcon,       color: 'from-violet-400 to-violet-600' },
   { target: 99,   suffix: '%', label: 'Satisfaction Rate',   icon: ShieldCheckIcon, color: 'from-amber-400 to-orange-500' },

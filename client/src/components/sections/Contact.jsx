@@ -5,11 +5,13 @@ import { useInView } from '../../hooks/useInView.js';
 
 const CONTACT_INFO = [
   {
-    icon:  PhoneIcon,
-    label: 'Phone',
-    value: '+91 9902112580',
+    icon:   PhoneIcon,
+    label:  'Phone',
+    values: [
+      { text: '+91 9902112580', href: 'tel:+919902112580' },
+      { text: '+91 7047553342', href: 'tel:+917047553342' },
+    ],
     sub:   'Mon - Sat, 8 AM - 9 PM',
-    href:  'tel:+917047553342',
     color: 'bg-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white',
   },
   {
@@ -37,6 +39,8 @@ const CONTACT_INFO = [
     color: 'bg-amber-100 text-amber-600 group-hover:bg-amber-500 group-hover:text-white',
   },
 ];
+
+const REGIONS_SERVED = ['Pune', 'Delhi', 'Calcutta', 'Mumbai', 'Chennai', 'Bengalore'];
 
 const SERVICES_LIST = [
   'Home Nursing Care', 'Elder Care', 'Post-Surgery Care',
@@ -99,28 +103,40 @@ export default function Contact() {
               sideInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'
             }`}
           >
-            {CONTACT_INFO.map(({ icon: Icon, label, value, sub, href, color }, i) => (
-              <a
-                key={label}
-                href={href}
-                className="flex items-start gap-4 p-5 bg-white rounded-2xl border border-slate-100 hover:border-indigo-100 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-0.5 group"
-                style={{
-                  opacity:            sideInView ? 1 : 0,
-                  transitionDelay:    sideInView ? `${i * 80}ms` : '0ms',
-                  transitionProperty: 'opacity, border-color, box-shadow, transform',
-                  transitionDuration: '400ms',
-                }}
-              >
-                <div className={`w-11 h-11 rounded-xl ${color} flex items-center justify-center shrink-0 transition-all duration-300`}>
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{label}</p>
-                  <p className="font-bold text-slate-900 mt-0.5">{value}</p>
-                  <p className="text-sm text-slate-500 mt-0.5">{sub}</p>
-                </div>
-              </a>
-            ))}
+            {CONTACT_INFO.map(({ icon: Icon, label, value, values, sub, href, color }, i) => {
+              const Wrapper  = values ? 'div' : 'a';
+              const wrapperProps = values ? {} : { href };
+              return (
+                <Wrapper
+                  key={label}
+                  {...wrapperProps}
+                  className="flex items-start gap-4 p-5 bg-white rounded-2xl border border-slate-100 hover:border-indigo-100 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-0.5 group"
+                  style={{
+                    opacity:            sideInView ? 1 : 0,
+                    transitionDelay:    sideInView ? `${i * 80}ms` : '0ms',
+                    transitionProperty: 'opacity, border-color, box-shadow, transform',
+                    transitionDuration: '400ms',
+                  }}
+                >
+                  <div className={`w-11 h-11 rounded-xl ${color} flex items-center justify-center shrink-0 transition-all duration-300`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">{label}</p>
+                    {values ? (
+                      values.map(({ text, href: h }) => (
+                        <a key={h} href={h} className="block font-bold text-slate-900 mt-0.5 hover:text-indigo-600 transition-colors">
+                          {text}
+                        </a>
+                      ))
+                    ) : (
+                      <p className="font-bold text-slate-900 mt-0.5">{value}</p>
+                    )}
+                    <p className="text-sm text-slate-500 mt-0.5">{sub}</p>
+                  </div>
+                </Wrapper>
+              );
+            })}
 
             {/* Map placeholder */}
             <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-indigo-100 to-emerald-100 border border-indigo-100 h-44 flex items-center justify-center">
@@ -130,6 +146,22 @@ export default function Contact() {
                 </div>
                 <p className="text-sm text-slate-700 font-semibold">Bengalore, Karnataka</p>
                 <p className="text-xs text-slate-500 mt-0.5">India - 560086</p>
+              </div>
+            </div>
+
+            {/* Regions we serve */}
+            <div className="p-5 bg-white rounded-2xl border border-slate-100 shadow-card">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Regions We Serve</p>
+              <div className="flex flex-wrap gap-2">
+                {REGIONS_SERVED.map((region) => (
+                  <span
+                    key={region}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-100 text-sm font-semibold text-slate-700"
+                  >
+                    <MapPinIcon className="w-3.5 h-3.5 text-indigo-500" />
+                    {region}
+                  </span>
+                ))}
               </div>
             </div>
           </div>

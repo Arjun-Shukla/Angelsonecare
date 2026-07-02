@@ -9,8 +9,8 @@ const VALUES = [
 ];
 
 const ACHIEVEMENTS = [
-  { target: 5,    suffix: '+', label: 'Years of Service',  color: 'text-indigo-700' },
-  { target: 2000, suffix: '+', label: 'Satisfied Clients', color: 'text-emerald-600' },
+  { target: 8,    suffix: '+', label: 'Years of Service',  color: 'text-indigo-700' },
+  { target: 275, suffix: '+', label: 'Satisfied Clients', color: 'text-emerald-600' },
   { target: 50,   suffix: '+', label: 'Expert Caregivers', color: 'text-indigo-700' },
   { target: 5,   suffix: '+', label: 'Cities Covered',    color: 'text-emerald-600' },
 ];

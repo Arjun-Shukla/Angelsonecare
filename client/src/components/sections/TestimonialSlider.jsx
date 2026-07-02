@@ -1,35 +1,32 @@
 import { useState } from 'react';
 import { TESTIMONIALS } from '../../data/testimonials.js';
 
-/* ─── Avatar colour palette (one per testimonial, cycles if more are added) ─── */
 const AVATAR_GRADIENTS = [
-  'from-indigo-400 to-indigo-600',
-  'from-emerald-400 to-emerald-600',
-  'from-violet-400 to-violet-600',
-  'from-teal-400 to-teal-600',
-  'from-rose-400 to-rose-500',
-  'from-amber-400 to-orange-500',
-  'from-sky-400 to-blue-600',
-  'from-fuchsia-400 to-purple-600',
+  'from-indigo-400 to-indigo-700',
+  'from-emerald-400 to-emerald-700',
+  'from-violet-400 to-violet-700',
+  'from-teal-400 to-teal-700',
+  'from-rose-400 to-rose-600',
+  'from-amber-400 to-orange-600',
+  'from-sky-400 to-blue-700',
+  'from-fuchsia-400 to-purple-700',
 ];
 
-/* ─── Service badge colour map ─────────────────────────────────────────────── */
 const SERVICE_STYLES = {
-  'Home Nursing':   'bg-indigo-50  text-indigo-700',
-  'Elder Care':     'bg-emerald-50 text-emerald-700',
-  'Attendant Care': 'bg-violet-50  text-violet-700',
-  'Physiotherapy':  'bg-teal-50    text-teal-700',
-  'Baby Care':      'bg-rose-50    text-rose-600',
+  'Home Nursing':   'bg-indigo-500/30  text-indigo-200  border-indigo-400/30',
+  'Elder Care':     'bg-emerald-500/30 text-emerald-200 border-emerald-400/30',
+  'Attendant Care': 'bg-violet-500/30  text-violet-200  border-violet-400/30',
+  'Physiotherapy':  'bg-teal-500/30    text-teal-200    border-teal-400/30',
+  'Baby Care':      'bg-rose-500/30    text-rose-200    border-rose-400/30',
 };
 
-/* ─── Star rating ──────────────────────────────────────────────────────────── */
 function Stars({ count }) {
   return (
-    <div className="flex gap-0.5" aria-label={`${count} out of 5 stars`}>
+    <div className="flex gap-1" aria-label={`${count} out of 5 stars`}>
       {Array.from({ length: 5 }, (_, i) => (
         <svg
           key={i}
-          className={`w-4 h-4 ${i < count ? 'text-amber-400' : 'text-slate-200'}`}
+          className={`w-4 h-4 ${i < count ? 'text-amber-400' : 'text-white/20'}`}
           fill="currentColor"
           viewBox="0 0 20 20"
           aria-hidden="true"
@@ -41,104 +38,129 @@ function Stars({ count }) {
   );
 }
 
-/* ─── Single testimonial card ──────────────────────────────────────────────── */
-function TestimonialCard({ name, location, service, rating, review, image, colorIndex }) {
-  const initials  = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  const gradient  = AVATAR_GRADIENTS[colorIndex % AVATAR_GRADIENTS.length];
-  const badgeStyle = SERVICE_STYLES[service] ?? 'bg-slate-50 text-slate-600';
+function TestimonialCard({ name, location, service, rating, review, image, imagePosition, imageStyle, colorIndex }) {
+  const initials   = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  const gradient   = AVATAR_GRADIENTS[colorIndex % AVATAR_GRADIENTS.length];
+  const badgeStyle = SERVICE_STYLES[service] ?? 'bg-white/20 text-white/80 border-white/20';
 
   return (
     <article className="
-      w-[300px] sm:w-[340px] lg:w-[360px]
-      flex-shrink-0 flex flex-col gap-4
-      bg-white rounded-2xl p-6
-      border border-slate-100
-      shadow-card
-      transition-all duration-300 ease-out
-      hover:-translate-y-2 hover:shadow-card-hover
+      w-[300px] sm:w-[340px]
+      flex-shrink-0 flex flex-col
+      rounded-2xl overflow-hidden
+      border border-white/10
+      bg-white/8 backdrop-blur-xl
+      shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.1)]
+      transition-all duration-500 ease-out
+      hover:-translate-y-2
+      hover:bg-white/14
+      hover:border-white/20
+      hover:shadow-[0_20px_60px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.15)]
     ">
-      {/* Author row */}
-      <div className="flex items-center gap-3">
-        {/* Avatar: shows initials by default; photo overlays if it loads */}
-        <div className="relative w-12 h-12 rounded-xl flex-shrink-0 overflow-hidden">
-          <div className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br ${gradient} text-white font-bold text-sm select-none`}>
-            {initials}
-          </div>
+
+      {/* ── Large photo area ── */}
+      <div className="relative h-96 w-full flex-shrink-0 overflow-hidden">
+        {/* Gradient fallback / background always visible */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
+          <span className="text-white/30 font-black text-7xl select-none">{initials}</span>
+        </div>
+
+        {/* Actual photo */}
+        {image && (
           <img
             src={image}
             alt={name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover ${imagePosition ?? 'object-center'}`}
+            style={imageStyle}
             onError={e => { e.currentTarget.style.display = 'none'; }}
             loading="lazy"
           />
-        </div>
+        )}
 
-        {/* Name + location */}
-        <div className="min-w-0 flex-1">
-          <p className="font-bold text-slate-800 text-sm leading-snug truncate">{name}</p>
-          <p className="text-xs text-slate-400 truncate">{location}</p>
-        </div>
+        {/* Bottom gradient scrim so text below blends */}
+        <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/40 to-transparent" />
 
-        {/* Service badge */}
-        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 ${badgeStyle}`}>
+        {/* Service badge pinned to bottom-left */}
+        <span className={`absolute bottom-3 left-3 text-xs font-semibold px-3 py-1 rounded-full border backdrop-blur-sm ${badgeStyle}`}>
           {service}
         </span>
       </div>
 
-      {/* Stars */}
-      <Stars count={rating} />
+      {/* ── Card body ── */}
+      <div className="flex flex-col gap-3 p-5 flex-1">
 
-      {/* Review body */}
-      <p className="text-sm text-slate-600 leading-relaxed flex-1">
-        &ldquo;{review}&rdquo;
-      </p>
+        {/* Stars */}
+        <Stars count={rating} />
+
+        {/* Quote */}
+        <p className="text-sm text-white/75 leading-relaxed flex-1">
+          &ldquo;{review}&rdquo;
+        </p>
+
+        {/* Divider */}
+        <div className="h-px bg-white/10" />
+
+        {/* Name + location */}
+        <div>
+          <p className="font-bold text-white text-sm">{name}</p>
+          <p className="text-xs text-white/45 mt-0.5">{location}</p>
+        </div>
+      </div>
     </article>
   );
 }
 
-/* ─── Duplicate items for seamless infinite loop ───────────────────────────── */
 const TRACK_ITEMS = [...TESTIMONIALS, ...TESTIMONIALS];
 
-/* ─── Main slider section ──────────────────────────────────────────────────── */
 export default function TestimonialSlider() {
   const [paused, setPaused] = useState(false);
 
   return (
-    <section className="py-20 lg:py-28 bg-gradient-to-b from-slate-50/80 to-white overflow-hidden">
+    <section className="py-20 lg:py-28 relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 40%, #1a1040 70%, #0d1b2a 100%)' }}
+    >
+      {/* ── Decorative background blobs ── */}
+      <div className="absolute -top-32 left-1/4 w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] rounded-full bg-violet-600/25 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-emerald-500/10 blur-[80px] pointer-events-none" />
 
-      {/* Section header */}
-      <div className="section-container text-center mb-14">
-        <span className="section-badge">❤️ Real Care Stories</span>
-        <h2 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+      {/* ── Section header ── */}
+      <div className="section-container text-center mb-14 relative z-10">
+        <span className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm text-white/90 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest border border-white/15">
+          ❤️ Real Care Stories
+        </span>
+        <h2 className="mt-5 text-3xl sm:text-4xl lg:text-5xl font-black leading-tight tracking-tight text-white">
           Trusted by{' '}
-          <span className="text-gradient">Thousands of Families</span>
+          <span className="bg-gradient-to-r from-indigo-300 via-violet-300 to-emerald-300 bg-clip-text text-transparent">
+            Thousands of Families
+          </span>
           <br className="hidden sm:block" />
           {' '}across India.
         </h2>
-        <p className="mt-4 text-slate-500 text-base sm:text-lg max-w-xl mx-auto">
-          Real stories from families who chose Angels Onecare for their loved ones.
+        <p className="mt-4 text-white/50 text-base sm:text-lg max-w-xl mx-auto">
+          Real stories from families who chose Angels One Health care for their loved ones.
         </p>
       </div>
 
-      {/* Slider track — mask creates the fade-out edges */}
+      {/* ── Slider ── */}
       <div
-        className="relative"
+        className="relative z-10"
         style={{
           maskImage:
-            'linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%)',
+            'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
           WebkitMaskImage:
-            'linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%)',
+            'linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)',
         }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
         onTouchStart={() => setPaused(true)}
         onTouchEnd={() => setPaused(false)}
         onTouchCancel={() => setPaused(false)}
-        aria-label="Customer testimonials"
         role="region"
+        aria-label="Customer testimonials"
       >
         <div
-          className="flex gap-5 w-max py-4 px-2"
+          className="flex gap-5 w-max py-6 px-2"
           style={{
             animation: 'testimonial-marquee 55s linear infinite',
             animationPlayState: paused ? 'paused' : 'running',
@@ -153,7 +175,6 @@ export default function TestimonialSlider() {
           ))}
         </div>
       </div>
-
     </section>
   );
 }

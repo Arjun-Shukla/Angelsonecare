@@ -12,7 +12,7 @@
 export const TESTIMONIALS = [
   {
     id: 1,
-    name: 'Patient1',
+    name: 'Mamta Rathour',
     location: 'Mumbai',
     service: 'Home Nursing',
     rating: 5,
@@ -22,18 +22,19 @@ export const TESTIMONIALS = [
   },
   {
     id: 2,
-    name: 'Patient2',
+    name: 'Sunil Venkat',
     location: 'Bengaluru',
     service: 'Elder Care',
     rating: 5,
     review:
       'Angels Onecare gave my 82-year-old father the dignity and warmth he deserved. The caregiver became like family. Truly exceptional service.',
-    image: '/testimonials/testimonials/patient2.jpeg',
+    image: '/testimonials/testimonials/patient2.jpeg.jpeg',
+    imageStyle: { objectPosition: 'center -125px' },
   },
   {
     id: 3,
-    name: 'Patient3',
-    location: 'Delhi',
+    name: 'Mamta Rathour',
+    location: 'Mumbai',
     service: 'Attendant Care',
     rating: 5,
     review:
@@ -42,8 +43,8 @@ export const TESTIMONIALS = [
   },
   {
     id: 4,
-    name: 'Patient4',
-    location: 'Hyderabad',
+    name: 'Murli Rai',
+    location: 'Chennai',
     service: 'Physiotherapy',
     rating: 5,
     review:
@@ -52,8 +53,8 @@ export const TESTIMONIALS = [
   },
   {
     id: 5,
-    name: 'Patient5',
-    location: 'Chennai',
+    name: 'Chandrasekhar Vijay',
+    location: 'Bengalore',
     service: 'Home Nursing',
     rating: 5,
     review:
@@ -62,7 +63,7 @@ export const TESTIMONIALS = [
   },
   {
     id: 6,
-    name: 'Patient6',
+    name: 'Nikhil Gaikwad',
     location: 'Pune',
     service: 'Elder Care',
     rating: 5,
@@ -72,18 +73,18 @@ export const TESTIMONIALS = [
   },
   {
     id: 7,
-    name: 'Patient7',
-    location: 'Kochi',
+    name: 'Rohit Dixit',
+    location: 'Delhi',
     service: 'Baby Care',
     rating: 5,
     review:
-      "The baby care nurse guided us through the most overwhelming first weeks with calm expertise. So loving with our newborn — we couldn't have managed without her.",
+      "The baby care nurse guided us through the most overwhelming first weeks with calm expertise. So loving with our newborn - we couldn't have managed without her.",
     image: '',
   },
   {
     id: 8,
-    name: 'Patient8',
-    location: 'Jaipur',
+    name: 'Yele Mallappa Shetty',
+    location: 'Bengalore',
     service: 'Attendant Care',
     rating: 5,
     review:

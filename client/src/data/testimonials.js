@@ -18,7 +18,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       'The nurses were incredibly attentive and professional. My mother recovered so much faster with expert care at home. We felt supported every single day.',
-    image: '/testimonials/priya-sharma.jpg',
+    image: '/testimonials/testimonials/patient1.jpeg',
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       'Angels Onecare gave my 82-year-old father the dignity and warmth he deserved. The caregiver became like family. Truly exceptional service.',
-    image: '/testimonials/rajesh-nair.jpg',
+    image: '/testimonials/testimonials/patient2.jpeg',
   },
   {
     id: 3,
@@ -38,7 +38,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       'After my surgery I needed full-time support. The attendant was punctual, kind, and highly trained. I felt completely safe throughout my recovery.',
-    image: '/testimonials/sunita-verma.jpg',
+    image: '/testimonials/testimonials/patient3.jpeg',
   },
   {
     id: 4,
@@ -48,7 +48,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       'The physiotherapist was absolutely brilliant. My father regained mobility in just three weeks. Booking was seamless and the team was always reachable.',
-    image: '/testimonials/arjun-mehta.jpg',
+    image: '/testimonials/testimonials/patient4.jpeg',
   },
   {
     id: 5,
@@ -58,7 +58,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       'World-class nursing delivered at home. The nurse managed my post-op wound care with great expertise and compassion. Highly recommend to everyone.',
-    image: '/testimonials/kavitha-reddy.jpg',
+    image: '',
   },
   {
     id: 6,
@@ -68,7 +68,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       "We were worried about leaving our parents alone. Angels Onecare's elder care team gave us complete peace of mind. The staff are warm and highly skilled.",
-    image: '/testimonials/deepak-joshi.jpg',
+    image: '',
   },
   {
     id: 7,
@@ -78,7 +78,7 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       "The baby care nurse guided us through the most overwhelming first weeks with calm expertise. So loving with our newborn — we couldn't have managed without her.",
-    image: '/testimonials/meena-krishnan.jpg',
+    image: '',
   },
   {
     id: 8,
@@ -88,6 +88,6 @@ export const TESTIMONIALS = [
     rating: 5,
     review:
       'Prompt response, trained staff, genuine compassion. My bedridden father was treated with utmost respect and care. Thank you Angels Onecare.',
-    image: '/testimonials/vikram-singh.jpg',
+    image: '',
   },
 ];

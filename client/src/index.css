@@ -87,3 +87,9 @@
     background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 30%, #4f46e5 60%, #059669 100%);
   }
 }
+
+/* Testimonial slider — moves the duplicated track exactly -50% (one full copy width) */
+@keyframes testimonial-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}

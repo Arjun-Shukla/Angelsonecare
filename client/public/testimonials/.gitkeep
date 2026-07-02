@@ -1,0 +1,14 @@
+# Testimonial Images
+
+Drop customer photos here. Name them to match the `image` field in `src/data/testimonials.js`.
+
+Example:
+  priya-sharma.jpg
+  rajesh-nair.jpg
+  sunita-verma.jpg
+  ...
+
+Supported formats: jpg, jpeg, png, webp
+Recommended size: 200×200 px minimum, square crop
+
+Images are served at: /testimonials/<filename>
